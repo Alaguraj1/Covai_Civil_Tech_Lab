@@ -14,100 +14,93 @@ const Invoice = () => {
     const [form] = Form.useForm();
     const [editRecord, setEditRecord] = useState(null);
     const { TextArea } = Input;
+    const [dataSource, setDataSource] = useState([])
+    const [formFields, setFormFields] = useState([])
 
-
-    const [drawerTitle, setDrawerTitle] = useState("Create Tax");
-    console.log("drawerTitle", drawerTitle)
     useEffect(() => {
-        if (editRecord) {
-            setDrawerTitle("Edit Tax");
-        } else {
-            setDrawerTitle("Create Tax");
-        }
-    }, [editRecord, open]);
+        getInvoice()
+    }, [])
+
+    const getInvoice = (() => {
+        axios.get("http://files.covaiciviltechlab.com/invoice_list/", {
+            headers: {
+                "Authorization": `Token ${localStorage.getItem("token")}`
+            }
+        }).then((res) => {
+            setDataSource(res?.data)
+        }).catch((error: any) => {
+            console.log(error)
+        })
+    })
+    console.log("datasource", dataSource)
+
+
+    useEffect(() => {
+        axios.get("http://files.covaiciviltechlab.com/create_invoice/", {
+            headers: {
+                "Authorization": `Token ${localStorage.getItem("token")}`
+            }
+        }).then((res) => {
+            setFormFields(res.data)
+        }).catch((error: any) => {
+            console.log(error)
+        })
+    }, [])
+
+    console.log("formFields", formFields)
 
 
 
-    // // drawer
-    // const showDrawer = (record: any) => {
-    //     if (record) {
-    //         setEditRecord(record);
-    //         form.setFieldsValue(record); // Set form values for editing
+    // useEffect(() => {
+    //     if (editRecord) {
+    //         setDrawerTitle("Edit Tax");
     //     } else {
-    //         setEditRecord(null); // Clear editRecord for create operation
-    //         form.resetFields(); // Clear form fields for create operation
+    //         setDrawerTitle("Create Tax");
     //     }
-
-    //     setOpen(true);
-    // };
-
-    // const onClose = () => {
-    //     setOpen(false);
-    //     form.resetFields()
-    // };
+    // }, [editRecord, open]);
 
 
-    // table
-    const [dataSource, setDataSource] = useState(
-        [
-            {
-                key: '1',
-                invoiceId: 2322,
-                customerName: "Nabl",
-                projectName: 'Audit Widness Test 1',
-                amount: 600
-            },
-            {
-                key: '2',
-                invoiceId: 2321,
-                customerName: "Vsk",
-                projectName: 'Audit Widness Test 2',
-                amount: 1200
-            },
-            {
-                key: '3',
-                invoiceId: "Iffco",
-                customerName: 15,
-                projectName: 'Audit Widness Test 3',
-                amount: 800
-            },
-            {
-                key: '4',
-                invoiceId: 2319,
-                customerName: "Plumeria ",
-                projectName: 'Audit Widness Test 4',
-                amount: 1000
-            },
-            {
-                key: '5',
-                invoiceId: 2318,
-                customerName: "Sri Eshwar",
-                projectName: 'Audit Widness Test 5',
-                amount: 600
-            },
-        ]
-    )
+
+    // drawer
+    const showDrawer = () => {
+        // if (record) {
+        // setEditRecord(record);
+        // form.setFieldsValue(record); // Set form values for editing
+        // } else {
+        setEditRecord(null); // Clear editRecord for create operation
+        form.resetFields(); // Clear form fields for create operation
+        // }
+
+        setOpen(true);
+    };
+
+    const onClose = () => {
+        setOpen(false);
+        form.resetFields()
+    };
+
+
 
     const columns = [
         {
             title: 'Invoice Id',
-            dataIndex: 'invoiceId',
-            key: 'invoiceId',
+            dataIndex: 'id',
+            key: 'id',
         },
         {
             title: 'Customer Name',
-            dataIndex: 'customerName',
-            key: 'customerName',
+            dataIndex: 'customer',
+            key: 'customer',
         },
         {
             title: 'Project Name',
-            dataIndex: 'projectName',
-            key: 'projectName',
+            dataIndex: 'project_name',
+            key: 'project_name',
         },
         {
-            title: 'Amount',
-            dataIndex: 'amount',
-            key: 'amount',
+            title: 'Advance',
+            dataIndex: 'advance',
+            key: 'advance',
         },
         {
             title: "Actions",
@@ -220,40 +213,82 @@ const Invoice = () => {
     };
 
 
-    // // form submit
-    // const onFinish = (values: any) => {
-    //     console.log('Success:', values);
+    // form submit
+    const onFinish = (values: any) => {
+        console.log('Success:', values);
 
-    //     // Check if editing or creating
-    //     if (editRecord) {
-    //         // Implement your update logic here
-    //         // ...
+        const Token = localStorage.getItem("token")
+        console.log("TokenTokenTokenToken", Token)
 
-    //         // Clear editRecord state
-    //         setEditRecord(null);
-    //     } else {
-    //         // Implement your create logic here
-    //         // ...
 
-    //         // Clear form fields
-    //         form.resetFields();
-    //     }
-    //     // Close the drawer
-    //     onClose();
-    // }
-    // const onFinishFailed = (errorInfo: any) => {
-    //     console.log('Failed:', errorInfo);
-    // };
+        const body = {
+            customer: values.customer.id,
+            project_name: values.report_template_name,
+            advance: values.print_format,
+            balance: values.letter_pad_logo,
+            discount: values.discount,
+            sales_mode: values.sales_mode.id,
+            tax:values.tax.id,
+            id:values.id
+        };
 
-    // type FieldType = {
-    //     discount?: string;
-    //     advance?: string;
-    //     balance?: string;
-    //     customer?: string;
-    //     beforeTax?: string;
-    //     afterTax?: string;
-    // };
 
+        axios.post("http://files.covaiciviltechlab.com/create_invoice/", body, {
+            headers: {
+                "Authorization": `Token ${Token}`
+            }
+        }).then((res: any) => {
+            getInvoice()
+            console.log(res?.data);
+            setOpen(false);
+        }).catch((error: any) => {
+            // Error handling
+            console.log(error);
+        });
+
+
+        // Check if editing or creating
+        // if (editRecord) {
+        //     // Implement your update logic here
+        //     // ...
+
+        //     // Clear editRecord state
+        //     setEditRecord(null);
+        // } else {
+        //     // Implement your create logic here
+        //     // ...
+
+        // Clear form fields
+        form.resetFields();
+        // }
+        // Close the drawer
+        onClose();
+    }
+    const onFinishFailed = (errorInfo: any) => {
+        console.log('Failed:', errorInfo);
+    };
+
+    type FieldType = {
+        discount?: string;
+        advance?: string;
+        balance?: string;
+        customer?: string;
+        beforeTax?: string;
+        afterTax?: string;
+    };
+
+
+    const [selectedCustomerId, setSelectedCustomerId] = useState(null);
+    const [customerAddress, setCustomerAddress] = useState('');
+
+    const handleSelectChange = (customerId: any) => {
+        // Find the selected customer in the data array
+        const selectedCustomer = formFields.find((customer: any) => customer.id === customerId);
+
+        // Update the state with the selected customer's address
+        setSelectedCustomerId(customerId);
+        setCustomerAddress(selectedCustomer?.address1 || '');
+    };
     return (
         <>
             <div>
@@ -263,18 +298,14 @@ const Invoice = () => {
                     </div>
                     <div>
                         <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
-                        <button type='button' className='create-button'><Link href='/invoice/add'>+ Create Tax</Link></button>
+                        <button type='button' className='create-button' onClick={() => showDrawer()}>+ Create Tax</button>
                     </div>
                 </div>
                 <div>
                     <Table dataSource={dataSource} columns={columns} pagination={false} />
                 </div>
 
-                {/* <Drawer title={drawerTitle} placement="right" width={1200} onClose={onClose} open={open}>
-
-
-
-
+                <Drawer title="Create Invoice" placement="right" width={600} onClose={onClose} open={open}>
                     <Form
                         name="basic-form"
                         layout="vertical"
@@ -285,58 +316,85 @@ const Invoice = () => {
                     >
                         <div style={{ border: "1px solid gray", padding: "20px" }}>
                             <p style={{ textAlign: "center", color: "blue", fontSize: "22px", fontWeight: "600", paddingBottom: "30px" }}>Invoice Number :<span style={{ color: "red" }}> 02322</span></p>
-                            <div style={{ display: "Flex", justifyContent: "space-around" }}>
-                                <div style={{ width: "500px" }}>
-                                    <Form.Item<FieldType>
-                                        label="Customer"
-                                        name="customer"
-                                        required={false}
-                                        rules={[{ required: true, message: 'Please input your Tax Name!' }]}
-                                    >
-                                        <Input />
-                                    </Form.Item>
-                                    <Form.Item<FieldType>
-                                        label="Customer"
-                                        name="customer"
-                                        required={false}
-                                        rules={[{ required: true, message: 'Please input your Tax Name!' }]}
-                                    >
-                                        <TextArea rows={4} />
-                                    </Form.Item>
-                                </div>
-                                <div style={{ width: "500px" }}>
+                            <Form.Item
+                                label="Material Name"
+                                name="material"
+                                required={false}
+                                rules={[{ required: true, message: 'Please select Material Name!' }]}
+                            >
+                                <Select onChange={handleSelectChange}
+                                    placeholder="Select a customer"
+                                    value={selectedCustomerId}>
+                                    {formFields?.customer?.map((val: any) => (
+                                        <Select.Option key={val.id} value={val.id}>
+                                            {val.customer_name}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
 
-                                    <Form.Item label="Material ID" name='materialId'>
-                                        <Select>
-                                            <Select.Option value="id 1">ID 1</Select.Option>
-                                            <Select.Option value="id 2">ID 2</Select.Option>
-                                        </Select>
-                                    </Form.Item>
+                            <Form.Item
+                                label="Address"
+                                name="address1"
+                                required={false}
+                                rules={[{ required: true, message: 'Please input your Tax Name!' }]}
+                            >
+                                <Input.TextArea rows={4} value={customerAddress} />
+                            </Form.Item>
 
-                                    <Form.Item label="Material ID" name='materialId'>
-                                        <Select>
-                                            <Select.Option value="id 1">ID 1</Select.Option>
-                                            <Select.Option value="id 2">ID 2</Select.Option>
-                                        </Select>
-                                    </Form.Item>
-                                </div>
-                            </div>
+
+                            <Form.Item
+                                label="Project Name"
+                                name="project_name"
+                                required={false}
+                                rules={[{ required: true, message: 'Please input your Project Name!' }]}
+                            >
+                                <Input />
+                            </Form.Item>
+
+
+                            <Form.Item label="Sales Mode" name='sales_mode'>
+                                <Select>
+                                    {formFields?.sales_mode?.map((val: any) => (
+                                        <Select.Option key={val.id} value={val.id}>
+                                            {val.sales_mode}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+
+                            <Form.Item label="Material ID" name='materialId'>
+                                <Select>
+                                    {formFields?.taxs?.map((val: any) => (
+                                        <Select.Option key={val.id} value={val.id}>
+                                            {val.tax_name}
+                                        </Select.Option>
+                                    ))}
+                                </Select>
+                            </Form.Item>
+
                             <Form.Item >
-                                <div style={{ textAlign: "center" }}>
+                                {/* <Space> */}
+                                <div className='form-btn-main'>
                                     <Space>
-                                        <Button type="primary" htmlType="submit">
-                                            Save
+                                        <Button danger htmlType="submit" onClick={() => onClose()}>
+                                            cancel
                                         </Button>
-                                        <Button htmlType="submit" style={{ borderColor: "blue", color: "blue" }}>
-                                            Add Invoice Test
+                                        <Button type="primary" htmlType="submit">
+                                            Submit
                                         </Button>
                                     </Space>
+
                                 </div>
+                                {/* <Button htmlType="submit" style={{ borderColor: "blue", color: "blue" }}>
+                                        Add Invoice Test
+                                    </Button> */}
+                                {/* </Space> */}
                             </Form.Item>
                         </div>
                     </Form>
 
-                    <div style={{ paddingTop: "50px" }}>
+                    {/* <div style={{ paddingTop: "50px" }}>
                         <Table dataSource={dataSource2} columns={columns2} />
                     </div>
 
@@ -408,8 +466,8 @@ const Invoice = () => {
                             </div>
 
                         </Form.Item>
-                    </Form>
-                </Drawer> */}
+                    </Form> */}
+                </Drawer>
 
             </div>
         </>

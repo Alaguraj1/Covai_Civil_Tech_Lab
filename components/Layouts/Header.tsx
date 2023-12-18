@@ -885,7 +885,7 @@ const Header = () => {
                                         fill="currentColor"
                                     ></path>
                                 </svg>
-                                <span className="px-1"><Link href='/invoice'>{t('Invoice')}</Link></span>
+                                <span className="px-1">{t('Invoice')}</span>
                             </div>
                             <div className="right_arrow">
                                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="rotate-90">

@@ -44,18 +44,29 @@ const PendingPayment = () => {
     const Token = localStorage.getItem("token")
     console.log("TokenTokenTokenToken", Token)
 
-    axios.get("http://files.covaiciviltechlab.com/tax_list/", {
+    axios.get("http://files.covaiciviltechlab.com/pending_payment", {
       headers: {
         "Authorization": `Token ${Token}`
       }
     }).then((res) => {
-      setDataSource(res?.data)
+      setDataSource(res.data.pending_payments)
     }).catch((error: any) => {
       console.log(error)
     })
   })
   console.log("dataSourcedataSource", dataSource)
 
+//   useEffect(() => {
+//     axios.get("http://files.covaiciviltechlab.com/pending_payment", {
+//         headers:{
+//             "Authorization": `Token ${localStorage.getItem("token")}`
+//         }
+//     }).then((res) => {
+//         console.log("pendingPayment",res.data.pending_payments)
+//     }).catch((error:any) => {
+//         console.log(error)
+//     })
+//   })
 
   useEffect(() => {
     if (editRecord) {
@@ -95,66 +106,76 @@ const PendingPayment = () => {
     //   key: 'id',
     // },
     {
-      title: 'Tax Name',
-      dataIndex: 'tax_name',
-      key: 'id',
+      title: 'Customer Name',
+      dataIndex: 'customer',
+      key: 'customer',
     },
     {
-      title: 'Tax Percentage',
-      dataIndex: 'tax_percentage',
-      key: 'tax_percentage',
+      title: 'project Name',
+      dataIndex: 'project_name',
+      key: 'project_name',
     },
     {
-      title: 'Tax Status',
-      dataIndex: 'tax_status',
-      key: 'tax_status',
+      title: 'Advance',
+      dataIndex: 'advance',
+      key: 'advance',
     },
     {
-      title: "Actions",
-      key: "actions",
-      render: (text: any, record: any) => (
+        title: 'Total Amount',
+        dataIndex: 'total_amount',
+        key: 'total_amount',
+      },
+      {
+        title: 'Balance',
+        dataIndex: 'balance',
+        key: 'balance',
+      },
+    // {
+    //   title: "Actions",
+    //   key: "actions",
+    //   render: (text: any, record: any) => (
 
-        <Space size="middle">
-          <EyeOutlined style={{ cursor: "pointer" }}
-            onClick={() => showModal(record)} className='view-icon' rev={undefined} />
-          <EditOutlined
-            style={{ cursor: "pointer" }}
-            onClick={() => showDrawer(record)}
-            className='edit-icon' rev={undefined} />
-          <DeleteOutlined
-            style={{ color: "red", cursor: "pointer" }}
-            onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} />
-        </Space>
-      ),
-    }
+    //     <Space size="middle">
+    //       <EyeOutlined style={{ cursor: "pointer" }}
+    //         onClick={() => showModal(record)} className='view-icon' rev={undefined} />
+    //       <EditOutlined
+    //         style={{ cursor: "pointer" }}
+    //         onClick={() => showDrawer(record)}
+    //         className='edit-icon' rev={undefined} />
+    //       <DeleteOutlined
+    //         style={{ color: "red", cursor: "pointer" }}
+    //         onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} />
+    //     </Space>
+    //   ),
+    // }
   ];
 
 
 
-  const handleDelete = (record: any,) => {
+//   const handleDelete = (record: any,) => {
 
-    const Token = localStorage.getItem("token")
+//     const Token = localStorage.getItem("token")
 
-    Modal.confirm({
-      title: "Are you sure, you want to delete this PENDING PAYMENT record?",
-      okText: "Yes",
-      okType: "danger",
-      onOk: () => {
-        console.log(record, "values")
-        axios.delete(`http://files.covaiciviltechlab.com/delete_tax/${record.id}`, {
-          headers: {
-            "Authorization": `Token ${Token}`
-          }
-        }).then((res) => {
-          console.log(res)
-          GetTaxData()
-        }).catch((err) => {
-          console.log(err)
-        })
+//     Modal.confirm({
+//       title: "Are you sure, you want to delete this PENDING PAYMENT record?",
+//       okText: "Yes",
+//       okType: "danger",
+//       onOk: () => {
+//         console.log(record, "values")
+//         axios.delete(`http://files.covaiciviltechlab.com/delete_tax/${record.id}`, {
+//           headers: {
+//             "Authorization": `Token ${Token}`
+//           }
+//         }).then((res) => {
+//           console.log(res)
+//           GetTaxData()
+//         }).catch((err) => {
+//           console.log(err)
+//         })
 
-      },
-    });
-  };
+//       },
+//     });
+//   };
 
 
 
@@ -177,21 +198,21 @@ const PendingPayment = () => {
     console.log("TokenTokenTokenToken", Token)
 
     // Check if editing or creating
-    if (editRecord) {
-      axios.put(`http://files.covaiciviltechlab.com/edit_tax/${editRecord.id}/`, values, {
-        headers: {
-          "Authorization": `Token ${Token}`
-        }
-      }).then((res: any) => {
-        // Successful response
-        GetTaxData()
-        console.log(res);
-        setOpen(false);
-      }).catch((error: any) => {
-        // Error handling
-        console.log(error);
-      });
-    } else {
+    // if (editRecord) {
+    //   axios.put(`http://files.covaiciviltechlab.com/edit_tax/${editRecord.id}/`, values, {
+    //     headers: {
+    //       "Authorization": `Token ${Token}`
+    //     }
+    //   }).then((res: any) => {
+    //     // Successful response
+    //     GetTaxData()
+    //     console.log(res);
+    //     setOpen(false);
+    //   }).catch((error: any) => {
+    //     // Error handling
+    //     console.log(error);
+    //   });
+    // } else {
       // Making a POST request using Axios
       axios.post("http://files.covaiciviltechlab.com/create_tax/", values, {
         headers: {
@@ -208,7 +229,7 @@ const PendingPayment = () => {
 
       // Clear form fields
       form.resetFields();
-    }
+    // }
     // Close the drawer
     onClose();
   }
@@ -227,58 +248,58 @@ const PendingPayment = () => {
 
 
 // Model Data
-  const modalData = () => {
-    const formatDate = (dateString: any) => {
-      if (!dateString) {
-        return "N/A"; // or handle it according to your requirements
-      }
+//   const modalData = () => {
+//     const formatDate = (dateString: any) => {
+//       if (!dateString) {
+//         return "N/A"; // or handle it according to your requirements
+//       }
 
-      const date = new Date(dateString);
+//       const date = new Date(dateString);
 
-      if (isNaN(date.getTime())) {
-        return "Invalid Date"; // or handle it according to your requirements
-      }
+//       if (isNaN(date.getTime())) {
+//         return "Invalid Date"; // or handle it according to your requirements
+//       }
 
-      return new Intl.DateTimeFormat('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }).format(date);
-    };
+//       return new Intl.DateTimeFormat('en-US', {
+//         year: 'numeric',
+//         month: 'long',
+//         day: 'numeric',
+//       }).format(date);
+//     };
 
-    const data = [
-      {
-        label: "Tax Name:",
-        value: viewRecord?.tax_name || "N/A",
-      },
-      {
-        label: "Tax Percentage:",
-        value: viewRecord?.tax_percentage || "N/A",
-      },
-      {
-        label: "Tax Status:",
-        value: viewRecord?.tax_status || "N/A",
-      },
-      {
-        label: "Created By:",
-        value: viewRecord?.created_by || "N/A",
-      },
-      {
-        label: "Created Date:",
-        value: formatDate(viewRecord?.created_date),
-      },
-      {
-        label: "Modified By:",
-        value: viewRecord?.modified_by || "N/A",
-      },
-      {
-        label: "Modified Date:",
-        value: formatDate(viewRecord?.modified_date),
-      },
-    ];
+//     const data = [
+//       {
+//         label: "Tax Name:",
+//         value: viewRecord?.tax_name || "N/A",
+//       },
+//       {
+//         label: "Tax Percentage:",
+//         value: viewRecord?.tax_percentage || "N/A",
+//       },
+//       {
+//         label: "Tax Status:",
+//         value: viewRecord?.tax_status || "N/A",
+//       },
+//       {
+//         label: "Created By:",
+//         value: viewRecord?.created_by || "N/A",
+//       },
+//       {
+//         label: "Created Date:",
+//         value: formatDate(viewRecord?.created_date),
+//       },
+//       {
+//         label: "Modified By:",
+//         value: viewRecord?.modified_by || "N/A",
+//       },
+//       {
+//         label: "Modified Date:",
+//         value: formatDate(viewRecord?.modified_date),
+//       },
+//     ];
 
-    return data;
-  };
+//     return data;
+//   };
 
 
   return (
@@ -290,14 +311,14 @@ const PendingPayment = () => {
           </div>
           <div>
             <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
-            <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Pending Payment</button>
+            {/* <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Pending Payment</button> */}
           </div>
         </div>
         <div>
           <Table dataSource={dataSource} columns={columns} pagination={false} />
         </div>
 
-        <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>
+        {/* <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>
           <Form
             name="basic"
             layout="vertical"
@@ -351,11 +372,11 @@ const PendingPayment = () => {
 
             </Form.Item>
           </Form>
-        </Drawer>
+        </Drawer> */}
 
 
         {/* Modal */}
-        <Modal title="View Tax" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
+        {/* <Modal title="View Tax" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
           {
             modalData()?.map((value: any) => {
               return (
@@ -368,7 +389,7 @@ const PendingPayment = () => {
               )
             })
           }
-        </Modal>
+        </Modal> */}
 
       </div>
     </>
