@@ -913,41 +913,8 @@ const Header = () => {
                                 <Link href="/invoice/expenseEntry">{t('Expense Entry')}</Link>
                             </li>
                             <li>
-                                <Link href="/invoice/invoiceFileUpload">{t('Invoice File Upload')}</Link>
+                                <Link href="/invoice/invoiceFileUplod">{t('Invoice File Upload')}</Link>
                             </li>
-                            {/* <li>
-                                <Link href="/invoice/dropdown">{t('dropdown')}</Link>
-                            </li> */}
-                            {/* <li>
-                                <Link href="/invoice/infobox">{t('infobox')}</Link>
-                            </li>
-                            <li>
-                                <Link href="/invoice/jumbotron">{t('jumbotron')}</Link>
-                            </li>
-                            <li>
-                                <Link href="/invoice/loader">{t('loader')}</Link>
-                            </li>
-                            <li>
-                                <Link href="/invoice/pagination">{t('pagination')}</Link>
-                            </li>
-                            <li>
-                                <Link href="/invoice/popovers">{t('popovers')}</Link>
-                            </li>
-                            <li>
-                                <Link href="/invoice/progress-bar">{t('progress_bar')}</Link>
-                            </li>
-                            <li>
-                                <Link href="/invoice/search">{t('search')}</Link>
-                            </li>
-                            <li>
-                                <Link href="/invoice/tooltips">{t('tooltips')}</Link>
-                            </li>
-                            <li>
-                                <Link href="/invoice/treeview">{t('treeview')}</Link>
-                            </li>
-                            <li>
-                                <Link href="/invoice/typography">{t('typography')}</Link>
-                            </li> */}
                         </ul>
                     </li>
                     <li className="menu nav-item relative">
