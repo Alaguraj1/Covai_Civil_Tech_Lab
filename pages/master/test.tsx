@@ -141,7 +141,7 @@ const Test = () => {
         const Token = localStorage.getItem("token")
 
         Modal.confirm({
-            title: "Are you sure, you want to delete this TAX record?",
+            title: "Are you sure, you want to delete this TEST record?",
             okText: "Yes",
             okType: "danger",
             onOk: () => {

@@ -136,7 +136,7 @@ const InvoiceFileUpload = () => {
     const Token = localStorage.getItem("token")
 
     Modal.confirm({
-      title: "Are you sure, you want to delete this TAX record?",
+      title: "Are you sure, you want to delete this INVOICE FILE UPLOAD record?",
       okText: "Yes",
       okType: "danger",
       onOk: () => {

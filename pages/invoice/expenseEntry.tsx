@@ -136,7 +136,7 @@ const ExpenseEntry = () => {
     const Token = localStorage.getItem("token")
 
     Modal.confirm({
-      title: "Are you sure, you want to delete this TAX record?",
+      title: "Are you sure, you want to delete this EXPENSE ENTRY record?",
       okText: "Yes",
       okType: "danger",
       onOk: () => {

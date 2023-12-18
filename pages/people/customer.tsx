@@ -121,7 +121,7 @@ const Customer = () => {
         console.log(`Delete record with key ${record}`);
 
         Modal.confirm({
-            title: "Are you sure, you want to delete this TAX record?",
+            title: "Are you sure, you want to delete this CUSTOMER record?",
             okText: "Yes",
             okType: "danger",
             onOk: () => {
