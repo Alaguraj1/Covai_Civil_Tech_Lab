@@ -244,8 +244,98 @@ const Customer = () => {
 
         const data = [
             {
-                label: "Tax Name:",
-                value: viewRecord?.material_name || "N/A",
+                label: "Customer Name:",
+                value: viewRecord?.customer_name || "N/A",
+            },
+            {
+                label: "phone No:",
+                value: viewRecord?.phone_no || "N/A",
+            },
+            {
+                label: "gstin No:",
+                value: viewRecord?.gstin_no || "N/A",
+            },
+            {
+                label: "email:",
+                value: viewRecord?.email || "N/A",
+            },
+
+            {
+                label: "Address 1:",
+                value: viewRecord?.address1 || "N/A",
+            },
+            {
+                label: "City 1:",
+                value: viewRecord?.city1 || "N/A",
+            },
+            {
+                label: "State 1:",
+                value: viewRecord?.state1 || "N/A",
+            },
+            {
+                label: "Country 1:",
+                value: viewRecord?.country1 || "N/A",
+            },
+            {
+                label: "Pincode 1:",
+                value: viewRecord?.pincode1 || "N/A",
+            },
+
+            {
+                label: "mobile No 1 :",
+                value: viewRecord?.mobile_no1 || "N/A",
+            },
+            {
+                label: "Pincode 1:",
+                value: viewRecord?.pincode1 || "N/A",
+            },
+            {
+                label: "contact_person Email 1:",
+                value: viewRecord?.contact_person_email1 || "N/A",
+            },
+            {
+                label: "Code:",
+                value: viewRecord?.code || "N/A",
+            },
+            {
+                label: "place Of Testing :",
+                value: viewRecord?.place_of_testing || "N/A",
+            },
+            {
+                label: "Address 2:",
+                value: viewRecord?.address2 || "N/A",
+            },
+
+
+            {
+                label: "City 2:",
+                value: viewRecord?.city2 || "N/A",
+            },
+            {
+                label: "State 2:",
+                value: viewRecord?.state2 || "N/A",
+            },
+            {
+                label: "Country 2:",
+                value: viewRecord?.country2 || "N/A",
+            },
+            {
+                label: "Pincode 2:",
+                value: viewRecord?.pincode2 || "N/A",
+            },
+            {
+                label: "contact Person 2:",
+                value: viewRecord?.contact_person2 || "N/A",
+            },
+
+            {
+                label: "mobile No 2:",
+                value: viewRecord?.mobile_no2 || "N/A",
+            },
+
+            {
+                label: "contact Person Email 2:",
+                value: viewRecord?.contact_person2 || "N/A",
             },
             {
                 label: "Created By:",
@@ -304,35 +394,6 @@ const Customer = () => {
                         >
                             <Input />
                         </Form.Item>
-
-                        {/* <Form.Item<FieldType>
-                            label="Login Name"
-                            name="loginName"
-                            required={false}
-                            rules={[{ required: true, message: 'Please input your GSTin!' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item<FieldType>
-                            label="Password"
-                            name="password"
-                            required={false}
-                            rules={[{ required: true, message: 'Please input your GSTin!' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item<FieldType>
-                            label="Address"
-                            name="address"
-                            required={false}
-                            rules={[{ required: true, message: 'Please input your Address1!' }]}
-                        >
-                            <TextArea rows={4} />
-                        </Form.Item> */}
-
-
 
                         <Form.Item<FieldType>
                             label="Phone Number"
