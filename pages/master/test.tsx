@@ -57,8 +57,20 @@ const Test = () => {
 
 
     const showModal = (record: any) => {
+
+        const testRecord = {
+            material_name: record?.material_name?.id, // Use the primary key of the material_name field
+            test_name: record.test_name,
+            price_per_piece: record.price_per_piece,
+            id: record.id,
+            created_by:record.created_by.username,
+            created_date:record.created_date,
+            modified_by:record.modified_by.username,
+            modified_date:record.modified_date
+        };
+
         setIsModalOpen(true);
-        setViewRecord(record)
+        setViewRecord(testRecord)
         modalData()
     };
 
@@ -82,14 +94,23 @@ const Test = () => {
     // drawer
     const showDrawer = (record: any) => {
         if (record) {
-            setEditRecord(record)
-            form.setFieldsValue(record)
+            console.log("usdhfshdfhsu", record);
+
+            const testRecord = {
+                material_name: record?.material_name?.id, // Use the primary key of the material_name field
+                test_name: record.test_name,
+                price_per_piece: record.price_per_piece,
+                id: record.id,
+            };
+
+            setEditRecord(testRecord);
+            form.setFieldsValue(testRecord);
         } else {
-            setEditRecord(null)
-            form.resetFields()
+            setEditRecord(null);
+            form.resetFields();
         }
 
-        setOpen(true);
+        setOpen(true)
     };
 
     const onClose = () => {
@@ -102,7 +123,8 @@ const Test = () => {
         {
             title: 'Material Name',
             dataIndex: 'material_name',
-            key: 'material_name',
+            key: 'material',
+            render: (material: any) => (material && material?.material_name) || 'N/A',
         },
         {
             title: 'Test Name',
@@ -178,6 +200,9 @@ const Test = () => {
         const Token = localStorage.getItem("token")
 
         if (editRecord) {
+
+            console.log("editRecordeditRecoreeditRecord", editRecord)
+
             axios.put(`http://files.covaiciviltechlab.com/edit_test/${editRecord.id}/`, values, {
                 headers: {
                     "Authorization": `Token ${Token}`
@@ -238,6 +263,8 @@ const Test = () => {
             }).format(date);
         };
 
+        console.log("viewRecordviewRecord", viewRecord)
+
         const data = [
             {
                 label: "Test Name:",
@@ -248,8 +275,12 @@ const Test = () => {
                 value: viewRecord?.material_name || "N/A",
             },
             {
+                label: "price Per Piece:",
+                value: viewRecord?.price_per_piece || "N/A",
+            },
+            {
                 label: "Created By:",
-                value: viewRecord?.created_by || "N/A",
+                value: viewRecord?.created_by?.username || "N/A",
             },
             {
                 label: "Created Date:",
@@ -257,16 +288,13 @@ const Test = () => {
             },
             {
                 label: "Modified By:",
-                value: viewRecord?.modified_by || "N/A",
+                value: viewRecord?.modified_by?.username || "N/A",
             },
             {
                 label: "Modified Date:",
                 value: formatDate(viewRecord?.modified_date),
             },
-            {
-                label: "price Per Piece:",
-                value: viewRecord?.price_per_piece || "N/A",
-            },
+
         ];
 
         return data;
@@ -355,6 +383,7 @@ const Test = () => {
                 <Modal title="View Test" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
                     {
                         modalData()?.map((value: any) => {
+                            console.log("valuevaluevalue", value)
                             return (
                                 <>
                                     <div className='content-main' >

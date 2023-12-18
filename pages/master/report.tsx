@@ -23,7 +23,7 @@ const Report = () => {
   const [formFields, setFormFields] = useState([])
   const [dataSource, setDataSource] = useState([])
 
-  // const [editor, setEditor] = useState("")
+  const [editor, setEditor] = useState("")
 
 
   useEffect(() => {
@@ -83,14 +83,15 @@ const Report = () => {
 
     if (record) {
       const templateRecord = {
-        material: record.material.name,
+        material: record.material.id,
         report_template_name: record.report_template_name,
-        print_format: record?.print_format.name,
-        letter_pad_logo: record?.letter_pad_logo.name,
-        template: record?.template
+        print_format: record?.print_format.id,
+        letter_pad_logo: record?.letter_pad_logo.id,
+        template: record?.template,
+        id: record?.id
       }
       console.log('templateRecord --->', templateRecord);
-
+      setEditor(record?.template,)
       setEditRecord(templateRecord)
       form.setFieldsValue(templateRecord)
       // setEditor(templateRecord)
@@ -164,12 +165,12 @@ const Report = () => {
     // Implement your delete logic here
 
     Modal.confirm({
-      title: "Are you sure, you want to delete this TAX record?",
+      title: "Are you sure, you want to delete this REPORT TEMPLATES record?",
       okText: "Yes",
       okType: "danger",
       onOk: () => {
         console.log(record, "values")
-        axios.delete(`http://files.covaiciviltechlab.com/delete_report_template/${record?.id}`,
+        axios.delete(`http://files.covaiciviltechlab.com/delete_report_template/${record?.id}/`,
           {
             headers: {
               "Authorization": `Token ${localStorage.getItem("token")}`
@@ -198,50 +199,41 @@ const Report = () => {
 
   // form submit
   const onFinish = (values: any) => {
-    console.log('Success:', values);
-
+    const templateText = values.template?.blocks?.[0]?.text || '';
 
     const body = {
       material: values.material,
       report_template_name: values.report_template_name,
       print_format: values.print_format,
       letter_pad_logo: values.letter_pad_logo,
-      template: values.template.blocks[0].text
-    }
-    console.log('✌️body --->', body);
+      template: templateText
+    };
 
-
-    const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
+    const Token = localStorage.getItem("token");
 
     if (editRecord) {
-      axios.put(`http://files.covaiciviltechlab.com/edit_report_template/${editRecord.id}`, values, {
+      axios.put(`http://files.covaiciviltechlab.com/edit_report_template/${editRecord.id}/`, body, {
         headers: {
           "Authorization": `Token ${Token}`
         }
       }).then((res) => {
-        console.log(res)
         setOpen(false);
-        getTemplate()
-      }).catch((error:any) => {
-        console.log(error)
-      })
-
+        getTemplate();
+      }).catch((error) => {
+        console.log(error);
+      });
     } else {
-      console.log('✌️body --->', body);
-
       axios.post("http://files.covaiciviltechlab.com/create_report_template/", body, {
         headers: {
           "Authorization": `Token ${Token}`
         }
-      }).then((res: any) => {
-        console.log(res);
+      }).then((res) => {
         form.resetFields();
         setOpen(false);
-        getTemplate()
-      }).catch((error: any) => {
-        console.log(error)
-      })
+        getTemplate();
+      }).catch((error) => {
+        console.log(error);
+      });
     }
   };
 
@@ -350,7 +342,9 @@ const Report = () => {
 
     return data;
   };
-  
+
+  console.log("editoreditoreditor", editor)
+
   return (
     <>
       <div>
@@ -419,7 +413,7 @@ const Report = () => {
             <Form.Item<FieldType>
               label="Templates"
               name="template"
-               required={false}
+              required={false}
               rules={[{ required: true, message: 'Please input your Report Name!' }]}
             >
               <Editor
@@ -427,7 +421,7 @@ const Report = () => {
                 editorClassName="editor"
                 toolbarClassName="toolbar"
                 {...editorOptions}
-                // value={editor}
+                value={editor}
               />
               {/* <TextArea /> */}
             </Form.Item>
@@ -477,14 +471,14 @@ const Report = () => {
         </Drawer>
 
         {/* modal */}
-        <Modal title="View Report Template" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
+        <Modal title="View Report Template" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false} style={{width:"700px"}}>
           {
             modalData()?.map((value: any) => {
               return (
                 <>
                   <div className='content-main' >
                     <p className='content-1'>{value?.label}</p>
-                    <p className='content-2'>{value?.value}</p>
+                    <p className='content-2' dangerouslySetInnerHTML={{__html : value?.value}}></p>
                   </div>
                 </>
               )

@@ -95,11 +95,11 @@ const ExpenseUser = () => {
             dataIndex: 'created_date',
             key: 'created_date',
         },
-        {
-            title: 'Flag',
-            dataIndex: 'flag',
-            key: 'flag',
-        },
+        // {
+        //     title: 'Flag',
+        //     dataIndex: 'flag',
+        //     key: 'flag',
+        // },
         {
             title: "Actions",
             key: "actions",
@@ -313,14 +313,14 @@ const ExpenseUser = () => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item<FieldType>
+                        {/* <Form.Item<FieldType>
                             label="Flag"
                             name="flag"
                             required={false}
                             rules={[{ required: true, message: 'Please input your Tax Status!' }]}
                         >
                             <Input />
-                        </Form.Item>
+                        </Form.Item> */}
 
                         <Form.Item >
                             <div className='form-btn-main'>
