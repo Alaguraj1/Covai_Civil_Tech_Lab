@@ -7,32 +7,32 @@ import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
 
 
-const PendingPayment = () => {
+const ExpenseReport = () => {
 
-  // const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(false);
   const { Search } = Input;
   const [form] = Form.useForm();
   const [editRecord, setEditRecord] = useState(null);
-  // const [drawerTitle, setDrawerTitle] = useState("Create Tax")
-  // const [viewRecord, setViewRecord] = useState(null)
+//   const [drawerTitle, setDrawerTitle] = useState("Create Tax")
+//   const [viewRecord, setViewRecord] = useState(null)
   const [dataSource, setDataSource] = useState([])
-  // const [isModalOpen, setIsModalOpen] = useState(false);
+//   const [isModalOpen, setIsModalOpen] = useState(false);
 
 
   // Model 
-  // const showModal = (record: any) => {
-  //   setIsModalOpen(true);
-  //   setViewRecord(record)
-  //   // modalData()
-  // };
+//   const showModal = (record: any) => {
+//     setIsModalOpen(true);
+//     setViewRecord(record)
+//     // modalData()
+//   };
 
-  // const handleOk = () => {
-  //   setIsModalOpen(false);
-  // };
+//   const handleOk = () => {
+//     setIsModalOpen(false);
+//   };
 
-  // const handleCancel = () => {
-  //   setIsModalOpen(false);
-  // };
+//   const handleCancel = () => {
+//     setIsModalOpen(false);
+//   };
 
 
   // get Tax datas
@@ -44,12 +44,12 @@ const PendingPayment = () => {
     const Token = localStorage.getItem("token")
     console.log("TokenTokenTokenToken", Token)
 
-    axios.get("http://files.covaiciviltechlab.com/pending_payment", {
+    axios.get("http://files.covaiciviltechlab.com/expense_report/", {
       headers: {
         "Authorization": `Token ${Token}`
       }
     }).then((res) => {
-      setDataSource(res.data.pending_payments)
+      setDataSource(res.data.reports)
     }).catch((error: any) => {
       console.log(error)
     })
@@ -68,33 +68,33 @@ const PendingPayment = () => {
 //     })
 //   })
 
-  // useEffect(() => {
-  //   if (editRecord) {
-  //     setDrawerTitle("Edit Tax");
-  //   } else {
-  //     setDrawerTitle("Create Tax");
-  //   }
-  // }, [editRecord, open]);
+//   useEffect(() => {
+//     if (editRecord) {
+//       setDrawerTitle("Edit Tax");
+//     } else {
+//       setDrawerTitle("Create Tax");
+//     }
+//   }, [editRecord, open]);
 
 
 
-  // // drawer
-  // const showDrawer = (record: any) => {
-  //   if (record) {
-  //     setEditRecord(record);
-  //     form.setFieldsValue(record); // Set form values for editing
-  //   } else {
-  //     setEditRecord(null);
-  //     form.resetFields();
-  //   }
+  // drawer
+//   const showDrawer = (record: any) => {
+//     if (record) {
+//       setEditRecord(record);
+//       form.setFieldsValue(record); // Set form values for editing
+//     } else {
+//       setEditRecord(null);
+//       form.resetFields();
+//     }
 
-  //   setOpen(true);
-  // };
+//     setOpen(true);
+//   };
 
-  // const onClose = () => {
-  //   setOpen(false);
-  //   form.resetFields()
-  // };
+//   const onClose = () => {
+//     setOpen(false);
+//     form.resetFields()
+//   };
 
 
 
@@ -106,29 +106,29 @@ const PendingPayment = () => {
     //   key: 'id',
     // },
     {
-      title: 'Customer Name',
-      dataIndex: 'customer',
-      key: 'customer',
+      title: 'Expense User',
+      dataIndex: 'expense_user',
+      key: 'expense_user',
     },
     {
-      title: 'project Name',
-      dataIndex: 'project_name',
-      key: 'project_name',
+      title: 'Expense Category',
+      dataIndex: 'expense_category',
+      key: 'expense_category',
     },
     {
-      title: 'Advance',
-      dataIndex: 'advance',
-      key: 'advance',
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
     },
     {
-        title: 'Total Amount',
-        dataIndex: 'total_amount',
-        key: 'total_amount',
+        title: 'Narration',
+        dataIndex: 'narration',
+        key: 'narration',
       },
       {
-        title: 'Balance',
-        dataIndex: 'balance',
-        key: 'balance',
+        title: 'Date',
+        dataIndex: 'date',
+        key: 'date',
       },
     // {
     //   title: "Actions",
@@ -190,60 +190,60 @@ const PendingPayment = () => {
 
 
   // form submit
-  // const onFinish = (values: any,) => {
-  //   console.log('Success:', editRecord, values);
+//   const onFinish = (values: any,) => {
+//     console.log('Success:', editRecord, values);
 
 
-  //   const Token = localStorage.getItem("token")
-  //   console.log("TokenTokenTokenToken", Token)
+//     const Token = localStorage.getItem("token")
+//     console.log("TokenTokenTokenToken", Token)
 
-  //   // Check if editing or creating
-  //   // if (editRecord) {
-  //   //   axios.put(`http://files.covaiciviltechlab.com/edit_tax/${editRecord.id}/`, values, {
-  //   //     headers: {
-  //   //       "Authorization": `Token ${Token}`
-  //   //     }
-  //   //   }).then((res: any) => {
-  //   //     // Successful response
-  //   //     GetTaxData()
-  //   //     console.log(res);
-  //   //     setOpen(false);
-  //   //   }).catch((error: any) => {
-  //   //     // Error handling
-  //   //     console.log(error);
-  //   //   });
-  //   // } else {
-  //     // Making a POST request using Axios
-  //     axios.post("http://files.covaiciviltechlab.com/create_tax/", values, {
-  //       headers: {
-  //         "Authorization": `Token ${Token}`
-  //       }
-  //     }).then((res: any) => {
-  //       GetTaxData()
-  //       console.log(res);
-  //       setOpen(false);
-  //     }).catch((error: any) => {
-  //       // Error handling
-  //       console.log(error);
-  //     });
+//     // Check if editing or creating
+//     // if (editRecord) {
+//     //   axios.put(`http://files.covaiciviltechlab.com/edit_tax/${editRecord.id}/`, values, {
+//     //     headers: {
+//     //       "Authorization": `Token ${Token}`
+//     //     }
+//     //   }).then((res: any) => {
+//     //     // Successful response
+//     //     GetTaxData()
+//     //     console.log(res);
+//     //     setOpen(false);
+//     //   }).catch((error: any) => {
+//     //     // Error handling
+//     //     console.log(error);
+//     //   });
+//     // } else {
+//       // Making a POST request using Axios
+//       axios.post("http://files.covaiciviltechlab.com/create_tax/", values, {
+//         headers: {
+//           "Authorization": `Token ${Token}`
+//         }
+//       }).then((res: any) => {
+//         GetTaxData()
+//         console.log(res);
+//         setOpen(false);
+//       }).catch((error: any) => {
+//         // Error handling
+//         console.log(error);
+//       });
 
-  //     // Clear form fields
-  //     form.resetFields();
-  //   // }
-  //   // Close the drawer
-  //   // onClose();
-  // }
+//       // Clear form fields
+//       form.resetFields();
+//     // }
+//     // Close the drawer
+//     onClose();
+//   }
 
 
-  // const onFinishFailed = (errorInfo: any) => {
-  //   console.log('Failed:', errorInfo);
-  // };
+//   const onFinishFailed = (errorInfo: any) => {
+//     console.log('Failed:', errorInfo);
+//   };
 
-  // type FieldType = {
-  //   tax_name?: string;
-  //   tax_percentage?: string;
-  //   tax_status?: string;
-  // };
+//   type FieldType = {
+//     tax_name?: string;
+//     tax_percentage?: string;
+//     tax_status?: string;
+//   };
   // console.log("viewRecordviewRecord", viewRecord)
 
 
@@ -396,4 +396,4 @@ const PendingPayment = () => {
   )
 }
 
-export default PendingPayment
+export default ExpenseReport

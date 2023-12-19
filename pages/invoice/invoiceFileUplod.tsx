@@ -2,9 +2,10 @@ import { size } from 'lodash'
 import React, { useState, useEffect } from 'react'
 import { Space, Table, Modal } from 'antd';
 import { Button, Drawer } from 'antd';
-import { Checkbox, Form, Input, Radio } from 'antd';
-import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { Checkbox, Form, Input, Radio, message, Upload, Select } from 'antd';
+import { EditOutlined, DeleteOutlined, EyeOutlined, InboxOutlined } from "@ant-design/icons";
 import axios from "axios"
+import type { UploadProps } from 'antd';
 
 
 const InvoiceFileUpload = () => {
@@ -17,7 +18,7 @@ const InvoiceFileUpload = () => {
   const [viewRecord, setViewRecord] = useState(null)
   const [dataSource, setDataSource] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [formFields, setFormFields] = useState([])
 
   // Model 
   const showModal = (record: any) => {
@@ -37,19 +38,19 @@ const InvoiceFileUpload = () => {
 
   // get Tax datas
   useEffect(() => {
-    GetTaxData()
+    getFileUpload()
   }, [])
 
-  const GetTaxData = (() => {
+  const getFileUpload = (() => {
     const Token = localStorage.getItem("token")
     console.log("TokenTokenTokenToken", Token)
 
-    axios.get("http://files.covaiciviltechlab.com/tax_list/", {
+    axios.get("http://files.covaiciviltechlab.com/invoice_file_upload_list/", {
       headers: {
         "Authorization": `Token ${Token}`
       }
     }).then((res) => {
-      setDataSource(res?.data)
+      setDataSource(res?.data?.invoice_files)
     }).catch((error: any) => {
       console.log(error)
     })
@@ -57,11 +58,27 @@ const InvoiceFileUpload = () => {
   console.log("dataSourcedataSource", dataSource)
 
 
+
+  useEffect(() => {
+    const Token = localStorage.getItem("token")
+
+    axios.get("http://files.covaiciviltechlab.com/create_invoice_file_upload/", {
+      headers: {
+        "Authorization": `Token ${Token}`
+      }
+    }).then((res) => {
+      setFormFields(res?.data)
+    }).catch((error: any) => {
+      console.log(error)
+    })
+  }, [])
+
+
   useEffect(() => {
     if (editRecord) {
-      setDrawerTitle("Edit Tax");
+      setDrawerTitle("Edit Invoice File Upload");
     } else {
-      setDrawerTitle("Create Tax");
+      setDrawerTitle("Create Invoice File Upload");
     }
   }, [editRecord, open]);
 
@@ -69,9 +86,22 @@ const InvoiceFileUpload = () => {
 
   // drawer
   const showDrawer = (record: any) => {
+console.log('✌️record --->', record);
     if (record) {
       setEditRecord(record);
-      form.setFieldsValue(record); // Set form values for editing
+      form.setFieldsValue({
+        invoice: record.invoice,
+        file:
+          [
+            {
+              uid: 'rc-upload-1',
+              name: record.file_url, // Assuming 'file_url' is the field with the existing file name
+              status: 'done',
+              url: record.file_url, // Assuming 'file_url' is the field with the file URL
+            },
+          ]
+
+      });
     } else {
       setEditRecord(null);
       form.resetFields();
@@ -79,6 +109,7 @@ const InvoiceFileUpload = () => {
 
     setOpen(true);
   };
+
 
   const onClose = () => {
     setOpen(false);
@@ -89,25 +120,15 @@ const InvoiceFileUpload = () => {
 
 
   const columns = [
-    // {
-    //   title: 'S No',
-    //   dataIndex: 'id',
-    //   key: 'id',
-    // },
     {
-      title: 'Tax Name',
-      dataIndex: 'tax_name',
-      key: 'id',
+      title: 'Invoice',
+      dataIndex: 'invoice',
+      key: 'invoice',
     },
     {
-      title: 'Tax Percentage',
-      dataIndex: 'tax_percentage',
-      key: 'tax_percentage',
-    },
-    {
-      title: 'Tax Status',
-      dataIndex: 'tax_status',
-      key: 'tax_status',
+      title: 'file_url',
+      dataIndex: 'file_url',
+      key: 'file_url',
     },
     {
       title: "Actions",
@@ -141,13 +162,13 @@ const InvoiceFileUpload = () => {
       okType: "danger",
       onOk: () => {
         console.log(record, "values")
-        axios.delete(`http://files.covaiciviltechlab.com/delete_tax/${record.id}`, {
+        axios.delete(`http://files.covaiciviltechlab.com/delete_invoice_file_upload/${record.id}`, {
           headers: {
             "Authorization": `Token ${Token}`
           }
         }).then((res) => {
-          console.log(res)
-          GetTaxData()
+          console.log(res.data)
+          getFileUpload()
         }).catch((err) => {
           console.log(err)
         })
@@ -169,22 +190,30 @@ const InvoiceFileUpload = () => {
 
 
   // form submit
-  const onFinish = (values: any,) => {
-    console.log('Success:', editRecord, values);
+  const onFinish = (values: any) => {
+    console.log('✌️values --->', values);
+    // console.log('Success:', editRecord, values);
+
+    const Token = localStorage.getItem("token");
+    console.log("TokenTokenTokenToken", Token);
 
 
-    const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
+    // Create a FormData object to send files
+    const formData = new FormData();
+    formData.append("file", values.file.file.originFileObj);
+    formData.append('invoice', values.invoice);
+
 
     // Check if editing or creating
     if (editRecord) {
-      axios.put(`http://files.covaiciviltechlab.com/edit_tax/${editRecord.id}/`, values, {
+      axios.put(`http://files.covaiciviltechlab.com/edit_invoice_file_upload/${editRecord.id}/`, formData, {
         headers: {
-          "Authorization": `Token ${Token}`
-        }
+          "Authorization": `Token ${Token}`,
+          "Content-Type": "multipart/form-data",  // Set content type for file upload
+        },
       }).then((res: any) => {
         // Successful response
-        GetTaxData()
+        getFileUpload();
         console.log(res);
         setOpen(false);
       }).catch((error: any) => {
@@ -193,12 +222,13 @@ const InvoiceFileUpload = () => {
       });
     } else {
       // Making a POST request using Axios
-      axios.post("http://files.covaiciviltechlab.com/create_tax/", values, {
+      axios.post("http://files.covaiciviltechlab.com/create_invoice_file_upload/", formData, {
         headers: {
-          "Authorization": `Token ${Token}`
-        }
+          "Authorization": `Token ${Token}`,
+          "Content-Type": "multipart/form-data",  // Set content type for file upload
+        },
       }).then((res: any) => {
-        GetTaxData()
+        getFileUpload();
         console.log(res);
         setOpen(false);
       }).catch((error: any) => {
@@ -209,9 +239,11 @@ const InvoiceFileUpload = () => {
       // Clear form fields
       form.resetFields();
     }
+
     // Close the drawer
     onClose();
-  }
+  };
+
 
 
   const onFinishFailed = (errorInfo: any) => {
@@ -219,14 +251,13 @@ const InvoiceFileUpload = () => {
   };
 
   type FieldType = {
-    tax_name?: string;
-    tax_percentage?: string;
-    tax_status?: string;
+    invoice?: string;
+    file?: string;
   };
   // console.log("viewRecordviewRecord", viewRecord)
 
 
-// Model Data
+  // Model Data
   const modalData = () => {
     const formatDate = (dateString: any) => {
       if (!dateString) {
@@ -281,6 +312,34 @@ const InvoiceFileUpload = () => {
   };
 
 
+
+
+
+
+  // file upload
+
+  const { Dragger } = Upload;
+
+  const props: UploadProps = {
+    name: 'file',
+    multiple: true,
+    action: 'https://run.mocky.io/v3/435e224c-44fb-4773-9faf-380c5e6a2188',
+    onChange(info) {
+      const { status } = info.file;
+      if (status !== 'uploading') {
+        console.log(info.file, info.fileList);
+      }
+      if (status === 'done') {
+        message.success(`${info.file.name} file uploaded successfully.`);
+      } else if (status === 'error') {
+        message.error(`${info.file.name} file upload failed.`);
+      }
+    },
+    onDrop(e) {
+      console.log('Dropped files', e.dataTransfer.files);
+    },
+  };
+
   return (
     <>
       <div>
@@ -308,33 +367,38 @@ const InvoiceFileUpload = () => {
             autoComplete="off"
 
           >
-            <Form.Item<FieldType>
-              label="Tax Name"
-              name="tax_name"
+            <Form.Item
+              label="Invoice"
+              name="invoice"
               required={false}
-              rules={[{ required: true, message: 'Please input your Tax Name!' }]}
+              rules={[{ required: true, message: 'Please select Expense User!' }]}
             >
-              <Input />
+              <Select
+                placeholder="Select a Invoice">
+                {formFields?.invoices?.map((val: any) => (
+                  <Select.Option key={val.id} value={val.id}>
+                    {val.id}
+                  </Select.Option>
+                ))}
+              </Select>
             </Form.Item>
 
             <Form.Item<FieldType>
-              label="Tax Percentage"
-              name="tax_percentage"
-              required={false}
-              rules={[{ required: true, message: 'Please input your Tax Percentage!' }]}
+              label="File"
+              name="file"
             >
-              <Input />
+              <Dragger {...props}>
+                <p className="ant-upload-drag-icon">
+                  <InboxOutlined rev={undefined} />
+                </p>
+                <p className="ant-upload-text">Click or drag file to this area to upload</p>
+                <p className="ant-upload-hint">
+                  Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.
+                </p>
+              </Dragger>
+
             </Form.Item>
 
-            <Form.Item label="Tax Status" name="tax_status"
-              required={false}
-              rules={[{ required: true, message: 'Please input your Tax Status!' }]}
-            >
-              <Radio.Group>
-                <Radio value="E"> Enable </Radio>
-                <Radio value="D"> Disable </Radio>
-              </Radio.Group>
-            </Form.Item>
 
             <Form.Item >
               <div className='form-btn-main'>

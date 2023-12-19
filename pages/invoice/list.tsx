@@ -224,7 +224,7 @@ console.log("valuesvaluesvaluesvaluesvalues", values)
                     </div>
                     <div>
                         <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
-                        <button type='button' className='create-button' onClick={() => showDrawer()}>+ Create Tax</button>
+                        <button type='button' className='create-button' onClick={() => showDrawer()}>+ Create Invoice</button>
                     </div>
                 </div>
                 <div>

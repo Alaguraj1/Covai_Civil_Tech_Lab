@@ -88,9 +88,19 @@ const ExpenseEntry = () => {
 
   // drawer
   const showDrawer = (record: any) => {
+    console.log('✌️record --->', record);
+
     if (record) {
-      setEditRecord(record);
-      form.setFieldsValue(record); // Set form values for editing
+      const updateData:any = {
+        amount: record.amount,
+        date: moment(record.date),
+        expense_category: record.expense_category,
+        expense_user: record.expense_user,
+        id: record.id,
+        narration: record.narration
+      }
+      setEditRecord(updateData);
+      form.setFieldsValue(updateData); // Set form values for editing
     } else {
       setEditRecord(null);
       form.resetFields();
@@ -194,7 +204,7 @@ const ExpenseEntry = () => {
 
   // form submit
   const onFinish = (values: any,) => {
-    console.log('Success:', editRecord, values);
+    console.log('Success:', values);
 
 
     const Token = localStorage.getItem("token")
@@ -207,14 +217,14 @@ const ExpenseEntry = () => {
       expense_category: values.expense_category,
       amount: values.amount,
       narration: values.narration,
-    
+
     };
 
     console.log("formattedData", formattedData)
 
     // Check if editing or creating
     if (editRecord) {
-      axios.put(`http://files.covaiciviltechlab.com/edit_expense_entry/${editRecord.id}/`, values, {
+      axios.put(`http://files.covaiciviltechlab.com/edit_expense_entry/${editRecord.id}/`, formattedData, {
         headers: {
           "Authorization": `Token ${Token}`
         }
