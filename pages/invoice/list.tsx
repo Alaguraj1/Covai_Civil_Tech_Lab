@@ -119,68 +119,12 @@ const Invoice = () => {
                     </Link>
                     <DeleteOutlined
                         style={{ color: "red", cursor: "pointer" }}
-                        onClick={() => handleDelete(record.key)} className='delete-icon' rev={undefined} />
+                        onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} />
                 </Space>
             ),
         }
     ];
 
-
-
-
-    // // invoice drawer table data
-    // const dataSource2 = [
-    //     {
-    //         key: '1',
-    //         name: 'Mike',
-    //         age: 32,
-    //         address: '10 Downing Street',
-    //     },
-    //     {
-    //         key: '2',
-    //         name: 'John',
-    //         age: 42,
-    //         address: '10 Downing Street',
-    //     },
-    // ];
-
-    // const columns2 = [
-    //     {
-    //         title: 'Material Name',
-    //         dataIndex: 'materialName',
-    //         key: 'materialName',
-    //     },
-    //     {
-    //         title: 'Quantity',
-    //         dataIndex: 'quantity',
-    //         key: 'quantity',
-    //     },
-    //     {
-    //         title: 'Rate Per Sample',
-    //         dataIndex: 'ratePerSample',
-    //         key: 'address',
-    //     },
-    //     {
-    //         title: "Action",
-    //         key: "action",
-    //         render: (records: any) => {
-    //             return (
-    //                 <>
-    //                     <Space size="middle">
-    //                         <EyeOutlined style={{ cursor: "pointer" }}
-    //                            className='view-icon' rev={undefined} />
-    //                         <EditOutlined
-    //                             style={{ cursor: "pointer" }}
-    //                             className='edit-icon' rev={undefined} />
-    //                         <DeleteOutlined
-    //                             style={{ color: "red", cursor: "pointer" }}
-    //                             className='delete-icon' rev={undefined} />
-    //                     </Space>
-    //                 </>
-    //             )
-    //         }
-    //     }
-    // ];
 
     const handleDelete = (record: any) => {
         // Implement your delete logic here
@@ -192,7 +136,11 @@ const Invoice = () => {
             okType: "danger",
             onOk: () => {
                 console.log(record, "values")
-                axios.delete(`http://localhost:3000/api/employee/delete/${record.id}`).then((res) => {
+                axios.delete(`http://files.covaiciviltechlab.com/delete_invoice_test/${record.id}`,{
+                    headers: {
+                        "Authorization": `Token ${localStorage.getItem("token")}`
+                    }
+                }).then((res) => {
                     console.log(res)
                 }).catch((err: any) => {
                     console.log(err)
@@ -214,56 +162,37 @@ const Invoice = () => {
 
 
     // form submit
-    const onFinish = (values: any) => {
-        console.log('Success:', values);
+    const onFinish = (values:any) => {
+    const Token = localStorage.getItem("token");
+console.log("valuesvaluesvaluesvaluesvalues", values)
 
-        const Token = localStorage.getItem("token")
-        console.log("TokenTokenTokenToken", Token)
+    const body = {
+        customer: values.customer,
+        project_name: values.project_name,
+        advance: values.advance,
+        balance: values.balance,
+        discount: values.discount,
+        sales_mode: values.sales_mode,
+        tax: values.tax,
+        id: values.id
+    };
 
+    axios.post("http://files.covaiciviltechlab.com/create_invoice/", body, {
+        headers: {
+            "Authorization": `Token ${Token}`
+        }
+    }).then((res) => {
+        getInvoice();
+        console.log(res?.data);
+        setOpen(false);
+    }).catch((error) => {
+        console.log(error);
+    });
 
-        const body = {
-            customer: values.customer.id,
-            project_name: values.report_template_name,
-            advance: values.print_format,
-            balance: values.letter_pad_logo,
-            discount: values.discount,
-            sales_mode: values.sales_mode.id,
-            tax:values.tax.id,
-            id:values.id
-        };
+    form.resetFields();
+    onClose();
+};
 
-
-        axios.post("http://files.covaiciviltechlab.com/create_invoice/", body, {
-            headers: {
-                "Authorization": `Token ${Token}`
-            }
-        }).then((res: any) => {
-            getInvoice()
-            console.log(res?.data);
-            setOpen(false);
-        }).catch((error: any) => {
-            // Error handling
-            console.log(error);
-        });
-
-
-        // Check if editing or creating
-        // if (editRecord) {
-        //     // Implement your update logic here
-        //     // ...
-
-        //     // Clear editRecord state
-        //     setEditRecord(null);
-        // } else {
-        //     // Implement your create logic here
-        //     // ...
-
-        // Clear form fields
-        form.resetFields();
-        // }
-        // Close the drawer
-        onClose();
-    }
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
     };
@@ -283,12 +212,13 @@ const Invoice = () => {
 
     const handleSelectChange = (customerId: any) => {
         // Find the selected customer in the data array
-        const selectedCustomer = formFields.find((customer: any) => customer.id === customerId);
+        const selectedCustomer = formFields?.customer?.find((customer: any) => customer.id === customerId);
 
         // Update the state with the selected customer's address
         setSelectedCustomerId(customerId);
         setCustomerAddress(selectedCustomer?.address1 || '');
     };
+    console.log("customerAddress", customerAddress)
     return (
         <>
             <div>
@@ -314,11 +244,11 @@ const Invoice = () => {
                         onFinishFailed={onFinishFailed}
                         autoComplete="off"
                     >
-                        <div style={{ border: "1px solid gray", padding: "20px" }}>
+                        {/* <div style={{ border: "1px solid gray", padding: "20px" }}> */}
                             <p style={{ textAlign: "center", color: "blue", fontSize: "22px", fontWeight: "600", paddingBottom: "30px" }}>Invoice Number :<span style={{ color: "red" }}> 02322</span></p>
                             <Form.Item
-                                label="Material Name"
-                                name="material"
+                                label="customer Name"
+                                name="customer"
                                 required={false}
                                 rules={[{ required: true, message: 'Please select Material Name!' }]}
                             >
@@ -337,7 +267,7 @@ const Invoice = () => {
                                 label="Address"
                                 name="address1"
                                 required={false}
-                                rules={[{ required: true, message: 'Please input your Tax Name!' }]}
+                                // rules={[{ required: true, message: 'Please input your Tax Name!' }]}
                             >
                                 <Input.TextArea rows={4} value={customerAddress} />
                             </Form.Item>
@@ -363,7 +293,7 @@ const Invoice = () => {
                                 </Select>
                             </Form.Item>
 
-                            <Form.Item label="Material ID" name='materialId'>
+                            {/* <Form.Item label="Material ID" name='materialId'>
                                 <Select>
                                     {formFields?.taxs?.map((val: any) => (
                                         <Select.Option key={val.id} value={val.id}>
@@ -371,7 +301,7 @@ const Invoice = () => {
                                         </Select.Option>
                                     ))}
                                 </Select>
-                            </Form.Item>
+                            </Form.Item> */}
 
                             <Form.Item >
                                 {/* <Space> */}
@@ -391,7 +321,7 @@ const Invoice = () => {
                                     </Button> */}
                                 {/* </Space> */}
                             </Form.Item>
-                        </div>
+                        {/* </div> */}
                     </Form>
 
                     {/* <div style={{ paddingTop: "50px" }}>
