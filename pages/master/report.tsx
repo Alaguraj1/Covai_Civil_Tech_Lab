@@ -472,7 +472,7 @@ const Report = () => {
         </Drawer>
 
         {/* modal */}
-        <Modal title="View Report Template" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false} style={{width:"700px"}}>
+        <Modal title="View Report Template" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false} style={{width:"850px"}}>
           {
             modalData()?.map((value: any) => {
               return (

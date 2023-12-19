@@ -93,7 +93,7 @@ const LoginCover = () => {
                         <div className="absolute inset-y-0 w-8 from-primary/10 via-transparent to-transparent ltr:-right-10 ltr:bg-gradient-to-r rtl:-left-10 rtl:bg-gradient-to-l xl:w-16 ltr:xl:-right-20 rtl:xl:-left-20"></div>
                         <div className="ltr:xl:-skew-x-[14deg] rtl:xl:skew-x-[14deg]">
                             <Link href="/" className="ms-10 block w-48 lg:w-72">
-                                <img src="/assets/images/auth/logo-white.svg" alt="Logo" className="w-full" />
+                                <img src="/assets/images/civil-techno-logo.png" alt="logo" />
                             </Link>
                             <div className="mt-24 hidden w-full max-w-[430px] lg:block">
                                 <img src="/assets/images/auth/login.svg" alt="Cover Image" className="w-full" />
@@ -187,7 +187,7 @@ const LoginCover = () => {
                                 <span className="absolute inset-x-0 top-1/2 h-px w-full -translate-y-1/2 bg-white-light dark:bg-white-dark"></span>
                                 <span className="relative bg-white px-2 font-bold uppercase text-white-dark dark:bg-dark dark:text-white-light">or</span>
                             </div>
-                            <div className="mb-10 md:mb-[60px]">
+                            {/* <div className="mb-10 md:mb-[60px]">
                                 <ul className="flex justify-center gap-3.5 text-white">
                                     <li>
                                         <Link
@@ -216,7 +216,7 @@ const LoginCover = () => {
                                             <IconTwitter fill={true} />
                                         </Link>
                                     </li>
-                                    {/* <li>
+                                    <li>
                                         <Link
                                             href="#"
                                             className="inline-flex h-8 w-8 items-center justify-center rounded-full p-0 transition hover:scale-110"
@@ -224,9 +224,9 @@ const LoginCover = () => {
                                         >
                                             <IconGoogle />
                                         </Link>
-                                    </li> */}
+                                    </li>
                                 </ul>
-                            </div>
+                            </div> */}
                             <div className="text-center dark:text-white">
                                 Don't have an account ?&nbsp;
                                 <Link href="/auth/register" className="uppercase text-primary underline transition hover:text-black dark:hover:text-white">
@@ -234,7 +234,7 @@ const LoginCover = () => {
                                 </Link>
                             </div>
                         </div>
-                        <p className="absolute bottom-6 w-full text-center dark:text-white">© {new Date().getFullYear()}.VRISTO All Rights Reserved.</p>
+                        <p className="absolute bottom-6 w-full text-center dark:text-white">© {new Date().getFullYear()}.CIVIL_TECHNO_LAB All Rights Reserved.</p>
                     </div>
                 </div>
             </div>
