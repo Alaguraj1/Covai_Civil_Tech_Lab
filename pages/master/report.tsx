@@ -94,10 +94,12 @@ const Report = () => {
       setEditor(record?.template,)
       setEditRecord(templateRecord)
       form.setFieldsValue(templateRecord)
+      setDrawerTitle("Edit Report Templates")
       // setEditor(templateRecord)
     } else {
       setEditRecord(null)
       form.resetFields()
+      setDrawerTitle("Create Report Templates")
     }
     setOpen(true);
   };

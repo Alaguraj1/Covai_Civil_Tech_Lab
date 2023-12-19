@@ -54,22 +54,24 @@ const Expense = () => {
   };
 
 
-  useEffect(() => {
-    if (editRecord) {
-      setDrawerTitle("Edit Expense")
-    } else {
-      setDrawerTitle("Create Expense")
-    }
-  }, [])
+  // useEffect(() => {
+  //   if (editRecord) {
+  //     setDrawerTitle("Edit Expense")
+  //   } else {
+  //     setDrawerTitle("Create Expense")
+  //   }
+  // }, [])
 
   // drawer
   const showDrawer = (record: any) => {
     if (record) {
       setEditRecord(record)
       form.setFieldsValue(record)
+      setDrawerTitle("Edit Expense")
     } else {
       setEditRecord(null)
       form.resetFields()
+      setDrawerTitle("Create Expense")
     }
     setOpen(true);
   };
