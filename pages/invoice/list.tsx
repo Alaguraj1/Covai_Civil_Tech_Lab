@@ -15,6 +15,9 @@ const Invoice = () => {
     const { TextArea } = Input;
     const [dataSource, setDataSource] = useState([])
     const [formFields, setFormFields] = useState([])
+    const [selectedCustomerId, setSelectedCustomerId] = useState(null);
+    const [customerAddress, setCustomerAddress] = useState('');
+
 
     useEffect(() => {
         getInvoice()
@@ -62,13 +65,14 @@ const Invoice = () => {
 
     // drawer
     const showDrawer = () => {
-        form.resetFields(); 
         setOpen(true);
+     
     };
 
     const onClose = () => {
         setOpen(false);
         form.resetFields()
+        setCustomerAddress('')
     };
 
 
@@ -200,9 +204,7 @@ console.log("valuesvaluesvaluesvaluesvalues", values)
     };
 
 
-    const [selectedCustomerId, setSelectedCustomerId] = useState(null);
-    const [customerAddress, setCustomerAddress] = useState('');
-
+   
     const handleSelectChange = (customerId: any) => {
         // Find the selected customer in the data array
         const selectedCustomer = formFields?.customer?.find((customer: any) => customer.id === customerId);
@@ -210,8 +212,9 @@ console.log("valuesvaluesvaluesvaluesvalues", values)
         // Update the state with the selected customer's address
         setSelectedCustomerId(customerId);
         setCustomerAddress(selectedCustomer?.address1 || '');
+        console.log("customerAddress", customerAddress)
     };
-    console.log("customerAddress", customerAddress)
+  
     return (
         <>
             <div>
@@ -257,15 +260,9 @@ console.log("valuesvaluesvaluesvaluesvalues", values)
                                 </Select>
                             </Form.Item>
 
-                            <Form.Item
-                                label="Address"
-                                name="address1"
-                                required={false}
-                                // rules={[{ required: true, message: 'Please input your Tax Name!' }]}
-                            >
-                                <Input.TextArea rows={4}  initialValue={customerAddress}   />
+                            <Form.Item>
+                                <Input.TextArea rows={4}  value={customerAddress}   />
                             </Form.Item>
-
 
                             <Form.Item
                                 label="Project Name"
