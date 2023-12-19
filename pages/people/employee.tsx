@@ -36,6 +36,7 @@ const Employee = () => {
         })
     })
 
+    console.log("dataSource", dataSource)
 
     const showModal = (record: any) => {
         setIsModalOpen(true);
@@ -64,10 +65,10 @@ const Employee = () => {
     const showDrawer = (record: any) => {
         if (record) {
             setEditRecord(record);
-            form.setFieldsValue(record); // Set form values for editing
+            form.setFieldsValue(record);
         } else {
-            setEditRecord(null); // Clear editRecord for create operation
-            form.resetFields(); // Clear form fields for create operation
+            setEditRecord(null); 
+            form.resetFields(); 
         }
 
         setOpen(true);
@@ -173,9 +174,17 @@ const Employee = () => {
 
         // Check if editing or creating
         if (editRecord) {
-            // Implement your update logic here
-            // ...
-
+            axios.put(`http://files.covaiciviltechlab.com/edit_customer/${editRecord.id}/`, values, {
+            headers: {
+                "Authorization": `Token ${localStorage.getItem("token")}`
+            }
+          }).then((res) => {
+            console.log(res)
+            form.resetFields();
+            getEmployee()
+          }).catch((error) => {
+            console.log(error)
+          })
             // Clear editRecord state
             setEditRecord(null);
         } else {
@@ -186,6 +195,7 @@ const Employee = () => {
                 }
             }).then((res) => {
                 console.log(res.data)
+                getEmployee()
             }).catch((error:any) => {
                 console.log(error)
             })
@@ -373,7 +383,7 @@ const Employee = () => {
                             required={false}
                             rules={[{ required: true, message: 'Please input your Address 2!' }]}
                         >
-                            <TextArea rows={4} />
+                            <Input />
                         </Form.Item>
 
                         <Form.Item label="DatePicker" name="joining_date">
