@@ -12,7 +12,6 @@ const Invoice = () => {
     const [open, setOpen] = useState(false);
     const { Search } = Input;
     const [form] = Form.useForm();
-    const [editRecord, setEditRecord] = useState(null);
     const { TextArea } = Input;
     const [dataSource, setDataSource] = useState([])
     const [formFields, setFormFields] = useState([])
@@ -63,14 +62,7 @@ const Invoice = () => {
 
     // drawer
     const showDrawer = () => {
-        // if (record) {
-        // setEditRecord(record);
-        // form.setFieldsValue(record); // Set form values for editing
-        // } else {
-        setEditRecord(null); // Clear editRecord for create operation
-        form.resetFields(); // Clear form fields for create operation
-        // }
-
+        form.resetFields(); 
         setOpen(true);
     };
 
@@ -136,12 +128,13 @@ const Invoice = () => {
             okType: "danger",
             onOk: () => {
                 console.log(record, "values")
-                axios.delete(`http://files.covaiciviltechlab.com/delete_invoice_test/${record.id}`,{
+                axios.delete(`http://files.covaiciviltechlab.com/delete_invoice/${record.id}`,{
                     headers: {
                         "Authorization": `Token ${localStorage.getItem("token")}`
                     }
                 }).then((res) => {
                     console.log(res)
+                    getInvoice()
                 }).catch((err: any) => {
                     console.log(err)
                 })
@@ -243,6 +236,7 @@ console.log("valuesvaluesvaluesvaluesvalues", values)
                         onFinish={onFinish}
                         onFinishFailed={onFinishFailed}
                         autoComplete="off"
+                        form={form}
                     >
                         {/* <div style={{ border: "1px solid gray", padding: "20px" }}> */}
                             <p style={{ textAlign: "center", color: "blue", fontSize: "22px", fontWeight: "600", paddingBottom: "30px" }}>Invoice Number :<span style={{ color: "red" }}> 02322</span></p>
@@ -269,7 +263,7 @@ console.log("valuesvaluesvaluesvaluesvalues", values)
                                 required={false}
                                 // rules={[{ required: true, message: 'Please input your Tax Name!' }]}
                             >
-                                <Input.TextArea rows={4} value={customerAddress} />
+                                <Input.TextArea rows={4}  initialValue={customerAddress}   />
                             </Form.Item>
 
 
