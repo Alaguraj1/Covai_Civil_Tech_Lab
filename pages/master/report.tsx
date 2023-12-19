@@ -219,6 +219,7 @@ const Report = () => {
       }).then((res) => {
         setOpen(false);
         getTemplate();
+        console.log( res)
       }).catch((error) => {
         console.log(error);
       });
