@@ -182,7 +182,7 @@ const ExpenseReport = () => {
   // input search
   const onSearch = (value: string, _e: any, info: any) => {
     const filteredData = dataSource.filter((item: any) =>
-      item.tax_name.toLowerCase().includes(value.toLowerCase())
+      item.expense_user.toLowerCase().includes(value.toLowerCase())
     );
     setDataSource(filteredData);
   };
@@ -307,7 +307,7 @@ const ExpenseReport = () => {
       <div>
         <div className='tax-heading-main'>
           <div>
-            <h1 className='tax-title'>Manage Pending Payment</h1>
+            <h1 className='tax-title'>Expense Report</h1>
           </div>
           <div>
             <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />

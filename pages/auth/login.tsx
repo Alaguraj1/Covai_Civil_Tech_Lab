@@ -37,7 +37,7 @@ const LoginCover = () => {
         axios.post("http://files.covaiciviltechlab.com/login/", formData).then((res) => {
             console.log(res.data)
             localStorage.setItem("token", res?.data?.token)
-            router.push('/');
+            router.push('/people/customer');
             messageApi.open({
                 type: 'success',
                 content: 'login successfully!',

@@ -106,8 +106,8 @@ const Tax = () => {
     },
     {
       title: 'Tax Status',
-      dataIndex: 'tax_status',
-      key: 'tax_status',
+      dataIndex: 'status',
+      key: 'status',
     },
     {
       title: "Actions",

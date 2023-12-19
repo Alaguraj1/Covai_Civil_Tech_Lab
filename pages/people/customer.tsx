@@ -52,9 +52,9 @@ const Customer = () => {
 
     useEffect(() => {
         if (editRecord) {
-            setDrawerTitle("Edit Employee Details");
+            setDrawerTitle("Edit Customer Details");
         } else {
-            setDrawerTitle("Create Employee Details");
+            setDrawerTitle("Create Customer Details");
         }
     }, [editRecord, open]);
 
@@ -594,7 +594,7 @@ const Customer = () => {
                             <div className='form-btn-main'>
                                 <Space>
                                     <Button danger htmlType="submit" onClick={() => onClose()}>
-                                        cancel
+                                        Cancel
                                     </Button>
                                     <Button type="primary" htmlType="submit">
                                         Submit

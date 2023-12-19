@@ -56,7 +56,7 @@ const Material = () => {
 
   useEffect(() => {
     if (editRecord) {
-      setDrawerTitle("edit Material")
+      setDrawerTitle("Edit Material")
     } else {
       setDrawerTitle("Create Material")
     }

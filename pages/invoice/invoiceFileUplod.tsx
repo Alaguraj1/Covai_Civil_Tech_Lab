@@ -277,34 +277,16 @@ console.log('✌️record --->', record);
       }).format(date);
     };
 
+    console.log("viewRecord", viewRecord)
+
     const data = [
       {
-        label: "Tax Name:",
-        value: viewRecord?.tax_name || "N/A",
+        label: "invoice:",
+        value: viewRecord?.invoice|| "N/A",
       },
       {
-        label: "Tax Percentage:",
-        value: viewRecord?.tax_percentage || "N/A",
-      },
-      {
-        label: "Tax Status:",
-        value: viewRecord?.tax_status || "N/A",
-      },
-      {
-        label: "Created By:",
-        value: viewRecord?.created_by || "N/A",
-      },
-      {
-        label: "Created Date:",
-        value: formatDate(viewRecord?.created_date),
-      },
-      {
-        label: "Modified By:",
-        value: viewRecord?.modified_by || "N/A",
-      },
-      {
-        label: "Modified Date:",
-        value: formatDate(viewRecord?.modified_date),
+        label: "file_url:",
+        value: viewRecord?.file_url || "N/A",
       },
     ];
 
@@ -387,7 +369,7 @@ console.log('✌️record --->', record);
               label="File"
               name="file"
             >
-              <Dragger {...props}>
+              <Dragger {...props} >
                 <p className="ant-upload-drag-icon">
                   <InboxOutlined rev={undefined} />
                 </p>
@@ -396,6 +378,7 @@ console.log('✌️record --->', record);
                   Support for a single or bulk upload. Strictly prohibited from uploading company data or other banned files.
                 </p>
               </Dragger>
+
 
             </Form.Item>
 
@@ -420,11 +403,12 @@ console.log('✌️record --->', record);
 
         {/* Modal */}
         <Modal title="View Tax" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
+          <div  style={{overflow:"scroll"}}>
           {
             modalData()?.map((value: any) => {
               return (
                 <>
-                  <div className='content-main' >
+                  <div className='content-main'>
                     <p className='content-1'>{value?.label}</p>
                     <p className='content-2'>{value?.value}</p>
                   </div>
@@ -432,6 +416,8 @@ console.log('✌️record --->', record);
               )
             })
           }
+          </div>
+          
         </Modal>
 
       </div>
