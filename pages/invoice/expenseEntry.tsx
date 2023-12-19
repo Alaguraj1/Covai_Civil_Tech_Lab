@@ -2,9 +2,11 @@ import { size } from 'lodash'
 import React, { useState, useEffect } from 'react'
 import { Space, Table, Modal } from 'antd';
 import { Button, Drawer } from 'antd';
-import { Checkbox, Form, Input, Radio } from 'antd';
+import { Checkbox, Form, Input, Radio, Select, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
+import moment from 'moment';
+
 
 
 const ExpenseEntry = () => {
@@ -17,7 +19,7 @@ const ExpenseEntry = () => {
   const [viewRecord, setViewRecord] = useState(null)
   const [dataSource, setDataSource] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [formFields, setFormFields] = useState([])
 
   // Model 
   const showModal = (record: any) => {
@@ -37,14 +39,14 @@ const ExpenseEntry = () => {
 
   // get Tax datas
   useEffect(() => {
-    GetTaxData()
+    getExpenceEntry()
   }, [])
 
-  const GetTaxData = (() => {
+  const getExpenceEntry = (() => {
     const Token = localStorage.getItem("token")
     console.log("TokenTokenTokenToken", Token)
 
-    axios.get("http://files.covaiciviltechlab.com/tax_list/", {
+    axios.get("http://files.covaiciviltechlab.com/expense_entry_list/", {
       headers: {
         "Authorization": `Token ${Token}`
       }
@@ -55,6 +57,23 @@ const ExpenseEntry = () => {
     })
   })
   console.log("dataSourcedataSource", dataSource)
+
+
+
+  useEffect(() => {
+    axios.get("http://files.covaiciviltechlab.com/create_expense_entry/", {
+      headers: {
+        "Authorization": `Token ${localStorage.getItem("token")}`
+      }
+    }).then((res) => {
+      setFormFields(res.data)
+    }).catch((error: any) => {
+      console.log(error)
+    })
+  }, [])
+
+  console.log("formFields", formFields)
+
 
 
   useEffect(() => {
@@ -95,19 +114,24 @@ const ExpenseEntry = () => {
     //   key: 'id',
     // },
     {
-      title: 'Tax Name',
-      dataIndex: 'tax_name',
-      key: 'id',
+      title: 'Expense User',
+      dataIndex: 'expense_user',
+      key: 'expense_user',
     },
     {
-      title: 'Tax Percentage',
-      dataIndex: 'tax_percentage',
-      key: 'tax_percentage',
+      title: 'Expense Category',
+      dataIndex: 'expense_category',
+      key: 'expense_category',
     },
     {
-      title: 'Tax Status',
-      dataIndex: 'tax_status',
-      key: 'tax_status',
+      title: 'Amount',
+      dataIndex: 'amount',
+      key: 'amount',
+    },
+    {
+      title: 'Narration',
+      dataIndex: 'narration',
+      key: 'narration',
     },
     {
       title: "Actions",
@@ -141,13 +165,13 @@ const ExpenseEntry = () => {
       okType: "danger",
       onOk: () => {
         console.log(record, "values")
-        axios.delete(`http://files.covaiciviltechlab.com/delete_tax/${record.id}`, {
+        axios.delete(`http://files.covaiciviltechlab.com/delete_expense_entry/${record.id}`, {
           headers: {
             "Authorization": `Token ${Token}`
           }
         }).then((res) => {
           console.log(res)
-          GetTaxData()
+          getExpenceEntry()
         }).catch((err) => {
           console.log(err)
         })
@@ -176,15 +200,27 @@ const ExpenseEntry = () => {
     const Token = localStorage.getItem("token")
     console.log("TokenTokenTokenToken", Token)
 
+    const formattedData = {
+      ...values,
+      expense_user: values.expense_user,
+      date: moment(values.dob).format("YYYY-MM-DD"),
+      expense_category: values.expense_category,
+      amount: values.amount,
+      narration: values.narration,
+    
+    };
+
+    console.log("formattedData", formattedData)
+
     // Check if editing or creating
     if (editRecord) {
-      axios.put(`http://files.covaiciviltechlab.com/edit_tax/${editRecord.id}/`, values, {
+      axios.put(`http://files.covaiciviltechlab.com/edit_expense_entry/${editRecord.id}/`, values, {
         headers: {
           "Authorization": `Token ${Token}`
         }
       }).then((res: any) => {
         // Successful response
-        GetTaxData()
+        getExpenceEntry()
         console.log(res);
         setOpen(false);
       }).catch((error: any) => {
@@ -193,12 +229,12 @@ const ExpenseEntry = () => {
       });
     } else {
       // Making a POST request using Axios
-      axios.post("http://files.covaiciviltechlab.com/create_tax/", values, {
+      axios.post("http://files.covaiciviltechlab.com/create_expense_entry/", formattedData, {
         headers: {
           "Authorization": `Token ${Token}`
         }
       }).then((res: any) => {
-        GetTaxData()
+        getExpenceEntry()
         console.log(res);
         setOpen(false);
       }).catch((error: any) => {
@@ -219,14 +255,16 @@ const ExpenseEntry = () => {
   };
 
   type FieldType = {
-    tax_name?: string;
-    tax_percentage?: string;
-    tax_status?: string;
+    expense_user?: string;
+    expense_category?: string;
+    amount?: string;
+    narration?: string;
+    date?: string;
   };
   // console.log("viewRecordviewRecord", viewRecord)
 
 
-// Model Data
+  // Model Data
   const modalData = () => {
     const formatDate = (dateString: any) => {
       if (!dateString) {
@@ -248,32 +286,24 @@ const ExpenseEntry = () => {
 
     const data = [
       {
-        label: "Tax Name:",
-        value: viewRecord?.tax_name || "N/A",
+        label: "Expense User:",
+        value: viewRecord?.expense_user || "N/A",
       },
       {
-        label: "Tax Percentage:",
-        value: viewRecord?.tax_percentage || "N/A",
+        label: "Expense Category:",
+        value: viewRecord?.expense_category || "N/A",
       },
       {
-        label: "Tax Status:",
-        value: viewRecord?.tax_status || "N/A",
+        label: "Amount:",
+        value: viewRecord?.amount || "N/A",
       },
       {
-        label: "Created By:",
-        value: viewRecord?.created_by || "N/A",
+        label: "Narration:",
+        value: viewRecord?.narration || "N/A",
       },
       {
-        label: "Created Date:",
-        value: formatDate(viewRecord?.created_date),
-      },
-      {
-        label: "Modified By:",
-        value: viewRecord?.modified_by || "N/A",
-      },
-      {
-        label: "Modified Date:",
-        value: formatDate(viewRecord?.modified_date),
+        label: "Date:",
+        value: formatDate(viewRecord?.date),
       },
     ];
 
@@ -308,34 +338,61 @@ const ExpenseEntry = () => {
             autoComplete="off"
 
           >
-            <Form.Item<FieldType>
-              label="Tax Name"
-              name="tax_name"
+            <Form.Item
+              label="Expense User"
+              name="expense_user"
               required={false}
-              rules={[{ required: true, message: 'Please input your Tax Name!' }]}
+              rules={[{ required: true, message: 'Please select Expense User!' }]}
+            >
+              <Select
+                placeholder="Select a customer">
+                {formFields?.expense_user?.map((val: any) => (
+                  <Select.Option key={val.id} value={val.id}>
+                    {val.name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item
+              label="Expense Category"
+              name="expense_category"
+              required={false}
+              rules={[{ required: true, message: 'Please select Expense Category!' }]}
+            >
+              <Select
+                placeholder="Select a customer">
+                {formFields?.expense?.map((val: any) => (
+                  <Select.Option key={val.id} value={val.id}>
+                    {val.expense_name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+            <Form.Item<FieldType>
+              label="Amount"
+              name="amount"
+              required={false}
+              rules={[{ required: true, message: 'Please input your Amount!' }]}
             >
               <Input />
             </Form.Item>
 
             <Form.Item<FieldType>
-              label="Tax Percentage"
-              name="tax_percentage"
+              label="Narration"
+              name="narration"
               required={false}
-              rules={[{ required: true, message: 'Please input your Tax Percentage!' }]}
+              rules={[{ required: true, message: 'Please input your Narration!' }]}
             >
               <Input />
             </Form.Item>
 
-            <Form.Item label="Tax Status" name="tax_status"
+            <Form.Item label="Date" name="date"
               required={false}
-              rules={[{ required: true, message: 'Please input your Tax Status!' }]}
-            >
-              <Radio.Group>
-                <Radio value="E"> Enable </Radio>
-                <Radio value="D"> Disable </Radio>
-              </Radio.Group>
+              rules={[{ required: true, message: 'Please input your Date!' }]}>
+              <DatePicker style={{ width: "100%" }} />
             </Form.Item>
-
             <Form.Item >
               <div className='form-btn-main'>
                 <Space>
@@ -355,7 +412,7 @@ const ExpenseEntry = () => {
 
 
         {/* Modal */}
-        <Modal title="View Tax" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
+        <Modal title="View Expense Entry" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
           {
             modalData()?.map((value: any) => {
               return (

@@ -183,7 +183,7 @@ const Employee = () => {
 
         // Check if editing or creating
         if (editRecord) {
-            axios.put(`http://files.covaiciviltechlab.com/edit_customer/${editRecord.id}/`, values,  {
+            axios.put(`http://files.covaiciviltechlab.com/edit_customer/${editRecord.id}/`, formattedData,  {
             headers: {
                 "Authorization": `Token ${localStorage.getItem("token")}`
             }
@@ -224,7 +224,7 @@ const Employee = () => {
 
 
     type FieldType = {
-        employeeName?: string;
+        employee_name?: string;
         username?: string;
         login_name?: string
         password?: string;
@@ -263,15 +263,35 @@ const Employee = () => {
             }).format(date);
         };
 
+        console.log("viewRecord", viewRecord)
+
         const data = [
             {
-                label: "Tax Name:",
-                value: viewRecord?.material_name || "N/A",
+                label: "Employee Name:",
+                value: viewRecord?.employee_name || "N/A",
             },
             {
-                label: "Created By:",
-                value: viewRecord?.created_by || "N/A",
+                label: "Login Name:",
+                value: viewRecord?.login_name || "N/A",
             },
+            {
+                label: "Address:",
+                value: viewRecord?.address || "N/A",
+            },
+
+            {
+                label: "Phone Number:",
+                value: viewRecord?.phone_number || "N/A",
+            },
+
+            // {
+            //     label: "Address:",
+            //     value: viewRecord?.address || "N/A",
+            // },
+            // {
+            //     label: "Address:",
+            //     value: viewRecord?.address || "N/A",
+            // },
             {
                 label: "Created Date:",
                 value: formatDate(viewRecord?.created_date),
