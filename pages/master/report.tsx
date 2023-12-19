@@ -1,15 +1,12 @@
-import { size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { Space, Table, Modal } from 'antd';
 import { Button, Drawer } from 'antd';
-import { Checkbox, Form, Input, Select, } from 'antd';
+import {  Form, Input, Select, } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { Editor } from 'react-draft-wysiwyg';
 import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import axios from "axios"
-import TextArea from 'antd/es/input/TextArea';
+// import TextArea from 'antd/es/input/TextArea';
 
 const Report = () => {
 

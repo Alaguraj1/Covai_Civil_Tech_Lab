@@ -5,6 +5,7 @@ import { Button, Drawer } from 'antd';
 import { Checkbox, Form, Input, Radio, DatePicker, } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
+import moment from 'moment';
 
 const Employee = () => {
 
@@ -172,9 +173,17 @@ const Employee = () => {
         const Token = localStorage.getItem("token")
 
 
+        const formattedData = {
+            ...values,
+            dob: moment(values.dob).format("YYYY-MM-DD"),
+            joining_date: moment(values.joining_date).format("YYYY-MM-DD"),
+          };
+
+          
+
         // Check if editing or creating
         if (editRecord) {
-            axios.put(`http://files.covaiciviltechlab.com/edit_customer/${editRecord.id}/`, values, {
+            axios.put(`http://files.covaiciviltechlab.com/edit_customer/${editRecord.id}/`, values,  {
             headers: {
                 "Authorization": `Token ${localStorage.getItem("token")}`
             }
@@ -189,7 +198,7 @@ const Employee = () => {
             setEditRecord(null);
         } else {
 
-            axios.post("http://files.covaiciviltechlab.com/create_employee/", values, {
+            axios.post("http://files.covaiciviltechlab.com/create_employee/", formattedData, {
                 headers: {
                     "Authorization": `Token ${Token}`
                 }
@@ -210,13 +219,18 @@ const Employee = () => {
         console.log('Failed:', errorInfo);
     };
 
+
+  
+
+
     type FieldType = {
         employeeName?: string;
-        loginName?: string;
+        username?: string;
+        login_name?: string
         password?: string;
         address?: string;
-        mobileNumber?: string;
-        phoneNumber?: string;
+        mobile_number?: string;
+        phone_number?: string;
         email?: string;
         dob?: string;
         gender?: string;
@@ -312,6 +326,16 @@ const Employee = () => {
                         </Form.Item>
 
                         <Form.Item<FieldType>
+                            label="User Name"
+                            name="username"
+                            required={false}
+                            rules={[{ required: true, message: 'Please input your GSTin!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        
+                        <Form.Item<FieldType>
                             label="Login Name"
                             name="login_name"
                             required={false}
@@ -366,14 +390,14 @@ const Employee = () => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item label="DatePicker" name="dob">
+                        <Form.Item label="DOB" name="dob">
                             <DatePicker style={{ width: "100%" }} />
                         </Form.Item>
 
                         <Form.Item label="Gender" name="gender">
                             <Radio.Group>
-                                <Radio value="male"> Male </Radio>
-                                <Radio value="female"> Female </Radio>
+                                <Radio value="M"> Male </Radio>
+                                <Radio value="F"> Female </Radio>
                             </Radio.Group>
                         </Form.Item>
 
@@ -386,7 +410,7 @@ const Employee = () => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item label="DatePicker" name="joining_date">
+                        <Form.Item label="Joining Date" name="joining_date">
                             <DatePicker style={{ width: "100%" }} />
                         </Form.Item>
 
