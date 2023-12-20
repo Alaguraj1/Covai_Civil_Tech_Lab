@@ -1,231 +1,301 @@
-import { useEffect } from 'react';
-import { useDispatch } from 'react-redux';
-import Link from 'next/link';
-import { setPageTitle } from '../../store/themeConfigSlice';
-import IconSend from '@/components/Icon/IconSend';
-import IconPrinter from '@/components/Icon/IconPrinter';
-import IconDownload from '@/components/Icon/IconDownload';
-import IconPlus from '@/components/Icon/IconPlus';
-import IconEdit from '@/components/Icon/IconEdit';
+import React, { useEffect, useState } from 'react';
 
 const Preview = () => {
-    const dispatch = useDispatch();
+    const [wordAmt, setWordAmt] = useState('');
+
     useEffect(() => {
-        dispatch(setPageTitle('Invoice Preview'));
-    });
-    const exportTable = () => {
-        window.print();
+      calcAmt();
+    }, []);
+  
+    const toWords = (amount:any) => {
+      // Implement or import the toWords function
+      // Example: return someConversionFunction(amount);
+      // Replace this with your actual implementation
+  
+      // For example, if toWords is a mock function
+      return `Words for ${amount}`;
     };
+  
+    const calcAmt = () => {
+      const amt = "11,446.00"; // You can replace this with your actual data source
+      const upperto = toWords(amt);
+      const word = upperto.slice(0, 1).toUpperCase() + upperto.slice(1);
+      setWordAmt(word);
+    };
+  
 
-    const items = [
-        {
-            id: 1,
-            title: 'Calendar App Customization',
-            quantity: 1,
-            price: '120',
-            amount: '120',
-        },
-        {
-            id: 2,
-            title: 'Chat App Customization',
-            quantity: 1,
-            price: '230',
-            amount: '230',
-        },
-        {
-            id: 3,
-            title: 'Laravel Integration',
-            quantity: 1,
-            price: '405',
-            amount: '405',
-        },
-        {
-            id: 4,
-            title: 'Backend UI Design',
-            quantity: 1,
-            price: '2500',
-            amount: '2500',
-        },
-    ];
-
-    const columns = [
-        {
-            key: 'id',
-            label: 'S.NO',
-        },
-        {
-            key: 'title',
-            label: 'ITEMS',
-        },
-        {
-            key: 'quantity',
-            label: 'QTY',
-        },
-        {
-            key: 'price',
-            label: 'PRICE',
-            class: 'ltr:text-right rtl:text-left',
-        },
-        {
-            key: 'amount',
-            label: 'AMOUNT',
-            class: 'ltr:text-right rtl:text-left',
-        },
-    ];
-
-    return (
-        <div>
-            <div className="mb-6 flex flex-wrap items-center justify-center gap-4 lg:justify-end">
-                <button type="button" className="btn btn-info gap-2">
-                    <IconSend />
-                    Send Invoice
-                </button>
-
-                <button type="button" className="btn btn-primary gap-2" onClick={() => exportTable()}>
-                    <IconPrinter />
-                    Print
-                </button>
-
-                <button type="button" className="btn btn-success gap-2">
-                    <IconDownload />
-                    Download
-                </button>
-
-                <Link href="/apps/invoice/add" className="btn btn-secondary gap-2">
-                    <IconPlus />
-                    Create
-                </Link>
-
-                <Link href="/apps/invoice/edit" className="btn btn-warning gap-2">
-                    <IconEdit />
-                    Edit
-                </Link>
+  return (
+    <>
+    <style
+      type="text/css"
+      dangerouslySetInnerHTML={{
+        __html:
+          "\n.style3 {\n\tfont-size: 22px;\n\tfont-weight: bold;\n}\n\ntable td, th {\n\tfont-size: 13px;\n}\n"
+      }}
+    />
+    <table width={800} border={0} cellSpacing={3} cellPadding={3}>
+      <tbody>
+        <tr style={{ height: 100 }}>
+          <td colSpan={2}>
+            <table width={800} border={1} cellSpacing={0} cellPadding={5}>
+              <tbody>
+                <tr>
+                  <td width="9%" align="left" valign="middle">
+                    <img src="https://civiltechnolab.in/new_app/techno/images/logo_3.jpg" />
+                  </td>
+                  <td width="82%" align="center" valign="middle">
+                    <span className="style3">
+                      CIVIL TECHNO LAB PRIVATE LIMITED
+                      <br /> AN ISO 9001:2008 CERTIFIED LAB
+                    </span>
+                    <br /> All Building Material Testing and Building Repair
+                    Consultancy
+                    <br />
+                    GSTIN : 33AAFCC7634Q1Z7
+                  </td>
+                  <td width="5%">
+                    <img
+                      src="https://civiltechnolab.in/new_app/techno/images/logo_1.jpg"
+                      alt="logo"
+                    />
+                  </td>
+                  <td width="4%" align="right" valign="middle">
+                    <img
+                      src="https://civiltechnolab.in/new_app/techno/images/logo_2.jpg"
+                      alt="logo2"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style={{ textAlign: "center" }} colSpan={2}>
+            <h2>INVOICE</h2>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            Date : 06-09-2023
+            <br />
+            Bill No : 01422
+          </td>
+          <td>
+            <ul style={{ listStyleType: "circle" }}>
+              <li>Original for Receipient</li>
+              <li>Duplicate for Supplier Transporter</li>
+              <li>Triplicate for Supplier</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td>
+            M/s MCR Construction,15, Raja Street, Perundurai-638052,
+            <br />
+            Erode, Tamilnadu
+            <br />
+          </td>
+          <td>
+            Code : 33
+            <br />
+            Place of Testing : Tamilnadu
+            <br />
+            GSTIN/UIN : 33AAZFM9314N1ZG
+            <br />
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={2}>
+            <b style={{ textAlign: "left" }}>
+              PROJECT : M/s KG (T &amp; C.Dev), Kadri Mills Precast Plant Site,
+              Ondipdur{" "}
+            </b>
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={2}>
+            <table width={800} border={1} cellSpacing={0} cellPadding={5}>
+              <tbody>
+                <tr>
+                  <th style={{width:"50px"}}>S.No</th>
+                  <th style={{width:"50px"}}>Name of Test</th>
+                  <th style={{width:"50px"}}>Qty</th>
+                  <th style={{width:"100px"}}>Rate/Sample(INR)</th>
+                  <th style={{width:"100px"}}>Amount(INR)</th>
+                </tr>
+                <tr>
+                  <td style={{ textAlign: "center" }}>1</td>
+                  <td>
+                    <i>Soil - Compaction Factor </i>-<b>Compaction</b>
+                  </td>
+                  <td style={{ textAlign: "center" }}>6</td>
+                  <td style={{ textAlign: "right" }}>1,500.00 </td>
+                  <td style={{ textAlign: "right" }}>9,000.00 </td>
+                </tr>
+                <tr>
+                  <td style={{ textAlign: "center" }}>2</td>
+                  <td>
+                    <i>Transportation </i>-<b>Taxi </b>
+                  </td>
+                  <td style={{ textAlign: "center" }}>1</td>
+                  <td style={{ textAlign: "right" }}>700.00 </td>
+                  <td style={{ textAlign: "right" }}>700.00 </td>
+                </tr>
+                <tr>
+                  <td colSpan={5} id="" style={{ textAlign: "center" }}>
+                    GST 18%
+                  </td>
+                </tr>
+                <tr>
+                  <td style={{ textAlign: "center" }} />
+                  <td>Add : CGST @ 9.00 % </td>
+                  <td style={{ textAlign: "center" }}>-</td>
+                  <td style={{ textAlign: "center" }}>-</td>
+                  <td style={{ textAlign: "right" }}>873.00 </td>
+                </tr>
+                <tr>
+                  {" "}
+                  <td style={{ textAlign: "center" }} />
+                  <td>Add : SGST @ 9.00 % </td>
+                  <td style={{ textAlign: "center" }}>-</td>
+                  <td style={{ textAlign: "center" }}>-</td>
+                  <td style={{ textAlign: "right" }}>873.00 </td>
+                </tr>
+                <tr></tr>
+                <tr>
+                  <td colSpan={2} id="" />
+                  <td colSpan={2} style={{ textAlign: "right" }}>
+                    Total Rs.
+                  </td>
+                  <td style={{ textAlign: "right", fontWeight: "bold" }}>
+                    11,446.00{" "}
+                    <input
+                      type="hidden"
+                      id="amt"
+                      name="amt"
+                      defaultValue="11,446.00"
+                    />
+                  </td>
+                </tr>
+                <tr>
+                  <td colSpan={4} id="words_amt">
+                    11,446.00{" "}
+                    <input
+                      type="hidden"
+                      id="amt"
+                      name="amt"
+                      defaultValue="11,446.00"
+                    />
+                  </td>
+                  <td>E &amp; OE</td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={2}>
+            <table width={800} border={1} cellSpacing={0} cellPadding={5}>
+              <tbody>
+                <tr>
+                  <th rowSpan={2}>HAN/SAC</th>
+                  <th rowSpan={2}>Taxable Value</th>
+                  <th colSpan={2}>Central Tax</th>
+                  <th colSpan={2}>State Tax</th>
+                </tr>
+                <tr>
+                  <th>Rate</th>
+                  <th>Amount</th>
+                  <th>Rate</th>
+                  <th>Amount</th>
+                </tr>
+                <tr style={{ textAlign: "right" }}>
+                  <th>998346</th>
+                  <td>9,700.00</td>
+                  <td>9.00%</td>
+                  <td>873.00</td>
+                  <td>9.00%</td>
+                  <td>873.00</td>
+                </tr>
+                <tr style={{ textAlign: "right", fontWeight: "bold" }}>
+                  <th>Total</th>
+                  <td>9,700.00</td>
+                  <td />
+                  <td>873.00</td>
+                  <td />
+                  <td>873.00</td>
+                </tr>
+                <tr>
+                  <td colSpan={6} id="words_amt2">
+                    11,446.00{" "}
+                    <input
+                      type="hidden"
+                      id="amt"
+                      name="amt"
+                      defaultValue="11,446.00"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <table width={800} border={0} cellSpacing={3} cellPadding={3}>
+      <tbody>
+        <tr>
+          <td width="55%">
+            No.12/26, Thandhai Periyar Nagar 2nd St,Sowripalayam To
+            Masakkalipalayam Road,
+            <br /> Sowripalayam,Coimbatore-641048. Ph : 0422 - 2575903
+            <br /> Mobile: 9842234561 / 9382574564 / 9626783884.
+            <br /> <i>Email : civiltechnolab@gmail.com </i>
+            <br /> <i>Website : www.civiltechnolab.in </i>
+            <p>
+              BANK DETAILS: Civiltechnolab P Ltd, <br />
+              Ac/No: 62371331494, Branch: SBI, KALAPATTI, IFSC CODE: SBIN0021798.
+            </p>
+          </td>
+          <td width="" style={{ textAlign: "center" }}>
+            <img
+              src="images/qr_code_invoice/qr_invoice4556.png"
+              width="100%"
+              align="center"
+              
+            />
+          </td>
+          <td width="25%" style={{ textAlign: "right" }}>
+            <b>
+              <br /> CIVIL TECHNO LAB Pvt Ltd
+              <br />
+              <br /> <br /> <br /> <br />{" "}
+              <b style={{ textAlign: "right" }}>S.CHANDRASEKAR.,ME.,</b>
+              <br />
+              TECHNICAL DIRECTOR
+            </b>
+          </td>
+        </tr>
+        <tr>
+          <td colSpan={3}>
+            <div style={{ textAlign: "center" }}>
+              <u>Declaration:-</u>
+              <br /> We declare that this invoice shows the actual price of the
+              Test Services described and that all particulars are true and
+              correct. <br /> <br />
             </div>
-            <div className="panel">
-                <div className="flex flex-wrap justify-between gap-4 px-4">
-                    <div className="text-2xl font-semibold uppercase">Invoice</div>
-                    <div className="shrink-0">
-                        <img src="/assets/images/civil-techno-logo.png" alt="img" className=" ltr:ml-auto rtl:mr-auto"  style={{width:"50%"}}/>
-                    </div>
-                </div>
-                <div className="px-4 ltr:text-right rtl:text-left">
-                    <div className="mt-6 space-y-1 text-white-dark">
-                        <div>13 Tetrick Road, Cypress Gardens, Florida, 33884, US</div>
-                        <div>vristo@gmail.com</div>
-                        <div>+1 (070) 123-4567</div>
-                    </div>
-                </div>
-
-                <hr className="my-6 border-white-light dark:border-[#1b2e4b]" />
-                <div className="flex flex-col flex-wrap justify-between gap-6 lg:flex-row">
-                    <div className="flex-1">
-                        <div className="space-y-1 text-white-dark">
-                            <div>Issue For:</div>
-                            <div className="font-semibold text-black dark:text-white">John Doe</div>
-                            <div>405 Mulberry Rd. Mc Grady, NC, 28649</div>
-                            <div>redq@company.com</div>
-                            <div>(128) 666 070</div>
-                        </div>
-                    </div>
-                    <div className="flex flex-col justify-between gap-6 sm:flex-row lg:w-2/3">
-                        <div className="xl:1/3 sm:w-1/2 lg:w-2/5">
-                            <div className="mb-2 flex w-full items-center justify-between">
-                                <div className="text-white-dark">Invoice :</div>
-                                <div>#8701</div>
-                            </div>
-                            <div className="mb-2 flex w-full items-center justify-between">
-                                <div className="text-white-dark">Issue Date :</div>
-                                <div>13 Sep 2022</div>
-                            </div>
-                            <div className="mb-2 flex w-full items-center justify-between">
-                                <div className="text-white-dark">Order ID :</div>
-                                <div>#OD-85794</div>
-                            </div>
-                            <div className="flex w-full items-center justify-between">
-                                <div className="text-white-dark">Shipment ID :</div>
-                                <div>#SHP-8594</div>
-                            </div>
-                        </div>
-                        <div className="xl:1/3 sm:w-1/2 lg:w-2/5">
-                            <div className="mb-2 flex w-full items-center justify-between">
-                                <div className="text-white-dark">Bank Name:</div>
-                                <div className="whitespace-nowrap">Bank Of America</div>
-                            </div>
-                            <div className="mb-2 flex w-full items-center justify-between">
-                                <div className="text-white-dark">Account Number:</div>
-                                <div>1234567890</div>
-                            </div>
-                            <div className="mb-2 flex w-full items-center justify-between">
-                                <div className="text-white-dark">SWIFT Code:</div>
-                                <div>S58K796</div>
-                            </div>
-                            <div className="mb-2 flex w-full items-center justify-between">
-                                <div className="text-white-dark">IBAN:</div>
-                                <div>L5698445485</div>
-                            </div>
-                            <div className="mb-2 flex w-full items-center justify-between">
-                                <div className="text-white-dark">Country:</div>
-                                <div>United States</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div className="table-responsive mt-6">
-                    <table className="table-striped">
-                        <thead>
-                            <tr>
-                                {columns.map((column) => {
-                                    return (
-                                        <th key={column.key} className={column?.class}>
-                                            {column.label}
-                                        </th>
-                                    );
-                                })}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {items.map((item) => {
-                                return (
-                                    <tr key={item.id}>
-                                        <td>{item.id}</td>
-                                        <td>{item.title}</td>
-                                        <td>{item.quantity}</td>
-                                        <td className="ltr:text-right rtl:text-left">${item.price}</td>
-                                        <td className="ltr:text-right rtl:text-left">${item.amount}</td>
-                                    </tr>
-                                );
-                            })}
-                        </tbody>
-                    </table>
-                </div>
-                <div className="mt-6 grid grid-cols-1 px-4 sm:grid-cols-2">
-                    <div></div>
-                    <div className="space-y-2 ltr:text-right rtl:text-left">
-                        <div className="flex items-center">
-                            <div className="flex-1">Subtotal</div>
-                            <div className="w-[37%]">$3255</div>
-                        </div>
-                        <div className="flex items-center">
-                            <div className="flex-1">Tax</div>
-                            <div className="w-[37%]">$700</div>
-                        </div>
-                        <div className="flex items-center">
-                            <div className="flex-1">Shipping Rate</div>
-                            <div className="w-[37%]">$0</div>
-                        </div>
-                        <div className="flex items-center">
-                            <div className="flex-1">Discount</div>
-                            <div className="w-[37%]">$10</div>
-                        </div>
-                        <div className="flex items-center text-lg font-semibold">
-                            <div className="flex-1">Grand Total</div>
-                            <div className="w-[37%]">$3945</div>
-                        </div>
-                    </div>
-                </div>
+            <div style={{ textAlign: "center" }}>
+              SUBJECT TO COIMBATORE JURISDICTION
+              <br /> This is computer Generated Invoice.
             </div>
-        </div>
-    );
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </>
+  
+  );
 };
 
 export default Preview;

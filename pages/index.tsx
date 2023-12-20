@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { setPageTitle, toggleLocale, toggleRTL } from '../../store/themeConfigSlice';
+import { setPageTitle, toggleLocale, toggleRTL } from '@/store/themeConfigSlice';
 import BlankLayout from '@/components/Layouts/BlankLayout';
 import Link from 'next/link';
 import Dropdown from '@/components/Dropdown';
@@ -93,7 +93,7 @@ const Index = () => {
                         <div className="absolute inset-y-0 w-8 from-primary/10 via-transparent to-transparent ltr:-right-10 ltr:bg-gradient-to-r rtl:-left-10 rtl:bg-gradient-to-l xl:w-16 ltr:xl:-right-20 rtl:xl:-left-20"></div>
                         <div className="ltr:xl:-skew-x-[14deg] rtl:xl:skew-x-[14deg]">
                             <Link href="/" className="ms-10 block w-48 lg:w-72">
-                                <img src="/assets/images/civil-techno-logo.png" alt="logo" />
+                                <img src="/assets/images/civil-techno-logo-white.png" alt="logo" />
                             </Link>
                             <div className="mt-24 hidden w-full max-w-[430px] lg:block">
                                 <img src="/assets/images/auth/login.svg" alt="Cover Image" className="w-full" />
@@ -150,7 +150,7 @@ const Index = () => {
                         <div className="w-full max-w-[440px] lg:mt-16">
                             <div className="mb-10">
                                 <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">Sign in</h1>
-                                <p className="text-base font-bold leading-normal text-white-dark">Enter your email and password to login</p>
+                                <p className="text-base font-bold leading-normal text-white-dark">Enter your email and password to Sign in</p>
                             </div>
                             {contextHolder}
                             <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
@@ -172,12 +172,12 @@ const Index = () => {
                                         </span>
                                     </div>
                                 </div>
-                                <div>
+                                {/* <div>
                                     <label className="flex cursor-pointer items-center">
                                         <input type="checkbox" className="form-checkbox bg-white dark:bg-black" />
                                         <span className="text-white-dark">Subscribe to weekly newsletter</span>
                                     </label>
-                                </div>
+                                </div> */}
                                 <button type="submit" className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
                                     Sign in
                                 </button>

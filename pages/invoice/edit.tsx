@@ -7,6 +7,8 @@ import IconSave from '@/components/Icon/IconSave';
 import IconSend from '@/components/Icon/IconSend';
 import IconEye from '@/components/Icon/IconEye';
 import IconDownload from '@/components/Icon/IconDownload';
+import { Button, Modal, Checkbox, Form, Input, Select, Space } from 'antd';
+import type { SelectProps } from 'antd';
 
 const Edit = () => {
     const dispatch = useDispatch();
@@ -18,20 +20,62 @@ const Edit = () => {
     const [discount, setDiscount] = useState<any>(0);
     const [shippingCharge, setShippingCharge] = useState<any>(0);
     const [paymentMethod, setPaymentMethod] = useState<any>('bank');
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+
+    // modal
+    const showModal = () => {
+        setIsModalOpen(true);
+    };
+
+    const handleOk = () => {
+        setIsModalOpen(false);
+    };
+
+    const handleCancel = () => {
+        setIsModalOpen(false);
+    };
+
+
+    // Multiple Select
+    const handleChange = (value: string[]) => {
+        console.log(`selected ${value}`);
+    };
+
+    const options: SelectProps['options'] = [
+        {
+            label: 'China',
+            value: 'china',
+        },
+        {
+            label: 'USA',
+            value: 'usa',
+        },
+        {
+            label: 'Japan',
+            value: 'japan',
+        },
+        {
+            label: 'Korea',
+            value: 'korea',
+        },
+    ];
+
+
 
     const [items, setItems] = useState<any>([
         {
             id: 1,
-            title: 'Calendar App Customization',
-            description: 'Make Calendar App Dynamic',
+            title: 'Density',
+            // description: 'Make Calendar App Dynamic',
             quantity: 2,
             amount: 120,
             isTax: false,
         },
         {
             id: 2,
-            title: 'Chat App Customization',
-            description: 'Customized Chat Application to resolve some Bug Fixes',
+            title: 'Elongation Index',
+            // description: 'Customized Chat Application to resolve some Bug Fixes',
             quantity: 1,
             amount: 25,
             isTax: false,
@@ -42,10 +86,10 @@ const Edit = () => {
         title: 'Tailwind',
         invoiceNo: '#0001',
         to: {
-            name: 'Jesse Cory',
-            email: 'redq@company.com',
-            address: '405 Mulberry Rd. Mc Grady, NC, 28649',
-            phone: '(128) 666 070',
+            name: 'Alagu Raj',
+            email: 'raj@gmail.com',
+            address: '5/20, Hops Collage, Covai.',
+            phone: '7862113454',
         },
         invoiceDate: '',
         dueDate: '',
@@ -69,22 +113,22 @@ const Edit = () => {
         });
     }, []);
 
-    const addItem = () => {
-        let maxId = 0;
-        maxId = items?.length ? items.reduce((max: number, character: any) => (character.id > max ? character.id : max), items[0].id) : 0;
+    // const addItem = () => {
+    //     let maxId = 0;
+    //     maxId = items?.length ? items.reduce((max: number, character: any) => (character.id > max ? character.id : max), items[0].id) : 0;
 
-        setItems([
-            ...items,
-            {
-                id: maxId + 1,
-                title: '',
-                description: '',
-                rate: 0,
-                quantity: 0,
-                amount: 0,
-            },
-        ]);
-    };
+    //     setItems([
+    //         ...items,
+    //         {
+    //             id: maxId + 1,
+    //             title: '',
+    //             description: '',
+    //             rate: 0,
+    //             quantity: 0,
+    //             amount: 0,
+    //         },
+    //     ]);
+    // };
 
     const removeItem = (item: any = null) => {
         setItems(items.filter((d: any) => d.id !== item.id));
@@ -102,13 +146,28 @@ const Edit = () => {
         setItems([...items]);
     };
 
+
+
+    const onFinish = (values: any) => {
+        console.log('Success:', values);
+    };
+
+    const onFinishFailed = (errorInfo: any) => {
+        console.log('Failed:', errorInfo);
+    };
+
+    type FieldType = {
+        material_id?: string;
+        test?: string;
+    };
+
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
             <div className="panel flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
                 <div className="flex flex-wrap justify-between px-4">
                     <div className="mb-6 w-full lg:w-1/2">
                         <div className="flex shrink-0 items-center text-black dark:text-white">
-                            <img src="/assets/images/logo.svg" alt="img" className="w-14" />
+                            <img src="/assets/images/civil-techno-logo.svg" alt="img" className="w-14" />
                         </div>
                         <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
                             <div>13 Tetrick Road, Cypress Gardens, Florida, 33884, US</div>
@@ -405,7 +464,7 @@ const Edit = () => {
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Item</th>
+                                    <th>Test Name</th>
                                     <th className="w-1">Quantity</th>
                                     <th className="w-1">Price</th>
                                     <th>Total</th>
@@ -425,7 +484,7 @@ const Edit = () => {
                                         <tr className="align-top" key={item.id}>
                                             <td>
                                                 <input type="text" className="form-input min-w-[200px]" placeholder="Enter Item Name" defaultValue={item.title} />
-                                                <textarea className="form-textarea mt-4" placeholder="Enter Description" defaultValue={item.description}></textarea>
+                                                {/* <textarea className="form-textarea mt-4" placeholder="Enter Description" defaultValue={item.description}></textarea> */}
                                             </td>
                                             <td>
                                                 <input
@@ -447,7 +506,7 @@ const Edit = () => {
                                                     onChange={(e) => changeQuantityPrice('price', e.target.value, item.id)}
                                                 />
                                             </td>
-                                            <td>${item.quantity * item.amount}</td>
+                                            <td>{item.quantity * item.amount}</td>
                                             <td>
                                                 <button type="button" onClick={() => removeItem(item)}>
                                                     <IconX className="w-5 h-5" />
@@ -461,14 +520,14 @@ const Edit = () => {
                     </div>
                     <div className="mt-6 flex flex-col justify-between px-4 sm:flex-row">
                         <div className="mb-6 sm:mb-0">
-                            <button type="button" className="btn btn-primary" onClick={() => addItem()}>
-                                Add Item
+                            <button type="button" className="btn btn-primary" onClick={showModal}>
+                                Add Invoice Test
                             </button>
                         </div>
                         <div className="sm:w-2/5">
                             <div className="flex items-center justify-between">
                                 <div>Subtotal</div>
-                                <div>$265.00</div>
+                                <div>265.00</div>
                             </div>
                             <div className="mt-4 flex items-center justify-between">
                                 <div>Tax(%)</div>
@@ -476,7 +535,7 @@ const Edit = () => {
                             </div>
                             <div className="mt-4 flex items-center justify-between">
                                 <div>Shipping Rate($)</div>
-                                <div>$0.00</div>
+                                <div>0.00</div>
                             </div>
                             <div className="mt-4 flex items-center justify-between">
                                 <div>Discount(%)</div>
@@ -550,18 +609,75 @@ const Edit = () => {
                             Send Invoice
                         </button>
 
-                        <Link href="/apps/invoice/preview" className="btn btn-primary w-full gap-2">
+                        <Link href="file:///C:/Users/WELCOME/Downloads/invoice.html" className="btn btn-primary w-full gap-2">
                             <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
                             Preview
                         </Link>
 
-                        <button type="button" className="btn btn-secondary w-full gap-2">
+                        {/* <button type="button" className="btn btn-secondary w-full gap-2">
                             <IconDownload className="ltr:mr-2 rtl:ml-2 shrink-0" />
                             Download
-                        </button>
+                        </button> */}
                     </div>
                 </div>
             </div>
+
+
+
+            {/* Modal */}
+            <Modal title="Create Invoice" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
+                <Form
+                    name="basic"
+                    onFinish={onFinish}
+                    onFinishFailed={onFinishFailed}
+                    layout="vertical"
+                >
+                    <Form.Item<FieldType>
+                        label="Material ID"
+                        name="material_id"
+                        required={false}
+                        rules={[{ required: true, message: 'Please input your username!' }]}
+                    >
+                        <Select>
+                            <Select.Option value="demo">Demo</Select.Option>
+                            <Select.Option value="demo2">Demo2</Select.Option>
+                        </Select>
+                    </Form.Item>
+
+                    <Form.Item<FieldType>
+                        label="Test"
+                        name="test"
+                        required={false}
+                        rules={[{ required: true, message: 'Please input your password!' }]}
+                    >
+                        <Select
+                            mode="multiple"
+                            style={{ width: '100%' }}
+                            placeholder="select one country"
+                            onChange={handleChange}
+                            optionLabelProp="label"
+                            options={options}
+                            optionRender={(option) => (
+                                <div>
+                                    {option.data.label}
+                                </div>
+                            )}
+                        />                    </Form.Item>
+
+                    <Form.Item>
+                        <Space>
+                            <Button  htmlType="submit" style={{color:"blue", borderColor:"blue"}}>
+                                Get Info
+                            </Button>
+                            <Button type="primary" htmlType="submit">
+                              Create
+                            </Button>
+                        </Space>
+                    </Form.Item>
+                </Form>
+            </Modal>
+
+
         </div>
     );
 };

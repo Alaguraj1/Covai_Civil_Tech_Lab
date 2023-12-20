@@ -745,6 +745,9 @@ border-right: 1px solid black;
     justify-content: space-between;
 }
 
+table tr td th{
+    border: 1px solid black;
+}
 
 @media(max-width:992px) {
     .system-navbar{
