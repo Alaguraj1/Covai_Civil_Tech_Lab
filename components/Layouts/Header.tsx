@@ -622,7 +622,7 @@ const Header = () => {
                             <li>
                                 <Link href="/invoice/list">{t('Lists')}</Link>
                             </li>
-                            <li>
+                            {/* <li>
                                 <Link href="/invoice/add">{t('Add')}</Link>
                             </li>
                             <li>
@@ -630,7 +630,7 @@ const Header = () => {
                             </li>
                             <li>
                                 <Link href="/invoice/preview">{t('Preview')}</Link>
-                            </li>
+                            </li> */}
                             <li>
                                 <Link href="/invoice/pendingPayment">{t('Pending Payment')}</Link>
                             </li>
