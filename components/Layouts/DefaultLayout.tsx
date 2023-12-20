@@ -11,6 +11,14 @@ import { useRouter } from 'next/router';
 
 const DefaultLayout = ({ children }: PropsWithChildren) => {
     const router = useRouter();
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (!token) {
+            // You can also pass a query parameter to the login page to handle redirection after login
+            router.push('/');
+        }
+    }, [])
+
     const [showLoader, setShowLoader] = useState(true);
     const [showTopButton, setShowTopButton] = useState(false);
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);

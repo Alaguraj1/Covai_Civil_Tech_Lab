@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 
 const Sidebar = () => {
     const router = useRouter();
+  
     const [currentMenu, setCurrentMenu] = useState<string>('');
     const [errorSubMenu, setErrorSubMenu] = useState(false);
     const themeConfig = useSelector((state: IRootState) => state.themeConfig);

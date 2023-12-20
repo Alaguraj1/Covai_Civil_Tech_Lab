@@ -12,6 +12,13 @@ import axios from "axios"
 
 const Header = () => {
     const router = useRouter();
+    // useEffect(() => {
+    //     const token = localStorage.getItem('token');
+    //     if (!token) {
+    //         // You can also pass a query parameter to the login page to handle redirection after login
+    //         router.push('/');
+    //     }
+    // }, [])
 
     useEffect(() => {
         const selector = document.querySelector('ul.horizontal-menu a[href="' + window.location.pathname + '"]');
