@@ -191,7 +191,7 @@ const Report = () => {
   // input search
   const onSearch = (value: string, _e: any, info: any) => {
     const filteredData = dataSource.filter((item: any) =>
-      item.reportName.toLowerCase().includes(value.toLowerCase())
+      item?.reportName?.toLowerCase()?.includes(value?.toLowerCase())
     );
 
     setDataSource(filteredData);

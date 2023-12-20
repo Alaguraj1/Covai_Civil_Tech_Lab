@@ -159,7 +159,7 @@ const Employee = () => {
 
         const filterData = dataSource.filter((search: any) => {
             return (
-                search?.customerName?.toLowerCase()?.includes(value.toLowerCase())
+                search?.employee_name?.toLowerCase()?.includes(value.toLowerCase())
             )
         })
         setDataSource(filterData)

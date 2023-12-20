@@ -151,7 +151,7 @@ const ExpenseUser = () => {
     // input search
     const onSearch = (value: string, _e: any, info: any) => {
         const filteredData = dataSource.filter((item: any) =>
-            item.name.toLowerCase().includes(value.toLowerCase())
+            item?.name?.toLowerCase().includes(value.toLowerCase())
         );
 
         setDataSource(filteredData);

@@ -121,15 +121,15 @@ const Test = () => {
 
     const columns = [
         {
+            title: 'Test Name',
+            dataIndex: 'test_name',
+            key: 'test_name',
+        },
+        {
             title: 'Material Name',
             dataIndex: 'material_name',
             key: 'material',
             render: (material: any) => (material && material?.material_name) || 'N/A',
-        },
-        {
-            title: 'Test Name',
-            dataIndex: 'test_name',
-            key: 'test_name',
         },
         {
             title: 'Price',
@@ -188,7 +188,7 @@ const Test = () => {
     // input search
     const onSearch = (value: string, _e: any, info: any) => {
         const filteredData = dataSource.filter((item: any) =>
-            item?.material_name?.toLowerCase()?.includes(value?.toLowerCase())
+            item?.test_name?.toLowerCase()?.includes(value?.toLowerCase())
         );
         setDataSource(filteredData);
     };

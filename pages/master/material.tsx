@@ -162,7 +162,7 @@ const Material = () => {
   // input search
   const onSearch = (value: string, _e: any, info: any) => {
     const filteredData = dataSource.filter((item: any) =>
-      item.material_name.toLowerCase().includes(value.toLowerCase())
+      item.material_name?.toLowerCase()?.includes(value?.toLowerCase())
     );
 
     setDataSource(filteredData);
