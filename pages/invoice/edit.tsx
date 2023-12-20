@@ -167,11 +167,11 @@ const Edit = () => {
                 <div className="flex flex-wrap justify-between px-4">
                     <div className="mb-6 w-full lg:w-1/2">
                         <div className="flex shrink-0 items-center text-black dark:text-white">
-                            <img src="/assets/images/civil-techno-logo.svg" alt="img" className="w-14" />
+                            <img src="/assets/images/civil-techno-logo.png" alt="img" style={{width:"30%"}} />
                         </div>
                         <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
                             <div>13 Tetrick Road, Cypress Gardens, Florida, 33884, US</div>
-                            <div>vristo@gmail.com</div>
+                            <div>civiltechno@gmail.com</div>
                             <div>+1 (070) 123-4567</div>
                         </div>
                     </div>
@@ -609,7 +609,7 @@ const Edit = () => {
                             Send Invoice
                         </button>
 
-                        <Link href="file:///C:/Users/WELCOME/Downloads/invoice.html" className="btn btn-primary w-full gap-2">
+                        <Link href="/invoice/preview" className="btn btn-primary w-full gap-2">
                             <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
                             Preview
                         </Link>
