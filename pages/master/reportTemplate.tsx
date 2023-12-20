@@ -443,7 +443,7 @@ const Report = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item label="letter pad logo" name='letter_pad_logo'>
+            <Form.Item label="Letter Pad Logo" name='letter_pad_logo'>
               <Select>
                 {
                   formFields?.letter_pad_logo?.map((val: any) => {
@@ -460,7 +460,7 @@ const Report = () => {
               <div className='form-btn-main'>
                 <Space>
                   <Button danger htmlType="submit" onClick={() => onClose()}>
-                    cancel
+                    Cancel
                   </Button>
                   <Button type="primary" htmlType="submit">
                     Submit
@@ -474,7 +474,7 @@ const Report = () => {
         </Drawer>
 
         {/* modal */}
-        <Modal title="View Report Template" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false} style={{width:"850px"}}>
+        <Modal title="View Report Template" width={900} open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
           {
             modalData()?.map((value: any) => {
               return (

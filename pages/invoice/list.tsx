@@ -299,7 +299,7 @@ console.log("valuesvaluesvaluesvaluesvalues", values)
                                 <div className='form-btn-main'>
                                     <Space>
                                         <Button danger htmlType="submit" onClick={() => onClose()}>
-                                            cancel
+                                            Cancel
                                         </Button>
                                         <Button type="primary" htmlType="submit">
                                             Submit

@@ -723,7 +723,7 @@ color: rgb(173, 101, 101);
 display: flex;
 border: 1px solid black;
 padding: 5px 0px;
-background-color: rgb(220, 216, 216);
+/* background-color: rgb(220, 216, 216); */
   }
 
   .content-1{
@@ -737,12 +737,23 @@ border-right: 1px solid black;
 .content-2{
     padding-left: 10px;
 }
+.mobile-menu{
+    display: none;
+}
+
+.header-main{
+    justify-content: space-between;
+}
+
 
 @media(max-width:992px) {
     .system-navbar{
         display: none !important;
     }
-    .small-device{
+    .small-device{       
+        display: block;      
+    }
+    .mobile-menu{
         display: block;
     }
 }
