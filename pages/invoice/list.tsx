@@ -30,6 +30,7 @@ const Invoice = () => {
             }
         }).then((res) => {
             setDataSource(res?.data)
+            setFilterData(res.data)
         }).catch((error: any) => {
             console.log(error)
         })
@@ -66,7 +67,7 @@ const Invoice = () => {
     // drawer
     const showDrawer = () => {
         setOpen(true);
-     
+
     };
 
     const onClose = () => {
@@ -132,7 +133,7 @@ const Invoice = () => {
             okType: "danger",
             onOk: () => {
                 console.log(record, "values")
-                axios.delete(`http://files.covaiciviltechlab.com/delete_invoice/${record.id}`,{
+                axios.delete(`http://files.covaiciviltechlab.com/delete_invoice/${record.id}`, {
                     headers: {
                         "Authorization": `Token ${localStorage.getItem("token")}`
                     }
@@ -149,46 +150,50 @@ const Invoice = () => {
     };
 
     // input search
-    const onSearch = (value: string, _e: any, info: any) => {
-        const filteredData = dataSource.filter((item: any) =>
-            item.taxName.toLowerCase().includes(value.toLowerCase())
-        );
+const [filterData, setFilterData] = useState(dataSource)
 
-        setDataSource(filteredData);
-    };
+const inputChange = ((e:any) => {
+    const SearchValue = e.target.value
 
+    const filteredData = dataSource.filter((item:any) => {
+        return(
+            item.project_name.toLowerCase().includes(SearchValue.toLowerCase())
+        )
+    })
+    setFilterData(filteredData)
+})
 
     // form submit
-    const onFinish = (values:any) => {
-    const Token = localStorage.getItem("token");
-console.log("valuesvaluesvaluesvaluesvalues", values)
+    const onFinish = (values: any) => {
+        const Token = localStorage.getItem("token");
+        console.log("valuesvaluesvaluesvaluesvalues", values)
 
-    const body = {
-        customer: values.customer,
-        project_name: values.project_name,
-        advance: values.advance,
-        balance: values.balance,
-        discount: values.discount,
-        sales_mode: values.sales_mode,
-        tax: values.tax,
-        id: values.id
+        const body = {
+            customer: values.customer,
+            project_name: values.project_name,
+            advance: values.advance,
+            balance: values.balance,
+            discount: values.discount,
+            sales_mode: values.sales_mode,
+            tax: values.tax,
+            id: values.id
+        };
+
+        axios.post("http://files.covaiciviltechlab.com/create_invoice/", body, {
+            headers: {
+                "Authorization": `Token ${Token}`
+            }
+        }).then((res) => {
+            getInvoice();
+            console.log(res?.data);
+            setOpen(false);
+        }).catch((error) => {
+            console.log(error);
+        });
+
+        form.resetFields();
+        onClose();
     };
-
-    axios.post("http://files.covaiciviltechlab.com/create_invoice/", body, {
-        headers: {
-            "Authorization": `Token ${Token}`
-        }
-    }).then((res) => {
-        getInvoice();
-        console.log(res?.data);
-        setOpen(false);
-    }).catch((error) => {
-        console.log(error);
-    });
-
-    form.resetFields();
-    onClose();
-};
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
@@ -204,7 +209,7 @@ console.log("valuesvaluesvaluesvaluesvalues", values)
     };
 
 
-   
+
     const handleSelectChange = (customerId: any) => {
         // Find the selected customer in the data array
         const selectedCustomer = formFields?.customer?.find((customer: any) => customer.id === customerId);
@@ -214,7 +219,7 @@ console.log("valuesvaluesvaluesvaluesvalues", values)
         setCustomerAddress(selectedCustomer?.address1 || '');
         console.log("customerAddress", customerAddress)
     };
-  
+
     return (
         <>
             <div>
@@ -223,12 +228,12 @@ console.log("valuesvaluesvaluesvaluesvalues", values)
                         <h1 className='tax-title'>Manage Invoices</h1>
                     </div>
                     <div>
-                        <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
+                        <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
                         <button type='button' className='create-button' onClick={() => showDrawer()}>+ Create Invoice</button>
                     </div>
                 </div>
                 <div>
-                    <Table dataSource={dataSource} columns={columns} pagination={false} />
+                    <Table dataSource={filterData} columns={columns} pagination={false} />
                 </div>
 
                 <Drawer title="Create Invoice" placement="right" width={600} onClose={onClose} open={open}>
@@ -242,49 +247,49 @@ console.log("valuesvaluesvaluesvaluesvalues", values)
                         form={form}
                     >
                         {/* <div style={{ border: "1px solid gray", padding: "20px" }}> */}
-                            <p style={{ textAlign: "center", color: "blue", fontSize: "22px", fontWeight: "600", paddingBottom: "30px" }}>Invoice Number :<span style={{ color: "red" }}> 02322</span></p>
-                            <Form.Item
-                                label="customer Name"
-                                name="customer"
-                                required={false}
-                                rules={[{ required: true, message: 'Please select Material Name!' }]}
-                            >
-                                <Select onChange={handleSelectChange}
-                                    placeholder="Select a customer"
-                                    value={selectedCustomerId}>
-                                    {formFields?.customer?.map((val: any) => (
-                                        <Select.Option key={val.id} value={val.id}>
-                                            {val.customer_name}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
+                        <p style={{ textAlign: "center", color: "blue", fontSize: "22px", fontWeight: "600", paddingBottom: "30px" }}>Invoice Number :<span style={{ color: "red" }}> 02322</span></p>
+                        <Form.Item
+                            label="customer Name"
+                            name="customer"
+                            required={false}
+                            rules={[{ required: true, message: 'Please select Material Name!' }]}
+                        >
+                            <Select onChange={handleSelectChange}
+                                placeholder="Select a customer"
+                                value={selectedCustomerId}>
+                                {formFields?.customer?.map((val: any) => (
+                                    <Select.Option key={val.id} value={val.id}>
+                                        {val.customer_name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
 
-                            <Form.Item>
-                                <Input.TextArea rows={4}  value={customerAddress}   />
-                            </Form.Item>
+                        <Form.Item>
+                            <Input.TextArea rows={4} value={customerAddress} />
+                        </Form.Item>
 
-                            <Form.Item
-                                label="Project Name"
-                                name="project_name"
-                                required={false}
-                                rules={[{ required: true, message: 'Please input your Project Name!' }]}
-                            >
-                                <Input />
-                            </Form.Item>
+                        <Form.Item
+                            label="Project Name"
+                            name="project_name"
+                            required={false}
+                            rules={[{ required: true, message: 'Please input your Project Name!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
 
 
-                            <Form.Item label="Sales Mode" name='sales_mode'>
-                                <Select>
-                                    {formFields?.sales_mode?.map((val: any) => (
-                                        <Select.Option key={val.id} value={val.id}>
-                                            {val.sales_mode}
-                                        </Select.Option>
-                                    ))}
-                                </Select>
-                            </Form.Item>
+                        <Form.Item label="Sales Mode" name='sales_mode'>
+                            <Select>
+                                {formFields?.sales_mode?.map((val: any) => (
+                                    <Select.Option key={val.id} value={val.id}>
+                                        {val.sales_mode}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                        </Form.Item>
 
-                            {/* <Form.Item label="Material ID" name='materialId'>
+                        {/* <Form.Item label="Material ID" name='materialId'>
                                 <Select>
                                     {formFields?.taxs?.map((val: any) => (
                                         <Select.Option key={val.id} value={val.id}>
@@ -294,24 +299,24 @@ console.log("valuesvaluesvaluesvaluesvalues", values)
                                 </Select>
                             </Form.Item> */}
 
-                            <Form.Item >
-                                {/* <Space> */}
-                                <div className='form-btn-main'>
-                                    <Space>
-                                        <Button danger htmlType="submit" onClick={() => onClose()}>
-                                            Cancel
-                                        </Button>
-                                        <Button type="primary" htmlType="submit">
-                                            Submit
-                                        </Button>
-                                    </Space>
+                        <Form.Item >
+                            {/* <Space> */}
+                            <div className='form-btn-main'>
+                                <Space>
+                                    <Button danger htmlType="submit" onClick={() => onClose()}>
+                                        Cancel
+                                    </Button>
+                                    <Button type="primary" htmlType="submit">
+                                        Submit
+                                    </Button>
+                                </Space>
 
-                                </div>
-                                {/* <Button htmlType="submit" style={{ borderColor: "blue", color: "blue" }}>
+                            </div>
+                            {/* <Button htmlType="submit" style={{ borderColor: "blue", color: "blue" }}>
                                         Add Invoice Test
                                     </Button> */}
-                                {/* </Space> */}
-                            </Form.Item>
+                            {/* </Space> */}
+                        </Form.Item>
                         {/* </div> */}
                     </Form>
 

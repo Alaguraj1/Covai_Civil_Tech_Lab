@@ -156,7 +156,7 @@ const Header = () => {
                         .then((res) => {
                             console.log("resresres", res);
                             // Handle the success response, e.g., redirect to another page
-                            router.push("/auth/login");
+                            router.push("/");
                             localStorage.removeItem("token")
                         })
                         .catch((error: any) => {

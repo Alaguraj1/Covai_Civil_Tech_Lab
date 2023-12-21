@@ -52,6 +52,7 @@ const ExpenseEntry = () => {
       }
     }).then((res) => {
       setDataSource(res?.data)
+      setFilterData(res.data)
     }).catch((error: any) => {
       console.log(error)
     })
@@ -193,13 +194,18 @@ const ExpenseEntry = () => {
 
 
   // input search
-  const onSearch = (value: string, _e: any, info: any) => {
-    const filteredData = dataSource.filter((item: any) =>
-      item.tax_name.toLowerCase().includes(value.toLowerCase())
-    );
-    setDataSource(filteredData);
-  };
+const [filterData, setFilterData] = useState(dataSource)
 
+const inputChange = ((e:any) => {
+  const SearchValue = e.target.value
+
+  const filteredData = dataSource.filter((item:any) => {
+    return(
+      item?.narration?.toLowerCase().includes(SearchValue.toLowerCase())
+    )
+  })
+  setFilterData(filteredData)
+})
 
 
   // form submit
@@ -329,12 +335,12 @@ const ExpenseEntry = () => {
             <h1 className='tax-title'>Manage Expense Entry</h1>
           </div>
           <div>
-            <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
+            <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Expense Entry</button>
           </div>
         </div>
         <div>
-          <Table dataSource={dataSource} columns={columns} pagination={false} />
+          <Table dataSource={filterData} columns={columns} pagination={false} />
         </div>
 
         <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>

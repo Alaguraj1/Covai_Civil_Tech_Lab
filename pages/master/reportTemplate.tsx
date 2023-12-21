@@ -193,7 +193,7 @@ const Report = () => {
 
   const inputChange = (e: any) => {
     const searchValue = e.target.value.toLowerCase();
-    const filteredData = dataSource.filter((item:any) =>
+    const filteredData = dataSource.filter((item: any) =>
       item?.report_template_name?.toLowerCase().includes(searchValue)
     );
     setFilterData(searchValue ? filteredData : dataSource);
@@ -358,7 +358,7 @@ const Report = () => {
             <h1 className='tax-title'>Manage Report Templates</h1>
           </div>
           <div>
-            <Input placeholder="input search text" onChange={inputChange} className='search-bar' style={{ border: "1px solid blue" }} />
+            <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Report</button>
           </div>
         </div>

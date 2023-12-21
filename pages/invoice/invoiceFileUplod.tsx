@@ -51,6 +51,7 @@ const InvoiceFileUpload = () => {
       }
     }).then((res) => {
       setDataSource(res?.data?.invoice_files)
+      setFilterData(res?.data?.invoice_files)
     }).catch((error: any) => {
       console.log(error)
     })
@@ -180,12 +181,14 @@ console.log('✌️record --->', record);
 
 
   // input search
-  const onSearch = (value: string, _e: any, info: any) => {
-    const filteredData = dataSource.filter((item: any) =>
-      item.tax_name.toLowerCase().includes(value.toLowerCase())
-    );
-    setDataSource(filteredData);
-  };
+const [filterData, setFilterData] = useState(dataSource)
+  const inputChange = (e: any) => {
+    setFilterData(
+      dataSource.filter((item: any) => {
+        return item.file_url.toLowerCase().includes(e.target.value.toLowerCase())
+      })
+    )
+  }
 
 
 
@@ -330,12 +333,12 @@ console.log('✌️record --->', record);
             <h1 className='tax-title'>Manage Invoice File Upload</h1>
           </div>
           <div>
-            <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
+            <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Invoice File Upload</button>
           </div>
         </div>
         <div>
-          <Table dataSource={dataSource} columns={columns} pagination={false} />
+          <Table dataSource={filterData} columns={columns} pagination={false} />
         </div>
 
         <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>

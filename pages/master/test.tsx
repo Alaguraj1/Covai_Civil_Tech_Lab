@@ -64,10 +64,10 @@ const Test = () => {
             test_name: record.test_name,
             price_per_piece: record.price_per_piece,
             id: record.id,
-            created_by:record.created_by.username,
-            created_date:record.created_date,
-            modified_by:record.modified_by.username,
-            modified_date:record.modified_date
+            created_by: record.created_by.username,
+            created_date: record.created_date,
+            modified_by: record.modified_by.username,
+            modified_date: record.modified_date
         };
 
         setIsModalOpen(true);
@@ -189,11 +189,11 @@ const Test = () => {
     const [filterData, setFilterData] = useState(dataSource)
 
     const inputChange = (e: any) => {
-      const searchValue = e.target.value.toLowerCase();
-      const filteredData = dataSource.filter((item: any) =>
-        item.test_name.toLowerCase().includes(searchValue)
-      );
-      setFilterData(searchValue ? filteredData : dataSource);
+        const searchValue = e.target.value.toLowerCase();
+        const filteredData = dataSource.filter((item: any) =>
+            item.test_name.toLowerCase().includes(searchValue)
+        );
+        setFilterData(searchValue ? filteredData : dataSource);
     };
 
 
@@ -312,7 +312,7 @@ const Test = () => {
                         <h1 className='tax-title'>Manage Test</h1>
                     </div>
                     <div>
-                    <Input placeholder="input search text" onChange={inputChange} className='search-bar' style={{border:"1px solid blue"}}/>
+                        <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
                         <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Test</button>
                     </div>
                 </div>

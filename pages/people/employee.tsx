@@ -32,6 +32,7 @@ const Employee = () => {
             }
         }).then((res) => {
             setDataSource(res.data)
+            setFilterData(res.data)
         }).catch((error: any) => {
             console.log(error)
         })
@@ -68,8 +69,8 @@ const Employee = () => {
             setEditRecord(record);
             form.setFieldsValue(record);
         } else {
-            setEditRecord(null); 
-            form.resetFields(); 
+            setEditRecord(null);
+            form.resetFields();
         }
 
         setOpen(true);
@@ -137,32 +138,35 @@ const Employee = () => {
             okText: "Yes",
             okType: "danger",
             onOk: () => {
-              console.log(record, "values")
-              axios.delete(`http://files.covaiciviltechlab.com/delete_employee/${record.id}/`, {
-                headers :
-                {
-                    "Authorization" : `Token ${Token}`
-                }
-              }).then((res) => {
-                console.log(res)
-                getEmployee()
-              }).catch((err) => {
-                console.log(err)
-              })
+                console.log(record, "values")
+                axios.delete(`http://files.covaiciviltechlab.com/delete_employee/${record.id}/`, {
+                    headers:
+                    {
+                        "Authorization": `Token ${Token}`
+                    }
+                }).then((res) => {
+                    console.log(res)
+                    getEmployee()
+                }).catch((err) => {
+                    console.log(err)
+                })
 
             },
         });
     };
 
     // input search
-    const onSearch = ((value: any) => {
+    const [filterData, setFilterData] = useState(dataSource)
 
-        const filterData = dataSource.filter((search: any) => {
-            return (
-                search?.employee_name?.toLowerCase()?.includes(value.toLowerCase())
+    const inputChange = ((e:any) => {
+        const SearchValue = e.target.value
+
+        const filteredData = dataSource.filter((item:any) => {
+            return(
+                item.employee_name.toLowerCase().includes(SearchValue.toLowerCase())
             )
         })
-        setDataSource(filterData)
+        setFilterData(filteredData)
     })
 
 
@@ -177,23 +181,23 @@ const Employee = () => {
             ...values,
             dob: moment(values.dob).format("YYYY-MM-DD"),
             joining_date: moment(values.joining_date).format("YYYY-MM-DD"),
-          };
+        };
 
-          
+
 
         // Check if editing or creating
         if (editRecord) {
-            axios.put(`http://files.covaiciviltechlab.com/edit_customer/${editRecord.id}/`, formattedData,  {
-            headers: {
-                "Authorization": `Token ${localStorage.getItem("token")}`
-            }
-          }).then((res) => {
-            console.log(res)
-            form.resetFields();
-            getEmployee()
-          }).catch((error) => {
-            console.log(error)
-          })
+            axios.put(`http://files.covaiciviltechlab.com/edit_customer/${editRecord.id}/`, formattedData, {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }).then((res) => {
+                console.log(res)
+                form.resetFields();
+                getEmployee()
+            }).catch((error) => {
+                console.log(error)
+            })
             // Clear editRecord state
             setEditRecord(null);
         } else {
@@ -205,7 +209,7 @@ const Employee = () => {
             }).then((res) => {
                 console.log(res.data)
                 getEmployee()
-            }).catch((error:any) => {
+            }).catch((error: any) => {
                 console.log(error)
             })
 
@@ -220,7 +224,7 @@ const Employee = () => {
     };
 
 
-  
+
 
 
     type FieldType = {
@@ -318,12 +322,12 @@ const Employee = () => {
                         <h1 className='tax-title'>Employee Details</h1>
                     </div>
                     <div>
-                        <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
+                        <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
                         <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Employee Details</button>
                     </div>
                 </div>
                 <div>
-                    <Table dataSource={dataSource} columns={columns} pagination={false} />
+                    <Table dataSource={filterData} columns={columns} pagination={false} />
                 </div>
 
                 <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>
@@ -354,7 +358,7 @@ const Employee = () => {
                             <Input />
                         </Form.Item>
 
-                        
+
                         <Form.Item<FieldType>
                             label="Login Name"
                             name="login_name"

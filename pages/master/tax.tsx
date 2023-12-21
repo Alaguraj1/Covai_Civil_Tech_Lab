@@ -288,7 +288,7 @@ const Tax = () => {
             <h1 className='tax-title'>Manage Tax</h1>
           </div>
           <div>
-            <Input placeholder="input search text" onChange={inputChange} className='search-bar' style={{ border: "1px solid blue" }} />
+          <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Tax</button>
           </div>
         </div>

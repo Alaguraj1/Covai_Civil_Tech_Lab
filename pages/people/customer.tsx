@@ -30,6 +30,7 @@ const Customer = () => {
             }
         }).then((res) => {
             setDataSource(res.data)
+            setFilterData(res.data)
         }).catch((error: any) => {
             console.log(error)
         })
@@ -141,16 +142,15 @@ const Customer = () => {
         });
     };
 
-    // input search
-    const onSearch = ((value: any) => {
+    const [filterData, setFilterData] = useState(dataSource)
 
-        const filterData = dataSource.filter((search: any) => {
-            return (
-                search?.customer_name?.toLowerCase()?.includes(value.toLowerCase())
-            )
-        })
-        setDataSource(filterData)
-    })
+    const inputChange = (e: any) => {
+      const searchValue = e.target.value.toLowerCase();
+      const filteredData = dataSource.filter((item: any) =>
+        item.customer_name.toLowerCase().includes(searchValue)
+      );
+      setFilterData(searchValue ? filteredData : dataSource);
+    };
 
 
     // form submit
@@ -367,12 +367,12 @@ const Customer = () => {
                         <h1 className='tax-title'>Customer Details</h1>
                     </div>
                     <div>
-                        <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
+                        <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
                         <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Customer Details</button>
                     </div>
                 </div>
                 <div>
-                    <Table dataSource={dataSource} columns={columns} pagination={false} />
+                    <Table dataSource={filterData} columns={columns} pagination={false} />
                 </div>
 
                 <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>

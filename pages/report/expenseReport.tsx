@@ -37,10 +37,10 @@ const ExpenseReport = () => {
 
   // get Tax datas
   useEffect(() => {
-    GetTaxData()
+    GetExpenseReport()
   }, [])
 
-  const GetTaxData = (() => {
+  const GetExpenseReport = (() => {
     const Token = localStorage.getItem("token")
     console.log("TokenTokenTokenToken", Token)
 
@@ -50,6 +50,7 @@ const ExpenseReport = () => {
       }
     }).then((res) => {
       setDataSource(res.data.reports)
+      setFilterData(res.data.reports)
     }).catch((error: any) => {
       console.log(error)
     })
@@ -168,7 +169,7 @@ const ExpenseReport = () => {
 //           }
 //         }).then((res) => {
 //           console.log(res)
-//           GetTaxData()
+//           GetExpenseReport()
 //         }).catch((err) => {
 //           console.log(err)
 //         })
@@ -180,13 +181,18 @@ const ExpenseReport = () => {
 
 
   // input search
-  const onSearch = (value: string, _e: any, info: any) => {
-    const filteredData = dataSource.filter((item: any) =>
-      item.expense_user.toLowerCase().includes(value.toLowerCase())
-    );
-    setDataSource(filteredData);
-  };
+  const [filterData, setFilterData] = useState(dataSource)
 
+  const inputChange = ((e:any) => {
+    const SearchValue = e.target.value
+  
+    const filteredData = dataSource.filter((item:any) => {
+      return(
+        item?.narration?.toLowerCase().includes(SearchValue.toLowerCase())
+      )
+    })
+    setFilterData(filteredData)
+  })
 
 
   // form submit
@@ -205,7 +211,7 @@ const ExpenseReport = () => {
 //     //     }
 //     //   }).then((res: any) => {
 //     //     // Successful response
-//     //     GetTaxData()
+//     //     GetExpenseReport()
 //     //     console.log(res);
 //     //     setOpen(false);
 //     //   }).catch((error: any) => {
@@ -219,7 +225,7 @@ const ExpenseReport = () => {
 //           "Authorization": `Token ${Token}`
 //         }
 //       }).then((res: any) => {
-//         GetTaxData()
+//         GetExpenseReport()
 //         console.log(res);
 //         setOpen(false);
 //       }).catch((error: any) => {
@@ -310,12 +316,12 @@ const ExpenseReport = () => {
             <h1 className='tax-title'>Expense Report</h1>
           </div>
           <div>
-            <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
+            <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
             {/* <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Pending Payment</button> */}
           </div>
         </div>
         <div>
-          <Table dataSource={dataSource} columns={columns} pagination={false} />
+          <Table dataSource={filterData} columns={columns} pagination={false} />
         </div>
 
         {/* <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>

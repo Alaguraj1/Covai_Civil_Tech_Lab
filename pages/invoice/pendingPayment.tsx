@@ -50,23 +50,24 @@ const PendingPayment = () => {
       }
     }).then((res) => {
       setDataSource(res.data.pending_payments)
+      setFilterData(res.data.pending_payments)
     }).catch((error: any) => {
       console.log(error)
     })
   })
   console.log("dataSourcedataSource", dataSource)
 
-//   useEffect(() => {
-//     axios.get("http://files.covaiciviltechlab.com/pending_payment", {
-//         headers:{
-//             "Authorization": `Token ${localStorage.getItem("token")}`
-//         }
-//     }).then((res) => {
-//         console.log("pendingPayment",res.data.pending_payments)
-//     }).catch((error:any) => {
-//         console.log(error)
-//     })
-//   })
+  //   useEffect(() => {
+  //     axios.get("http://files.covaiciviltechlab.com/pending_payment", {
+  //         headers:{
+  //             "Authorization": `Token ${localStorage.getItem("token")}`
+  //         }
+  //     }).then((res) => {
+  //         console.log("pendingPayment",res.data.pending_payments)
+  //     }).catch((error:any) => {
+  //         console.log(error)
+  //     })
+  //   })
 
   // useEffect(() => {
   //   if (editRecord) {
@@ -121,15 +122,15 @@ const PendingPayment = () => {
       key: 'advance',
     },
     {
-        title: 'Total Amount',
-        dataIndex: 'total_amount',
-        key: 'total_amount',
-      },
-      {
-        title: 'Balance',
-        dataIndex: 'balance',
-        key: 'balance',
-      },
+      title: 'Total Amount',
+      dataIndex: 'total_amount',
+      key: 'total_amount',
+    },
+    {
+      title: 'Balance',
+      dataIndex: 'balance',
+      key: 'balance',
+    },
     // {
     //   title: "Actions",
     //   key: "actions",
@@ -152,42 +153,47 @@ const PendingPayment = () => {
 
 
 
-//   const handleDelete = (record: any,) => {
+  //   const handleDelete = (record: any,) => {
 
-//     const Token = localStorage.getItem("token")
+  //     const Token = localStorage.getItem("token")
 
-//     Modal.confirm({
-//       title: "Are you sure, you want to delete this PENDING PAYMENT record?",
-//       okText: "Yes",
-//       okType: "danger",
-//       onOk: () => {
-//         console.log(record, "values")
-//         axios.delete(`http://files.covaiciviltechlab.com/delete_tax/${record.id}`, {
-//           headers: {
-//             "Authorization": `Token ${Token}`
-//           }
-//         }).then((res) => {
-//           console.log(res)
-//           GetTaxData()
-//         }).catch((err) => {
-//           console.log(err)
-//         })
+  //     Modal.confirm({
+  //       title: "Are you sure, you want to delete this PENDING PAYMENT record?",
+  //       okText: "Yes",
+  //       okType: "danger",
+  //       onOk: () => {
+  //         console.log(record, "values")
+  //         axios.delete(`http://files.covaiciviltechlab.com/delete_tax/${record.id}`, {
+  //           headers: {
+  //             "Authorization": `Token ${Token}`
+  //           }
+  //         }).then((res) => {
+  //           console.log(res)
+  //           GetTaxData()
+  //         }).catch((err) => {
+  //           console.log(err)
+  //         })
 
-//       },
-//     });
-//   };
+  //       },
+  //     });
+  //   };
 
 
 
   // input search
-  const onSearch = (value: string, _e: any, info: any) => {
-    const filteredData = dataSource.filter((item: any) =>
-      item.project_name.toLowerCase().includes(value.toLowerCase())
-    );
-    setDataSource(filteredData);
-  };
+  const [filterData, setFilterData] = useState(dataSource)
 
+  const inputChange = ((e: any) => {
+    const SearchValue = e.target.value
 
+    const filteredData = dataSource.filter((item: any) => {
+      return (
+        item.project_name.toLowerCase().includes(SearchValue.toLowerCase())
+
+      )
+    })
+    setFilterData(filteredData)
+  })
 
   // form submit
   // const onFinish = (values: any,) => {
@@ -247,59 +253,59 @@ const PendingPayment = () => {
   // console.log("viewRecordviewRecord", viewRecord)
 
 
-// Model Data
-//   const modalData = () => {
-//     const formatDate = (dateString: any) => {
-//       if (!dateString) {
-//         return "N/A"; // or handle it according to your requirements
-//       }
+  // Model Data
+  //   const modalData = () => {
+  //     const formatDate = (dateString: any) => {
+  //       if (!dateString) {
+  //         return "N/A"; // or handle it according to your requirements
+  //       }
 
-//       const date = new Date(dateString);
+  //       const date = new Date(dateString);
 
-//       if (isNaN(date.getTime())) {
-//         return "Invalid Date"; // or handle it according to your requirements
-//       }
+  //       if (isNaN(date.getTime())) {
+  //         return "Invalid Date"; // or handle it according to your requirements
+  //       }
 
-//       return new Intl.DateTimeFormat('en-US', {
-//         year: 'numeric',
-//         month: 'long',
-//         day: 'numeric',
-//       }).format(date);
-//     };
+  //       return new Intl.DateTimeFormat('en-US', {
+  //         year: 'numeric',
+  //         month: 'long',
+  //         day: 'numeric',
+  //       }).format(date);
+  //     };
 
-//     const data = [
-//       {
-//         label: "Tax Name:",
-//         value: viewRecord?.tax_name || "N/A",
-//       },
-//       {
-//         label: "Tax Percentage:",
-//         value: viewRecord?.tax_percentage || "N/A",
-//       },
-//       {
-//         label: "Tax Status:",
-//         value: viewRecord?.tax_status || "N/A",
-//       },
-//       {
-//         label: "Created By:",
-//         value: viewRecord?.created_by || "N/A",
-//       },
-//       {
-//         label: "Created Date:",
-//         value: formatDate(viewRecord?.created_date),
-//       },
-//       {
-//         label: "Modified By:",
-//         value: viewRecord?.modified_by || "N/A",
-//       },
-//       {
-//         label: "Modified Date:",
-//         value: formatDate(viewRecord?.modified_date),
-//       },
-//     ];
+  //     const data = [
+  //       {
+  //         label: "Tax Name:",
+  //         value: viewRecord?.tax_name || "N/A",
+  //       },
+  //       {
+  //         label: "Tax Percentage:",
+  //         value: viewRecord?.tax_percentage || "N/A",
+  //       },
+  //       {
+  //         label: "Tax Status:",
+  //         value: viewRecord?.tax_status || "N/A",
+  //       },
+  //       {
+  //         label: "Created By:",
+  //         value: viewRecord?.created_by || "N/A",
+  //       },
+  //       {
+  //         label: "Created Date:",
+  //         value: formatDate(viewRecord?.created_date),
+  //       },
+  //       {
+  //         label: "Modified By:",
+  //         value: viewRecord?.modified_by || "N/A",
+  //       },
+  //       {
+  //         label: "Modified Date:",
+  //         value: formatDate(viewRecord?.modified_date),
+  //       },
+  //     ];
 
-//     return data;
-//   };
+  //     return data;
+  //   };
 
 
   return (
@@ -310,12 +316,12 @@ const PendingPayment = () => {
             <h1 className='tax-title'>Pending Payment</h1>
           </div>
           <div>
-            <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
+            <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
             {/* <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Pending Payment</button> */}
           </div>
         </div>
         <div>
-          <Table dataSource={dataSource} columns={columns} pagination={false} />
+          <Table dataSource={filterData} columns={columns} pagination={false} />
         </div>
 
         {/* <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>
