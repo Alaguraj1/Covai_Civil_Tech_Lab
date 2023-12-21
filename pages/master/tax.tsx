@@ -18,7 +18,6 @@ const Tax = () => {
   const [dataSource, setDataSource] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
 
-
   // Model 
   const showModal = (record: any) => {
     setIsModalOpen(true);
@@ -50,6 +49,7 @@ const Tax = () => {
       }
     }).then((res) => {
       setDataSource(res?.data)
+      setFilterData(res.data)
     }).catch((error: any) => {
       console.log(error)
     })
@@ -156,16 +156,15 @@ const Tax = () => {
     });
   };
 
+  const [filterData, setFilterData] = useState(dataSource)
 
-
-  // input search
-  const onSearch = (value: string, _e: any, info: any) => {
+  const inputChange = (e: any) => {
+    const searchValue = e.target.value.toLowerCase();
     const filteredData = dataSource.filter((item: any) =>
-      item.tax_name.toLowerCase().includes(value.toLowerCase())
+      item.tax_name.toLowerCase().includes(searchValue)
     );
-    setDataSource(filteredData);
+    setFilterData(searchValue ? filteredData : dataSource);
   };
-
 
 
   // form submit
@@ -226,7 +225,7 @@ const Tax = () => {
   // console.log("viewRecordviewRecord", viewRecord)
 
 
-// Model Data
+  // Model Data
   const modalData = () => {
     const formatDate = (dateString: any) => {
       if (!dateString) {
@@ -280,7 +279,7 @@ const Tax = () => {
     return data;
   };
 
-
+  console.log("ilterDatailterData", filterData)
   return (
     <>
       <div>
@@ -289,12 +288,12 @@ const Tax = () => {
             <h1 className='tax-title'>Manage Tax</h1>
           </div>
           <div>
-            <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
+            <Input placeholder="input search text" onChange={inputChange} className='search-bar' style={{ border: "1px solid blue" }} />
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Tax</button>
           </div>
         </div>
         <div>
-          <Table dataSource={dataSource} columns={columns} pagination={false} />
+          <Table dataSource={filterData} columns={columns} pagination={false} />
         </div>
 
         <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>

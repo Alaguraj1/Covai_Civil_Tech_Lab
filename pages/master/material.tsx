@@ -48,6 +48,7 @@ const Material = () => {
         }
       }).then((res) => {
         setDataSource(res?.data)
+        setFilterData(res.data)
       }).catch((error: any) => {
         console.log(error)
       })
@@ -157,16 +158,16 @@ const Material = () => {
     });
   };
 
+  const [filterData, setFilterData] = useState(dataSource )
 
-  
-  // input search
-  const onSearch = (value: string, _e: any, info: any) => {
-    const filteredData = dataSource.filter((item: any) =>
-      item.material_name?.toLowerCase()?.includes(value?.toLowerCase())
+  const inputChange = (e:any) => {
+    const searchValue = e.target.value.toLowerCase();
+    const filteredData = dataSource.filter((item:any) =>
+      item?.material_name?.toLowerCase().includes(searchValue)
     );
-
-    setDataSource(filteredData);
+    setFilterData(searchValue ? filteredData : dataSource);
   };
+
 
 
 
@@ -274,12 +275,12 @@ const Material = () => {
             <h1 className='tax-title'>Manage Material</h1>
           </div>
           <div>
-            <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
+          <Input placeholder="input search text" onChange={inputChange} className='search-bar' style={{border:"1px solid blue"}}/>
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Material</button>
           </div>
         </div>
         <div>
-          <Table dataSource={dataSource} columns={columns} pagination={false} />
+          <Table dataSource={filterData} columns={columns} pagination={false} />
         </div>
 
         <Drawer title={DrawerTitle} placement="right" width={600} onClose={onClose} open={open}>

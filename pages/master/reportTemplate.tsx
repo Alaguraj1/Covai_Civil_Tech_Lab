@@ -70,6 +70,7 @@ const Report = () => {
       }
     }).then((res: any) => {
       setDataSource(res.data)
+      setFilterData(res.data)
     }).catch((error: any) => {
       console.log(error)
     })
@@ -188,13 +189,14 @@ const Report = () => {
     });
   };
 
-  // input search
-  const onSearch = (value: string, _e: any, info: any) => {
-    const filteredData = dataSource.filter((item: any) =>
-      item?.reportName?.toLowerCase()?.includes(value?.toLowerCase())
-    );
+  const [filterData, setFilterData] = useState(dataSource)
 
-    setDataSource(filteredData);
+  const inputChange = (e: any) => {
+    const searchValue = e.target.value.toLowerCase();
+    const filteredData = dataSource.filter((item:any) =>
+      item?.report_template_name?.toLowerCase().includes(searchValue)
+    );
+    setFilterData(searchValue ? filteredData : dataSource);
   };
 
 
@@ -221,7 +223,7 @@ const Report = () => {
       }).then((res) => {
         setOpen(false);
         getTemplate();
-        console.log( res)
+        console.log(res)
       }).catch((error) => {
         console.log(error);
       });
@@ -356,12 +358,12 @@ const Report = () => {
             <h1 className='tax-title'>Manage Report Templates</h1>
           </div>
           <div>
-            <Search placeholder="input search text" onSearch={onSearch} enterButton className='search-bar' />
+            <Input placeholder="input search text" onChange={inputChange} className='search-bar' style={{ border: "1px solid blue" }} />
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Report</button>
           </div>
         </div>
         <div>
-          <Table dataSource={dataSource} columns={columns} pagination={false} />
+          <Table dataSource={filterData} columns={columns} pagination={false} />
         </div>
 
         <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>
@@ -481,7 +483,7 @@ const Report = () => {
                 <>
                   <div className='content-main' >
                     <p className='content-1'>{value?.label}</p>
-                    <p className='content-2' dangerouslySetInnerHTML={{__html : value?.value}}></p>
+                    <p className='content-2' dangerouslySetInnerHTML={{ __html: value?.value }}></p>
                   </div>
                 </>
               )
