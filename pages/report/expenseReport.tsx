@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
-import {  Table, Button } from 'antd';
-import {Input} from 'antd';
+import { Table, Button, Space } from 'antd';
+import { Input } from 'antd';
 import axios from "axios"
 import ExcelJS from "exceljs";
 import * as FileSaver from "file-saver";
@@ -90,8 +90,8 @@ const ExpenseReport = () => {
     worksheet.addRow(columns.map((column) => column.title));
 
     // Add data rows
-    dataSource.forEach((row:any) => {
-      worksheet.addRow(columns.map((column:any) => row[column.dataIndex]));
+    dataSource.forEach((row: any) => {
+      worksheet.addRow(columns.map((column: any) => row[column.dataIndex]));
     });
 
     // Generate a Blob containing the Excel file
@@ -115,14 +115,14 @@ const ExpenseReport = () => {
             <h1 className='tax-title'>Expense Report</h1>
           </div>
           <div>
-            <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
+            <Space>
+              <Button type="primary" onClick={exportToExcel}>Export to Excel</Button>
+              <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
+            </Space>
           </div>
         </div>
         <div>
           <Table dataSource={filterData} columns={columns} pagination={false} />
-          <Button type="primary" onClick={exportToExcel}>
-            Export to Excel
-          </Button>
         </div>
       </div>
     </>
