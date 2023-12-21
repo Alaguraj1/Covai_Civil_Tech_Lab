@@ -90,7 +90,7 @@ const ExpenseReport = () => {
     worksheet.addRow(columns.map((column) => column.title));
 
     // Add data rows
-    dataSource.forEach((row: any) => {
+    filterData.forEach((row: any) => {
       worksheet.addRow(columns.map((column: any) => row[column.dataIndex]));
     });
 
@@ -102,7 +102,7 @@ const ExpenseReport = () => {
       new Blob([blob], {
         type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       }),
-      "antd-table-export.xlsx"
+      "Expense-Report.xlsx"
     );
   };
 

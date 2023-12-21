@@ -210,21 +210,21 @@ const ExpenseUser = () => {
     const modalData = () => {
         const formatDate = (dateString: any) => {
             if (!dateString) {
-                return "N/A"; // or handle it according to your requirements
+              return "N/A"; // or handle it according to your requirements
             }
-
+          
             const date = new Date(dateString);
-
+          
             if (isNaN(date.getTime())) {
-                return "Invalid Date"; // or handle it according to your requirements
+              return "Invalid Date"; // or handle it according to your requirements
             }
-
+          
             return new Intl.DateTimeFormat('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
             }).format(date);
-        };
+          };
 
         const data = [
             {
