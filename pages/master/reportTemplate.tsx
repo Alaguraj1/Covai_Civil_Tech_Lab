@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import { Space, Table, Modal } from 'antd';
-import { Button, Drawer } from 'antd';
-import { Form, Input, Select, } from 'antd';
+import { Space, Table, Modal, Form, Input, Select, Button, Drawer } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
 import "react-quill/dist/quill.snow.css";
-import ReactQuill from "react-quill";
-import "react-quill/dist/quill.snow.css";
+// import ReactQuill from "react-quill";
+import dynamic from 'next/dynamic';
+
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const Report = () => {
 
@@ -20,15 +20,6 @@ const Report = () => {
   const [formFields, setFormFields] = useState([])
   const [dataSource, setDataSource] = useState([])
   const [editor, setEditor] = useState("")
-
-
-  useEffect(() => {
-    if (editRecord) {
-      setDrawerTitle("Edit Report Templates")
-    } else {
-      setDrawerTitle("Create Report Templates")
-    }
-  }, [])
 
 
   // get Method 
@@ -48,13 +39,12 @@ const Report = () => {
   }, [])
 
   console.log("formFields", formFields)
-  console.log("dataSource", dataSource)
+
 
   // Get Method
   useEffect(() => {
     getTemplate()
   }, [])
-
 
   const getTemplate = (() => {
     const Token = localStorage.getItem("token")
@@ -71,20 +61,17 @@ const Report = () => {
       console.log(error)
     })
   })
+  console.log("dataSource", dataSource)
 
 
-
-// editor
-const handleEditorChange = (value:any) => {
-  setEditor(value);
-};
-
+  // editor
+  const handleEditorChange = (value: any) => {
+    setEditor(value);
+  };
 
 
   // drawer
   const showDrawer = (record: any) => {
-    console.log("recordrecordrecordrecord", record)
-
 
     if (record) {
       const templateRecord = {
@@ -95,7 +82,6 @@ const handleEditorChange = (value:any) => {
         template: record?.template,
         id: record?.id
       }
-      console.log('templateRecord --->', templateRecord);
       setEditor(record?.template,)
       setEditRecord(templateRecord)
       form.setFieldsValue(templateRecord)
@@ -131,9 +117,7 @@ const handleEditorChange = (value:any) => {
     setIsModalOpen(false);
   };
 
-
-
-
+  // Table Header
   const columns = [
     {
       title: 'Report Name',
@@ -207,8 +191,8 @@ const handleEditorChange = (value:any) => {
 
   // form submit
   const onFinish = (values: any) => {
-console.log('✌️values --->', values);
-    const templateText = values.template;
+    console.log('✌️values --->', values);
+    const templateText = values?.template;
 
     const body = {
       material: values.material,
@@ -217,8 +201,6 @@ console.log('✌️values --->', values);
       letter_pad_logo: values.letter_pad_logo,
       template: templateText
     };
-
-    console.log('✌️body --->', body);
 
     const Token = localStorage.getItem("token");
 
@@ -265,23 +247,23 @@ console.log('✌️values --->', values);
 
   // modal data
   const modalData = () => {
-    const formatDate = (dateString: any) => {
-      if (!dateString) {
-        return "N/A"; // or handle it according to your requirements
-      }
+    // const formatDate = (dateString: any) => {
+    //   if (!dateString) {
+    //     return "N/A"; // or handle it according to your requirements
+    //   }
 
-      const date = new Date(dateString);
+    //   const date = new Date(dateString);
 
-      if (isNaN(date.getTime())) {
-        return "Invalid Date"; // or handle it according to your requirements
-      }
+    //   if (isNaN(date.getTime())) {
+    //     return "Invalid Date"; // or handle it according to your requirements
+    //   }
 
-      return new Intl.DateTimeFormat('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      }).format(date);
-    };
+    //   return new Intl.DateTimeFormat('en-US', {
+    //     year: 'numeric',
+    //     month: 'long',
+    //     day: 'numeric',
+    //   }).format(date);
+    // };
 
     const data = [
       {
@@ -365,8 +347,8 @@ console.log('✌️values --->', values);
             <Form.Item
               label="Templates"
               name="template"
-              required={false}
-              rules={[{ required: true, message: 'Please input your Report Name!' }]}
+              // required={false}
+              // rules={[{ required: true, message: 'Please input your Report Name!' }]}
             >
               <ReactQuill
                 value={editor}
@@ -383,7 +365,6 @@ console.log('✌️values --->', values);
                   ],
                 }}
               />
-              {/* <TextArea /> */}
             </Form.Item>
 
 
