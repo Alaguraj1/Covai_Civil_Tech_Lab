@@ -193,34 +193,34 @@ const Edit = () => {
     const onFinish = (values: any) => {
         // Assuming 'id' and 'filterTest' are properties you want to include in the request
         values.invoice = Number(id);
-      
+        
         const requestData = { ...values };
-      
+
         // Extract the first item from the filterTest array
         const firstTestItem = filterTest.length > 0 ? filterTest[0] : null;
-      
+
         if (firstTestItem) {
-          // Include relevant properties from the firstTestItem in the request data
-          requestData.test = firstTestItem.value; // Adjust this based on your data structure
-          requestData.quantity = Number(firstTestItem.quantity);
-          requestData.total = firstTestItem.total;
+            // Include relevant properties from the firstTestItem in the request data
+            requestData.test = firstTestItem.value; // Adjust this based on your data structure
+            requestData.quantity = Number(firstTestItem.quantity);
+            requestData.total = firstTestItem.total;
         }
-      
+
         console.log('Success:', requestData);
-      
+
         axios.post('http://files.covaiciviltechlab.com/create_invoice_test/', requestData, {
-          headers: {
-            'Authorization': `Token ${localStorage.getItem('token')}`
-          }
+            headers: {
+                'Authorization': `Token ${localStorage.getItem('token')}`
+            }
         })
-          .then((res) => {
-            console.log(res.data);
-          })
-          .catch((error) => {
-            console.error('Error:', error);
-          });
-      };
-      
+            .then((res) => {
+                console.log(res.data);
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+    };
+
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
@@ -780,7 +780,7 @@ const Edit = () => {
 
                     </Form.Item>
 
-
+                    
                     {
                         tableVisible && (
                             <div className="table-responsive">
