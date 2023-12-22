@@ -1,15 +1,12 @@
-import { size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { Space, Table, Modal } from 'antd';
 import { Button, Drawer } from 'antd';
-import { Checkbox, Form, Input, Select, } from 'antd';
+import { Form, Input, Select, } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { Editor } from 'react-draft-wysiwyg';
-import 'react-draft-wysiwyg/dist/react-draft-wysiwyg.css';
 import axios from "axios"
-import TextArea from 'antd/es/input/TextArea';
+import "react-quill/dist/quill.snow.css";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 
 const Report = () => {
 
@@ -22,7 +19,6 @@ const Report = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formFields, setFormFields] = useState([])
   const [dataSource, setDataSource] = useState([])
-
   const [editor, setEditor] = useState("")
 
 
@@ -75,6 +71,14 @@ const Report = () => {
       console.log(error)
     })
   })
+
+
+
+// editor
+const handleEditorChange = (value:any) => {
+  setEditor(value);
+};
+
 
 
   // drawer
@@ -203,7 +207,8 @@ const Report = () => {
 
   // form submit
   const onFinish = (values: any) => {
-    const templateText = values.template?.blocks?.[0]?.text || '';
+console.log('✌️values --->', values);
+    const templateText = values.template;
 
     const body = {
       material: values.material,
@@ -212,6 +217,8 @@ const Report = () => {
       letter_pad_logo: values.letter_pad_logo,
       template: templateText
     };
+
+    console.log('✌️body --->', body);
 
     const Token = localStorage.getItem("token");
 
@@ -223,7 +230,7 @@ const Report = () => {
       }).then((res) => {
         setOpen(false);
         getTemplate();
-        console.log(res)
+        console.log("editor result", res.data)
       }).catch((error) => {
         console.log(error);
       });
@@ -252,52 +259,6 @@ const Report = () => {
     template?: any;
     print_format?: any;
     letter_pad_logo?: any
-  };
-
-
-  const editorOptions = {
-    toolbar: {
-      options: ["inline", "blockType", "fontSize", "fontFamily", "list", "textAlign", "colorPicker", "link", "embedded", "emoji", "image", "remove", "history"],
-      inline: {
-        options: ["bold", "italic", "underline", "strikethrough"],
-      },
-      blockType: {
-        options: ["Normal", "H1", "H2", "H3", "H4", "H5", "H6", "Blockquote", "Code"],
-      },
-      fontSize: {
-        options: [10, 12, 14, 16, 18, 24, 30],
-      },
-      fontFamily: {
-        options: ["Arial", "Georgia", "Impact", "Tahoma", "Times New Roman", "Verdana"],
-      },
-      list: {
-        options: ["unordered", "ordered"],
-      },
-      textAlign: {
-        options: ["left", "center", "right"],
-      },
-      colorPicker: {
-        colors: ["#000000", "#e60000", "#ff9900", "#ffff00", "#008a00", "#0066cc", "#9933ff", "#ffffff"],
-      },
-      link: {
-        options: ["link"],
-      },
-      embedded: {
-        options: ["embedded"],
-      },
-      emoji: {
-        options: ["emoji"],
-      },
-      image: {
-        options: ["image"],
-      },
-      remove: {
-        options: ["remove"],
-      },
-      history: {
-        options: ["undo", "redo"],
-      },
-    },
   };
 
 
@@ -376,20 +337,6 @@ const Report = () => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-            {/* <Form.Item label="Material ID" name='materialId'>
-              <Select>
-                {
-                  formFields?.materials?.map((val: any) => {
-                    return (
-                      <>
-                        <Select.Option value={val.id}>{val.id}</Select.Option>
-                      </>
-                    )
-                  })
-                }
-              </Select>
-            </Form.Item> */}
-
 
             <Form.Item
               label="Material Name"
@@ -406,7 +353,7 @@ const Report = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item<FieldType>
+            <Form.Item
               label="Report Name"
               name="report_template_name"
               required={false}
@@ -415,18 +362,26 @@ const Report = () => {
               <Input />
             </Form.Item>
 
-            <Form.Item<FieldType>
+            <Form.Item
               label="Templates"
               name="template"
               required={false}
               rules={[{ required: true, message: 'Please input your Report Name!' }]}
             >
-              <Editor
-                wrapperClassName="wrapper"
-                editorClassName="editor"
-                toolbarClassName="toolbar"
-                {...editorOptions}
+              <ReactQuill
                 value={editor}
+                onChange={handleEditorChange}
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2, false] }],
+                    ["bold", "italic", "underline", "strike"],
+                    ["blockquote", "code-block"],
+                    [{ list: "ordered" }, { list: "bullet" }],
+                    ["link", "image", "video"],
+                    ["clean"],
+                    // Add your custom features here
+                  ],
+                }}
               />
               {/* <TextArea /> */}
             </Form.Item>
