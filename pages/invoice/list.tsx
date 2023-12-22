@@ -2,7 +2,7 @@ import { size } from 'lodash'
 import React, { useState, useEffect } from 'react'
 import { Space, Table, Modal, Flex } from 'antd';
 import { Button, Drawer } from 'antd';
-import { Checkbox, Form, Input, Select } from 'antd';
+import { Form, Input, Select } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
 import Link from 'next/link';
@@ -109,11 +109,13 @@ const Invoice = () => {
                         <EyeOutlined style={{ cursor: "pointer" }}
                             className='view-icon' rev={undefined} />
                     </Link>
-                    <Link href='/invoice/edit'>
-                        <EditOutlined
-                            style={{ cursor: "pointer" }}
-                            className='edit-icon' rev={undefined} />
-                    </Link>
+                    <span
+                        onClick={() => handleEditClick(record)}
+                        style={{ cursor: "pointer" }}
+                        className='edit-icon'
+                    >
+                        <EditOutlined />
+                    </span>
                     <DeleteOutlined
                         style={{ color: "red", cursor: "pointer" }}
                         onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} />
@@ -122,6 +124,11 @@ const Invoice = () => {
         }
     ];
 
+
+    const handleEditClick = (record:any) => {
+        // Navigate to the /invoice/edit page with the record data as a query parameter
+        window.location.href = `/invoice/edit?id=${record.id}`;
+    };
 
     const handleDelete = (record: any) => {
         // Implement your delete logic here
@@ -150,18 +157,18 @@ const Invoice = () => {
     };
 
     // input search
-const [filterData, setFilterData] = useState(dataSource)
+    const [filterData, setFilterData] = useState(dataSource)
 
-const inputChange = ((e:any) => {
-    const SearchValue = e.target.value
+    const inputChange = ((e: any) => {
+        const SearchValue = e.target.value
 
-    const filteredData = dataSource.filter((item:any) => {
-        return(
-            item.project_name.toLowerCase().includes(SearchValue.toLowerCase())
-        )
+        const filteredData = dataSource.filter((item: any) => {
+            return (
+                item.project_name.toLowerCase().includes(SearchValue.toLowerCase())
+            )
+        })
+        setFilterData(filteredData)
     })
-    setFilterData(filteredData)
-})
 
     // form submit
     const onFinish = (values: any) => {

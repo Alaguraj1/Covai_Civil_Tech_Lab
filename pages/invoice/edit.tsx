@@ -10,14 +10,24 @@ import IconDownload from '@/components/Icon/IconDownload';
 import { Button, Modal, Checkbox, Form, Input, Select, Space, Flex } from 'antd';
 import type { SelectProps } from 'antd';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 
 const Edit = () => {
+
+    const router = useRouter();
+    const { id } = router.query;
+
+    console.log(id)
+
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle('Invoice Edit'));
     });
+
+
     const currencyList = ['USD - US Dollar', 'GBP - British Pound', 'IDR - Indonesian Rupiah', 'INR - Indian Rupee', 'BRL - Brazilian Real', 'EUR - Germany (Euro)', 'TRY - Turkish Lira'];
     const [tax, setTax] = useState<any>(0);
+    const [form] = Form.useForm()
     const [discount, setDiscount] = useState<any>(0);
     const [shippingCharge, setShippingCharge] = useState<any>(0);
     const [paymentMethod, setPaymentMethod] = useState<any>('bank');
@@ -61,6 +71,7 @@ const Edit = () => {
 
     const handleCancel = () => {
         setIsModalOpen(false);
+        form.resetFields()
     };
 
 
@@ -70,7 +81,7 @@ const Edit = () => {
         const filteredTests = filterMaterial.filter((value: any) => {
             return testIds.includes(value.value);
         });
-        const addedPrice: any = filteredTests.map((obj: any) => ({ ...obj, quantity: 0 }));
+        const addedPrice: any = filteredTests.map((obj: any) => ({ ...obj, quantity: 1, total: quantity * Number(obj?.price) }));
 
         setFilterTest(addedPrice);
     };
@@ -132,6 +143,7 @@ const Edit = () => {
         },
         notes: 'It was a pleasure working with you and your team. We hope you will keep us in mind for future freelance projects. Thank You!',
     });
+
     useEffect(() => {
         let dt: Date = new Date();
         const month = dt.getMonth() + 1 < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1;
@@ -179,8 +191,36 @@ const Edit = () => {
 
 
     const onFinish = (values: any) => {
-        console.log('Success:', values);
-    };
+        // Assuming 'id' and 'filterTest' are properties you want to include in the request
+        values.invoice = Number(id);
+      
+        const requestData = { ...values };
+      
+        // Extract the first item from the filterTest array
+        const firstTestItem = filterTest.length > 0 ? filterTest[0] : null;
+      
+        if (firstTestItem) {
+          // Include relevant properties from the firstTestItem in the request data
+          requestData.test = firstTestItem.value; // Adjust this based on your data structure
+          requestData.quantity = Number(firstTestItem.quantity);
+          requestData.total = firstTestItem.total;
+        }
+      
+        console.log('Success:', requestData);
+      
+        axios.post('http://files.covaiciviltechlab.com/create_invoice_test/', requestData, {
+          headers: {
+            'Authorization': `Token ${localStorage.getItem('token')}`
+          }
+        })
+          .then((res) => {
+            console.log(res.data);
+          })
+          .catch((error) => {
+            console.error('Error:', error);
+          });
+      };
+      
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
@@ -207,14 +247,28 @@ const Edit = () => {
             updatedFilterTest[index] = updatedItem;
             setFilterTest(updatedFilterTest)
 
+        }
+    })
 
+
+    const priceChange = ((e: any, index: number) => {
+        // console.log('✌️e --->', e, index);
+        const updatedFilterTest: any = [...filterTest]; // Create a copy of the array
+        const filterItem: any = updatedFilterTest[index];
+
+        if (filterItem) {
+            // Check if the item at the specified index exists
+            const updatedItem = {
+                ...filterItem,
+                price: Number(e),
+            };
+            updatedFilterTest[index] = updatedItem;
+            setFilterTest(updatedFilterTest)
 
         }
     })
 
-    const priceChange = ((e: any) => {
-        setPrice(Number(e.target.value))
-    })
+
 
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
@@ -686,6 +740,7 @@ const Edit = () => {
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     layout="vertical"
+                    form={form}
                 >
                     <Form.Item
                         label="Material ID"
@@ -751,31 +806,33 @@ const Edit = () => {
                                             return (
                                                 <tr className="align-top" key={item.value}>
                                                     <td>
+
                                                         <input type="text" className="form-input min-w-[200px]" placeholder="Enter Item Name" defaultValue={item?.label} />
                                                         {/* <textarea className="form-textarea mt-4" placeholder="Enter Description" defaultValue={item.description}></textarea> */}
+
                                                     </td>
                                                     <td>
                                                         <input
                                                             type="number"
                                                             className="form-input w-32"
                                                             placeholder="Quantity"
-                                                            value={Number(item?.quantity) || 0}
+                                                            value={Number(item?.quantity)}
                                                             min={0}
                                                             onChange={(e) => quantityChange(e.target.value, index)}
                                                         />
+
                                                     </td>
                                                     <td>
-
                                                         <input
-                                                            type="number"
+                                                            type="float"
                                                             className="form-input w-32"
                                                             placeholder="Price"
                                                             min={0}
-                                                            onChange={priceChange}
-                                                            value={item?.price}
+                                                            onChange={(e) => priceChange(e.target.value, index)}
+                                                            value={Number(item?.price)}
                                                         />
                                                     </td>
-                                                    <td>{quantity * Number(item.price)}</td>
+                                                    <td>{item?.quantity * Number(item.price)}</td>
                                                     <td>
                                                         <button type="button" onClick={() => removeItem(item)}>
                                                             <IconX className="w-5 h-5" />
