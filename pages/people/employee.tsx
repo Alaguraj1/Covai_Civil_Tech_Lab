@@ -344,7 +344,7 @@ const Employee = () => {
                             label="Employee Name"
                             name="employee_name"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Customer Name!' }]}
+                            rules={[{ required: true, message: 'Please input your Employee Name!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -353,7 +353,7 @@ const Employee = () => {
                             label="User Name"
                             name="username"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your GSTin!' }]}
+                            rules={[{ required: true, message: 'Please input your User Name!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -363,7 +363,7 @@ const Employee = () => {
                             label="Login Name"
                             name="login_name"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your GSTin!' }]}
+                            rules={[{ required: true, message: 'Please input your Login Name!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -372,7 +372,7 @@ const Employee = () => {
                             label="Password"
                             name="password"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your GSTin!' }]}
+                            rules={[{ required: true, message: 'Please input your Password!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -381,7 +381,7 @@ const Employee = () => {
                             label="Address"
                             name="address"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Address1!' }]}
+                            rules={[{ required: true, message: 'Please input your Address!' }]}
                         >
                             <TextArea rows={4} />
                         </Form.Item>
@@ -390,7 +390,7 @@ const Employee = () => {
                             label="Mobile Number"
                             name="mobile_number"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your City1!' }]}
+                            rules={[{ required: true, message: 'Please input your Mobile Number!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -414,11 +414,17 @@ const Employee = () => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item label="DOB" name="dob">
+                        <Form.Item label="DOB" name="dob"
+                         required={false}
+                         rules={[{ required: true, message: 'Please Select your DOB!' }]}
+                         >
                             <DatePicker style={{ width: "100%" }} />
                         </Form.Item>
 
-                        <Form.Item label="Gender" name="gender">
+                        <Form.Item label="Gender" name="gender"
+                         required={false}
+                         rules={[{ required: true, message: 'Please Select your Gender!' }]}
+                         >
                             <Radio.Group>
                                 <Radio value="M"> Male </Radio>
                                 <Radio value="F"> Female </Radio>
@@ -429,7 +435,7 @@ const Employee = () => {
                             label="Qualification"
                             name="qualification"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Address 2!' }]}
+                            rules={[{ required: true, message: 'Please input your Qualification!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -442,7 +448,7 @@ const Employee = () => {
                             label="Salary"
                             name="salary"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State1!' }]}
+                            rules={[{ required: true, message: 'Please input your Salary!' }]}
                         >
                             <Input />
                         </Form.Item>

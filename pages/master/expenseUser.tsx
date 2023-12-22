@@ -291,7 +291,7 @@ const ExpenseUser = () => {
                             label="Name"
                             name="name"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Tax Name!' }]}
+                            rules={[{ required: true, message: 'Please input your Name!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -300,7 +300,7 @@ const ExpenseUser = () => {
                             label="Phone"
                             name="phone"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Tax Percentage!' }]}
+                            rules={[{ required: true, message: 'Please input your Phone!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -309,7 +309,7 @@ const ExpenseUser = () => {
                             label="Address"
                             name="address"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Tax Status!' }]}
+                            rules={[{ required: true, message: 'Please input your Tax Address!' }]}
                         >
                             <Input />
                         </Form.Item>

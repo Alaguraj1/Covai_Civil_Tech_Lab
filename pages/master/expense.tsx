@@ -284,7 +284,7 @@ const Expense = () => {
               label="Expense Name"
               name="expense_name"
               required={false}
-              rules={[{ required: true, message: 'Please input your Tax Name!' }]}
+              rules={[{ required: true, message: 'Please input your Expense Name!' }]}
             >
               <Input />
             </Form.Item>

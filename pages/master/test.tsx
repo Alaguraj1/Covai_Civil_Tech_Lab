@@ -334,7 +334,7 @@ const Test = () => {
                             label="Material Name"
                             name="material_name"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Tax Name!' }]}
+                            rules={[{ required: true, message: 'Please input your Material Name!' }]}
                         >
                             <Select>
                                 {formFields?.materials?.map((val: any) => (
@@ -349,7 +349,7 @@ const Test = () => {
                             label="Test Name"
                             name="test_name"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Tax Percentage!' }]}
+                            rules={[{ required: true, message: 'Please input your Test Name!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -358,7 +358,7 @@ const Test = () => {
                             label="Price"
                             name="price_per_piece"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Tax Status!' }]}
+                            rules={[{ required: true, message: 'Please input your Price!' }]}
                         >
                             <InputNumber style={{ width: "100%" }} />
                         </Form.Item>

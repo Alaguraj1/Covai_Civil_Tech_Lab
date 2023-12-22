@@ -297,7 +297,7 @@ const Material = () => {
               label="Material Name"
               name="material_name"
               required={false}
-              rules={[{ required: true, message: 'Please input your Tax Name!' }]}
+              rules={[{ required: true, message: 'Please input your Material Name!' }]}
             >
               <Input />
             </Form.Item>

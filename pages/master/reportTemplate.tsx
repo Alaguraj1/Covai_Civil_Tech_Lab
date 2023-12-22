@@ -265,7 +265,7 @@ const Report = () => {
     //   }).format(date);
     // };
 
-    const data = [
+    const data:any = [
       {
         label: "Report Template Name:",
         value: viewRecord?.report_template_name || "N/A",
@@ -347,8 +347,8 @@ const Report = () => {
             <Form.Item
               label="Templates"
               name="template"
-              // required={false}
-              // rules={[{ required: true, message: 'Please input your Report Name!' }]}
+              required={false}
+              rules={[{ required: true, message: 'Please input your Report Templates!' }]}
             >
               <ReactQuill
                 value={editor}
@@ -368,7 +368,10 @@ const Report = () => {
             </Form.Item>
 
 
-            <Form.Item label="Print Format" name='print_format'>
+            <Form.Item label="Print Format" name='print_format'
+             required={false}
+             rules={[{ required: true, message: 'Please Select your Print Format!' }]}
+            >
               <Select>
                 {
                   formFields?.print_format?.map((val: any) => {
@@ -381,7 +384,10 @@ const Report = () => {
               </Select>
             </Form.Item>
 
-            <Form.Item label="Letter Pad Logo" name='letter_pad_logo'>
+            <Form.Item label="Letter Pad Logo" name='letter_pad_logo'
+             required={false}
+             rules={[{ required: true, message: 'Please Select your Letter Pad Logo!' }]}
+            >
               <Select>
                 {
                   formFields?.letter_pad_logo?.map((val: any) => {

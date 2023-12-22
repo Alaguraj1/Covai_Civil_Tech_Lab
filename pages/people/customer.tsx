@@ -408,7 +408,7 @@ const Customer = () => {
                             label="GST in"
                             name="gstin_no"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your City1!' }]}
+                            rules={[{ required: true, message: 'Please input your GST in!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -446,7 +446,7 @@ const Customer = () => {
                             label="City 1"
                             name="city1"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State1!' }]}
+                            rules={[{ required: true, message: 'Please input your City 1!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -455,7 +455,7 @@ const Customer = () => {
                             label="State 1"
                             name="state1"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State1!' }]}
+                            rules={[{ required: true, message: 'Please input your State 1!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -464,7 +464,7 @@ const Customer = () => {
                             label="Country 1"
                             name="country1"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State1!' }]}
+                            rules={[{ required: true, message: 'Please input your Country 1!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -473,7 +473,7 @@ const Customer = () => {
                             label="Pincode 1"
                             name="pincode1"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State1!' }]}
+                            rules={[{ required: true, message: 'Please input your Pincode 1!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -482,7 +482,7 @@ const Customer = () => {
                             label="Contact Person 1"
                             name="contact_person1"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State1!' }]}
+                            rules={[{ required: true, message: 'Please input your Contact Person 1!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -491,7 +491,7 @@ const Customer = () => {
                             label="Mobile Number 1"
                             name="mobile_no1"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Phone Number!' }]}
+                            rules={[{ required: true, message: 'Please input your Mobile Number 1!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -500,7 +500,7 @@ const Customer = () => {
                             label="Contact Person Email1"
                             name="contact_person_email1"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your EMail!' }]}
+                            rules={[{ required: true, message: 'Please input your Contact Person Email 1!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -510,7 +510,7 @@ const Customer = () => {
                             label="Address 2"
                             name="address2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Address1!' }]}
+                            rules={[{ required: true, message: 'Please input your Address 2!' }]}
                         >
                             <TextArea rows={4} />
                         </Form.Item>
@@ -519,7 +519,7 @@ const Customer = () => {
                             label="City 2"
                             name="city2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State1!' }]}
+                            rules={[{ required: true, message: 'Please input your City 2!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -528,7 +528,7 @@ const Customer = () => {
                             label="State 2"
                             name="state2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State1!' }]}
+                            rules={[{ required: true, message: 'Please input your State 2!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -537,7 +537,7 @@ const Customer = () => {
                             label="Country 2"
                             name="country2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State1!' }]}
+                            rules={[{ required: true, message: 'Please input your Country 2!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -546,7 +546,7 @@ const Customer = () => {
                             label="Pincode 2"
                             name="pincode2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State1!' }]}
+                            rules={[{ required: true, message: 'Please input your Pincode 2!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -555,7 +555,7 @@ const Customer = () => {
                             label="Contact Person 2"
                             name="contact_person2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State1!' }]}
+                            rules={[{ required: true, message: 'Please input your Contact Person 2!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -564,7 +564,7 @@ const Customer = () => {
                             label="Mobile Number 2"
                             name="mobile_no2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Phone Number!' }]}
+                            rules={[{ required: true, message: 'Please input your Mobile Number 2!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -573,7 +573,7 @@ const Customer = () => {
                             label="Contact Person Email2"
                             name="contact_person_email2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your EMail!' }]}
+                            rules={[{ required: true, message: 'Please input your Contact Person Email2!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -583,7 +583,7 @@ const Customer = () => {
                             label="Place Of Testing"
                             name="place_of_testing"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State1!' }]}
+                            rules={[{ required: true, message: 'Please input your Place Of Testing!' }]}
                         >
                             <Input />
                         </Form.Item>
