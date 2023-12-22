@@ -7,8 +7,9 @@ import IconSave from '@/components/Icon/IconSave';
 import IconSend from '@/components/Icon/IconSend';
 import IconEye from '@/components/Icon/IconEye';
 import IconDownload from '@/components/Icon/IconDownload';
-import { Button, Modal, Checkbox, Form, Input, Select, Space } from 'antd';
+import { Button, Modal, Checkbox, Form, Input, Select, Space, Flex } from 'antd';
 import type { SelectProps } from 'antd';
+import axios from 'axios';
 
 const Edit = () => {
     const dispatch = useDispatch();
@@ -21,7 +22,33 @@ const Edit = () => {
     const [shippingCharge, setShippingCharge] = useState<any>(0);
     const [paymentMethod, setPaymentMethod] = useState<any>('bank');
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [testFormData, setTestFormData] = useState([])
+    const [tableVisible, setTableVisible] = useState(false)
+    const [filterMaterial, setFilterMaterial] = useState([])
+    const [quantity, setQuantity] = useState(1)
+    const [price, setPrice] = useState()
+    const [filterTest, setFilterTest] = useState([])
 
+
+    const tableTogle = () => {
+        setTableVisible(!tableVisible)
+    }
+
+    // get meterial test
+    useEffect(() => {
+
+        const Token = localStorage.getItem('token');
+        axios.get("http://files.covaiciviltechlab.com/get_material_test/", {
+            headers: {
+                'Authorization': `Token ${Token}`
+            }
+        }).then((res) => {
+            setTestFormData(res.data)
+        }).catch((error: any) => {
+            console.log(error)
+        })
+    }, [])
+    console.log("testFormData", testFormData)
 
     // modal
     const showModal = () => {
@@ -38,30 +65,33 @@ const Edit = () => {
 
 
     // Multiple Select
-    const handleChange = (value: string[]) => {
-        console.log(`selected ${value}`);
+    const TestChange = (testIds: string[]) => {
+
+        const filteredTests = filterMaterial.filter((value: any) => {
+            return testIds.includes(value.value);
+        });
+        const addedPrice: any = filteredTests.map((obj: any) => ({ ...obj, quantity: 0 }));
+
+        setFilterTest(addedPrice);
     };
 
-    const options: SelectProps['options'] = [
-        {
-            label: 'China',
-            value: 'china',
-        },
-        {
-            label: 'USA',
-            value: 'usa',
-        },
-        {
-            label: 'Japan',
-            value: 'japan',
-        },
-        {
-            label: 'Korea',
-            value: 'korea',
-        },
-    ];
 
 
+
+    const materialChange = (materialId: any) => {
+        const filteredMaterial = testFormData?.tests
+            ?.filter((test: any) => test.test_material_id === String(materialId))
+            .map((test: any) => ({
+                label: test.test_name,
+                value: test.id,
+                price: test.price_per_piece
+            })) ?? [];
+        setFilterMaterial(filteredMaterial);
+        console.log("filteredMaterial", filteredMaterial);
+    };
+
+
+    console.log("FilterMaterial", filterMaterial)
 
     const [items, setItems] = useState<any>([
         {
@@ -161,13 +191,38 @@ const Edit = () => {
         test?: string;
     };
 
+    console.log("filterDAtss", filterTest)
+
+    const quantityChange = ((e: any, index: number) => {
+        // console.log('✌️e --->', e, index);
+        const updatedFilterTest: any = [...filterTest]; // Create a copy of the array
+        const filterItem: any = updatedFilterTest[index];
+
+        if (filterItem) {
+            // Check if the item at the specified index exists
+            const updatedItem = {
+                ...filterItem,
+                quantity: Number(e),
+            };
+            updatedFilterTest[index] = updatedItem;
+            setFilterTest(updatedFilterTest)
+
+
+
+        }
+    })
+
+    const priceChange = ((e: any) => {
+        setPrice(Number(e.target.value))
+    })
+
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
             <div className="panel flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
                 <div className="flex flex-wrap justify-between px-4">
                     <div className="mb-6 w-full lg:w-1/2">
                         <div className="flex shrink-0 items-center text-black dark:text-white">
-                            <img src="/assets/images/civil-techno-logo.png" alt="img" style={{width:"30%"}} />
+                            <img src="/assets/images/civil-techno-logo.png" alt="img" style={{ width: "30%" }} />
                         </div>
                         <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
                             <div>13 Tetrick Road, Cypress Gardens, Florida, 33884, US</div>
@@ -625,55 +680,124 @@ const Edit = () => {
 
 
             {/* Modal */}
-            <Modal title="Create Invoice" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
+            <Modal title="Create Invoice" open={isModalOpen} width={900} onOk={handleOk} onCancel={handleCancel} footer={false}>
                 <Form
                     name="basic"
                     onFinish={onFinish}
                     onFinishFailed={onFinishFailed}
                     layout="vertical"
                 >
-                    <Form.Item<FieldType>
+                    <Form.Item
                         label="Material ID"
                         name="material_id"
                         required={false}
-                        rules={[{ required: true, message: 'Please input your username!' }]}
+                        rules={[{ required: true, message: 'Please select a Material ID!' }]}
                     >
-                        <Select>
-                            <Select.Option value="demo">Demo</Select.Option>
-                            <Select.Option value="demo2">Demo2</Select.Option>
+                        <Select onChange={materialChange}>
+                            {testFormData?.materials?.map((value: any) => (
+                                <Select.Option key={value.id} value={value.id}>
+                                    {value.material_name}
+                                </Select.Option>
+                            ))}
                         </Select>
                     </Form.Item>
 
-                    <Form.Item<FieldType>
+                    <Form.Item
                         label="Test"
                         name="test"
                         required={false}
-                        rules={[{ required: true, message: 'Please input your password!' }]}
+                        rules={[{ required: true, message: 'Please select one or more tests!' }]}
                     >
                         <Select
                             mode="multiple"
                             style={{ width: '100%' }}
-                            placeholder="select one country"
-                            onChange={handleChange}
+                            placeholder="Select one or more tests"
+                            onChange={TestChange}
                             optionLabelProp="label"
-                            options={options}
-                            optionRender={(option) => (
-                                <div>
-                                    {option.data.label}
-                                </div>
-                            )}
-                        />                    </Form.Item>
+                            options={filterMaterial}
+                        />
+                    </Form.Item>
 
                     <Form.Item>
-                        <Space>
-                            <Button  htmlType="submit" style={{color:"blue", borderColor:"blue"}}>
-                                Get Info
-                            </Button>
-                            <Button type="primary" htmlType="submit">
-                              Create
-                            </Button>
-                        </Space>
+                        <Button style={{ color: "blue", borderColor: "blue", marginTop: "20px" }} onClick={tableTogle}>
+                            {tableVisible ? "Hide Info" : "Get Info"}
+                        </Button>
+
                     </Form.Item>
+
+
+                    {
+                        tableVisible && (
+                            <div className="table-responsive">
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th>Test Name</th>
+                                            <th className="w-1">Quantity</th>
+                                            <th className="w-1">Price Per Sample</th>
+                                            <th>Total</th>
+                                            <th className="w-1"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {filterTest.length <= 0 && (
+                                            <tr>
+                                                <td colSpan={5} className="!text-center font-semibold">
+                                                    No Item Available
+                                                </td>
+                                            </tr>
+                                        )}
+                                        {filterTest.map((item: any, index: any) => {
+                                            return (
+                                                <tr className="align-top" key={item.value}>
+                                                    <td>
+                                                        <input type="text" className="form-input min-w-[200px]" placeholder="Enter Item Name" defaultValue={item?.label} />
+                                                        {/* <textarea className="form-textarea mt-4" placeholder="Enter Description" defaultValue={item.description}></textarea> */}
+                                                    </td>
+                                                    <td>
+                                                        <input
+                                                            type="number"
+                                                            className="form-input w-32"
+                                                            placeholder="Quantity"
+                                                            value={Number(item?.quantity) || 0}
+                                                            min={0}
+                                                            onChange={(e) => quantityChange(e.target.value, index)}
+                                                        />
+                                                    </td>
+                                                    <td>
+
+                                                        <input
+                                                            type="number"
+                                                            className="form-input w-32"
+                                                            placeholder="Price"
+                                                            min={0}
+                                                            onChange={priceChange}
+                                                            value={item?.price}
+                                                        />
+                                                    </td>
+                                                    <td>{quantity * Number(item.price)}</td>
+                                                    <td>
+                                                        <button type="button" onClick={() => removeItem(item)}>
+                                                            <IconX className="w-5 h-5" />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )
+                    }
+
+
+                    <div style={{ paddingTop: "30px" }}>
+                        <Form.Item>
+                            <Button type="primary" htmlType="submit">
+                                Create
+                            </Button>
+                        </Form.Item>
+                    </div>
                 </Form>
             </Modal>
 
