@@ -35,14 +35,28 @@ const Edit = () => {
     const [testFormData, setTestFormData] = useState([])
     const [tableVisible, setTableVisible] = useState(false)
     const [filterMaterial, setFilterMaterial] = useState([])
-    const [quantity, setQuantity] = useState(1)
-    const [price, setPrice] = useState()
     const [filterTest, setFilterTest] = useState([])
-
+    const [invoiceFormData, setInvoiceFormData] = useState({})
 
     const tableTogle = () => {
         setTableVisible(!tableVisible)
     }
+
+
+    // Get Single Product
+    useEffect(() => {
+        axios.get(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`, {
+            headers: {
+                "Authorization": `Token ${localStorage.getItem("token")}`
+            }
+        }).then((res) => {
+            setInvoiceFormData(res?.data)
+        }).catch((error: any) => {
+            console.log("error", error)
+        })
+    },[id])
+
+    console.log("InvoiceFormData", invoiceFormData)
 
     // get meterial test
     useEffect(() => {
@@ -81,7 +95,7 @@ const Edit = () => {
         const filteredTests = filterMaterial.filter((value: any) => {
             return testIds.includes(value.value);
         });
-        const addedPrice: any = filteredTests.map((obj: any) => ({ ...obj, quantity: 1, total: quantity * Number(obj?.price) }));
+        const addedPrice: any = filteredTests.map((obj: any) => ({ ...obj, quantity: 1, total: Number(obj?.price) }));
 
         setFilterTest(addedPrice);
     };
@@ -191,19 +205,21 @@ const Edit = () => {
 
 
     const onFinish = (values: any) => {
+        console.log('✌️values --->', values);
         // Assuming 'id' and 'filterTest' are properties you want to include in the request
         values.invoice = Number(id);
 
         // const requestData = { ...values };
 
-        const body = {
+        console.log("filterTest", filterTest)
+        const body: any = {
             ...values,
             tests: filterTest.map((item) => ({
                 ...values,
                 test: item?.value,
                 quantity: item.quantity,
-                price: item.price,
-                total: item.total.toFixed(2)
+                price_per_sample: Number(item.price),
+                total: Number(item.total.toFixed(2))
             }))
         }
 
@@ -216,6 +232,7 @@ const Edit = () => {
         })
             .then((res) => {
                 console.log(res.data);
+                setIsModalOpen(false);
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -273,6 +290,46 @@ const Edit = () => {
     })
 
 
+    // invoice 
+
+    const invoiceQuantityChange = ((e: any, index: number) => {
+        // console.log('✌️e --->', e, index);
+        const updatedFilterTest: any = [...filterTest]; // Create a copy of the array
+        const filterItem: any = updatedFilterTest[index];
+
+        if (filterItem) {
+            // Check if the item at the specified index exists
+            const updatedItem = {
+                ...filterItem,
+                quantity: Number(e),
+                total: Number(e) * Number(filterItem.price),
+            };
+            updatedFilterTest[index] = updatedItem;
+            setFilterTest(updatedFilterTest)
+
+        }
+    })
+
+    const invoicePriceChange = ((e: any, index: number) => {
+        // console.log('✌️e --->', e, index);
+        const updatedFilterTest: any = [...filterTest]; // Create a copy of the array
+        const filterItem: any = updatedFilterTest[index];
+
+        if (filterItem) {
+            // Check if the item at the specified index exists
+            const updatedItem = {
+                ...filterItem,
+                price: Number(e),
+                total: Number(e) * Number(filterItem.quantity),
+            };
+            updatedFilterTest[index] = updatedItem;
+            setFilterTest(updatedFilterTest)
+
+        }
+    })
+
+
+
 
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
@@ -293,7 +350,7 @@ const Edit = () => {
                             <label htmlFor="number" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
                                 Invoice Number
                             </label>
-                            <input id="number" type="text" name="inv-num" className="form-input w-2/3 lg:w-[250px]" placeholder="#8801" defaultValue={params.invoiceNo} />
+                            <input id="number" type="text" name="inv-num" className="form-input w-2/3 lg:w-[250px]"  defaultValue={invoiceFormData?.invoice?.invoice_no} />
                         </div>
                         <div className="mt-4 flex items-center">
                             <label htmlFor="invoiceLabel" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
@@ -324,7 +381,7 @@ const Edit = () => {
                                 <label htmlFor="reciever-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Name
                                 </label>
-                                <input id="reciever-name" type="text" name="reciever-name" className="form-input flex-1" defaultValue={params.to.name} placeholder="Enter Name" />
+                                <input id="reciever-name" type="text" name="reciever-name" className="form-input flex-1" defaultValue={invoiceFormData?.customer?.customer_name} placeholder="Enter Name" />
                             </div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="reciever-email" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
@@ -336,7 +393,7 @@ const Edit = () => {
                                 <label htmlFor="reciever-address" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Address
                                 </label>
-                                <input id="reciever-address" type="text" name="reciever-address" className="form-input flex-1" defaultValue={params.to.address} placeholder="Enter Address" />
+                                <input id="reciever-address" type="text" name="reciever-address" className="form-input flex-1" defaultValue={invoiceFormData?.customer?.address1} placeholder="Enter Address" />
                             </div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="reciever-number" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
@@ -585,18 +642,18 @@ const Edit = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {items.length <= 0 && (
+                                {invoiceFormData.invoice_tests?.length <= 0 && (
                                     <tr>
                                         <td colSpan={5} className="!text-center font-semibold">
                                             No Item Available
                                         </td>
                                     </tr>
                                 )}
-                                {items.map((item: any, index: any) => {
+                                {invoiceFormData.invoice_tests?.map((item: any, index: any) => {
                                     return (
                                         <tr className="align-top" key={item.id}>
                                             <td>
-                                                <input type="text" className="form-input min-w-[200px]" placeholder="Enter Item Name" defaultValue={item.title} />
+                                                <input type="text" className="form-input min-w-[200px]" placeholder="Enter Item Name" defaultValue={item.test_name} />
                                                 {/* <textarea className="form-textarea mt-4" placeholder="Enter Description" defaultValue={item.description}></textarea> */}
                                             </td>
                                             <td>
@@ -604,9 +661,9 @@ const Edit = () => {
                                                     type="number"
                                                     className="form-input w-32"
                                                     placeholder="Quantity"
-                                                    defaultValue={item.quantity}
+                                                    value={Number(item?.quantity)}
                                                     min={0}
-                                                    onChange={(e) => changeQuantityPrice('quantity', e.target.value, item.id)}
+                                                    // onChange={(e) => invoiceQuantityChange(e.target.value, index)}
                                                 />
                                             </td>
                                             <td>
@@ -614,12 +671,12 @@ const Edit = () => {
                                                     type="number"
                                                     className="form-input w-32"
                                                     placeholder="Price"
-                                                    defaultValue={item.amount}
+                                                    value={Number(item?.price_per_sample)}
                                                     min={0}
-                                                    onChange={(e) => changeQuantityPrice('price', e.target.value, item.id)}
+                                                    // onChange={(e) => invoicePriceChange(e.target.value, index)}
                                                 />
                                             </td>
-                                            <td>{item.quantity * item.amount}</td>
+                                            <td>{item.quantity * item.price_per_sample}</td>
                                             <td>
                                                 <button type="button" onClick={() => removeItem(item)}>
                                                     <IconX className="w-5 h-5" />

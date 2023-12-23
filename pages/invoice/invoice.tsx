@@ -12,7 +12,6 @@ const Invoice = () => {
     const [open, setOpen] = useState(false);
     const { Search } = Input;
     const [form] = Form.useForm();
-    const { TextArea } = Input;
     const [dataSource, setDataSource] = useState([])
     const [formFields, setFormFields] = useState([])
     const [selectedCustomerId, setSelectedCustomerId] = useState(null);
@@ -51,16 +50,6 @@ const Invoice = () => {
     }, [])
 
     console.log("formFields", formFields)
-
-
-
-    // useEffect(() => {
-    //     if (editRecord) {
-    //         setDrawerTitle("Edit Tax");
-    //     } else {
-    //         setDrawerTitle("Create Tax");
-    //     }
-    // }, [editRecord, open]);
 
 
 
@@ -125,7 +114,7 @@ const Invoice = () => {
     ];
 
 
-    const handleEditClick = (record:any) => {
+    const handleEditClick = (record: any) => {
         // Navigate to the /invoice/edit page with the record data as a query parameter
         window.location.href = `/invoice/edit?id=${record.id}`;
     };
@@ -253,10 +242,9 @@ const Invoice = () => {
                         autoComplete="off"
                         form={form}
                     >
-                        {/* <div style={{ border: "1px solid gray", padding: "20px" }}> */}
-                        <p style={{ textAlign: "center", color: "blue", fontSize: "22px", fontWeight: "600", paddingBottom: "30px" }}>Invoice Number :<span style={{ color: "red" }}> 02322</span></p>
+
                         <Form.Item
-                            label="customer Name"
+                            label="Customer Name"
                             name="customer"
                             required={false}
                             rules={[{ required: true, message: 'Please select Material Name!' }]}
@@ -327,79 +315,6 @@ const Invoice = () => {
                         {/* </div> */}
                     </Form>
 
-                    {/* <div style={{ paddingTop: "50px" }}>
-                        <Table dataSource={dataSource2} columns={columns2} />
-                    </div>
-
-                    <Form
-                        name="basic"
-                        layout="vertical"
-                        form={form}
-                        initialValues={{ remember: true }}
-                        onFinish={onFinish}
-                        onFinishFailed={onFinishFailed}
-                        autoComplete="off"
-                    >
-                        <Form.Item<FieldType>
-                            label="Discount( % )"
-                            name="discount"
-                            required={false}
-                            rules={[{ required: true, message: 'Please input your Tax Name!' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item<FieldType>
-                            label="Amount Before Tax"
-                            name="beforeTax"
-                            required={false}
-                            rules={[{ required: true, message: 'Please input your Tax Percentage!' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item<FieldType>
-                            label="Amount After Tax"
-                            name="afterTax"
-                            required={false}
-                            rules={[{ required: true, message: 'Please input your Tax Status!' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item<FieldType>
-                            label="Advance"
-                            name="advance"
-                            required={false}
-                            rules={[{ required: true, message: 'Please input your Tax Status!' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item<FieldType>
-                            label="Balance"
-                            name="balance"
-                            required={false}
-                            rules={[{ required: true, message: 'Please input your Tax Status!' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item >
-                            <div className='form-btn-main'>
-                                <Space>
-                                    <Button danger htmlType="submit" onClick={() => onClose()}>
-                                        cancel
-                                    </Button>
-                                    <Button type="primary" htmlType="submit">
-                                        Submit
-                                    </Button>
-                                </Space>
-
-                            </div>
-
-                        </Form.Item>
-                    </Form> */}
                 </Drawer>
 
             </div>
