@@ -193,22 +193,23 @@ const Edit = () => {
     const onFinish = (values: any) => {
         // Assuming 'id' and 'filterTest' are properties you want to include in the request
         values.invoice = Number(id);
-        
-        const requestData = { ...values };
 
-        // Extract the first item from the filterTest array
-        const firstTestItem = filterTest.length > 0 ? filterTest[0] : null;
+        // const requestData = { ...values };
 
-        if (firstTestItem) {
-            // Include relevant properties from the firstTestItem in the request data
-            requestData.test = firstTestItem.value; // Adjust this based on your data structure
-            requestData.quantity = Number(firstTestItem.quantity);
-            requestData.total = firstTestItem.total;
+        const body = {
+            ...values,
+            tests: filterTest.map((item) => ({
+                ...values,
+                test: item?.value,
+                quantity: item.quantity,
+                price: item.price,
+                total: item.total.toFixed(2)
+            }))
         }
 
-        console.log('Success:', requestData);
+        console.log('✌️body --->', body);
 
-        axios.post('http://files.covaiciviltechlab.com/create_invoice_test/', requestData, {
+        axios.post('http://files.covaiciviltechlab.com/create_invoice_test/', body?.tests, {
             headers: {
                 'Authorization': `Token ${localStorage.getItem('token')}`
             }
@@ -220,6 +221,7 @@ const Edit = () => {
                 console.error('Error:', error);
             });
     };
+
 
 
     const onFinishFailed = (errorInfo: any) => {
@@ -243,6 +245,7 @@ const Edit = () => {
             const updatedItem = {
                 ...filterItem,
                 quantity: Number(e),
+                total: Number(e) * Number(filterItem.price),
             };
             updatedFilterTest[index] = updatedItem;
             setFilterTest(updatedFilterTest)
@@ -261,6 +264,7 @@ const Edit = () => {
             const updatedItem = {
                 ...filterItem,
                 price: Number(e),
+                total: Number(e) * Number(filterItem.quantity),
             };
             updatedFilterTest[index] = updatedItem;
             setFilterTest(updatedFilterTest)
@@ -780,7 +784,7 @@ const Edit = () => {
 
                     </Form.Item>
 
-                    
+
                     {
                         tableVisible && (
                             <div className="table-responsive">
@@ -833,11 +837,11 @@ const Edit = () => {
                                                         />
                                                     </td>
                                                     <td>{item?.quantity * Number(item.price)}</td>
-                                                    <td>
+                                                    {/* <td>
                                                         <button type="button" onClick={() => removeItem(item)}>
                                                             <IconX className="w-5 h-5" />
                                                         </button>
-                                                    </td>
+                                                    </td> */}
                                                 </tr>
                                             );
                                         })}

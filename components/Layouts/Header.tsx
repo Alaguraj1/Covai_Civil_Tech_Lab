@@ -196,7 +196,7 @@ const Header = () => {
                     </div>
 
                     <div style={{ display: "flex" }}>
-                        <div className="dropdown shrink-0" style={{paddingRight:"20px"}}>
+                        <div className="dropdown shrink-0" style={{ paddingRight: "20px" }}>
                             <Dropdown
                                 offset={[0, 8]}
                                 placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
@@ -627,7 +627,7 @@ const Header = () => {
                         </button>
                         <ul className="sub-menu">
                             <li>
-                                <Link href="/invoice/list">{t('Lists')}</Link>
+                                <Link href="/invoice/invoice">{t('Invoice')}</Link>
                             </li>
                             {/* <li>
                                 <Link href="/invoice/add">{t('Add')}</Link>
@@ -686,10 +686,10 @@ const Header = () => {
                             <li>
                                 <Link href="/report/expenseReport">{t('Expense Report')}</Link>
                             </li>
-                            {/* <li>
-                                <Link href="/forms/input-group">{t('input_group')}</Link>
-                            </li>
                             <li>
+                                <Link href="/report/saleReport">{t('Sales Report')}</Link>
+                            </li>
+                            {/*  <li>
                                 <Link href="/forms/layouts">{t('layouts')}</Link>
                             </li>
                             <li>
