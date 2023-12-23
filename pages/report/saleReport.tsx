@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { Table, Form, Input, Button, DatePicker, Select } from 'antd';
 import axios from "axios"
 import moment from 'moment';
-
+import ExcelJS from "exceljs";
+import * as FileSaver from "file-saver";
 
 const SaleReport = () => {
 
@@ -142,6 +143,32 @@ const SaleReport = () => {
     };
 
 
+     // export to excel format
+  const exportToExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Sheet1");
+
+
+    // Add header row
+    worksheet.addRow(columns.map((column) => column.title));
+
+    // Add data rows
+    dataSource.forEach((row: any) => {
+      worksheet.addRow(columns.map((column: any) => row[column.dataIndex]));
+    });
+
+    // Generate a Blob containing the Excel file
+    const blob = await workbook.xlsx.writeBuffer();
+
+    // Use file-saver to save the Blob as a file
+    FileSaver.saveAs(
+      new Blob([blob], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      }),
+      "Sales-Report.xlsx"
+    );
+  };
+
     return (
         <>
             <div>
@@ -201,10 +228,16 @@ const SaleReport = () => {
                     </Form>
                 </div>
                 <div className='tax-heading-main'>
-                    <h1 className='tax-title'>Sales Report</h1>
+                    <div>
+                        <h1 className='tax-title'>Sales Report</h1>
+                    </div>
+                    <div>
+                        <button type='button'  onClick={exportToExcel} className='create-button'>Export to Excel </button>
+                    </div>
                 </div>
+               
                 <div>
-                    <Table dataSource={dataSource} columns={columns} pagination={false} />
+                    <Table dataSource={dataSource} columns={columns} />
                 </div>
             </div>
         </>

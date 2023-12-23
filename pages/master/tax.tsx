@@ -17,6 +17,7 @@ const Tax = () => {
   const [viewRecord, setViewRecord] = useState(null)
   const [dataSource, setDataSource] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filterData, setFilterData] = useState(dataSource)
 
   // Model 
   const showModal = (record: any) => {
@@ -66,7 +67,6 @@ const Tax = () => {
   }, [editRecord, open]);
 
 
-
   // drawer
   const showDrawer = (record: any) => {
     if (record) {
@@ -87,13 +87,8 @@ const Tax = () => {
 
 
 
-
+  // Table Datas
   const columns = [
-    // {
-    //   title: 'S No',
-    //   dataIndex: 'id',
-    //   key: 'id',
-    // },
     {
       title: 'Tax Name',
       dataIndex: 'tax_name',
@@ -156,8 +151,8 @@ const Tax = () => {
     });
   };
 
-  const [filterData, setFilterData] = useState(dataSource)
 
+  // Search Bar
   const inputChange = (e: any) => {
     const searchValue = e.target.value.toLowerCase();
     const filteredData = dataSource.filter((item: any) =>
@@ -175,23 +170,19 @@ const Tax = () => {
     const Token = localStorage.getItem("token")
     console.log("TokenTokenTokenToken", Token)
 
-    // Check if editing or creating
     if (editRecord) {
       axios.put(`http://files.covaiciviltechlab.com/edit_tax/${editRecord.id}/`, values, {
         headers: {
           "Authorization": `Token ${Token}`
         }
       }).then((res: any) => {
-        // Successful response
         GetTaxData()
         console.log(res);
         setOpen(false);
       }).catch((error: any) => {
-        // Error handling
         console.log(error);
       });
     } else {
-      // Making a POST request using Axios
       axios.post("http://files.covaiciviltechlab.com/create_tax/", values, {
         headers: {
           "Authorization": `Token ${Token}`
@@ -201,14 +192,11 @@ const Tax = () => {
         console.log(res);
         setOpen(false);
       }).catch((error: any) => {
-        // Error handling
         console.log(error);
       });
 
-      // Clear form fields
       form.resetFields();
     }
-    // Close the drawer
     onClose();
   }
 
@@ -222,7 +210,6 @@ const Tax = () => {
     tax_percentage?: string;
     tax_status?: string;
   };
-  // console.log("viewRecordviewRecord", viewRecord)
 
 
   // Model Data
@@ -275,7 +262,6 @@ const Tax = () => {
         value: formatDate(viewRecord?.modified_date),
       },
     ];
-
     return data;
   };
 
@@ -288,7 +274,7 @@ const Tax = () => {
             <h1 className='tax-title'>Manage Tax</h1>
           </div>
           <div>
-          <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
+            <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Tax</button>
           </div>
         </div>
