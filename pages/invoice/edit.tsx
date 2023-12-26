@@ -17,7 +17,7 @@ const Edit = () => {
     const router = useRouter();
     const { id } = router.query;
 
-    console.log(id)
+    // console.log(id)
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -25,24 +25,46 @@ const Edit = () => {
     });
 
 
-    const currencyList = ['USD - US Dollar', 'GBP - British Pound', 'IDR - Indonesian Rupiah', 'INR - Indian Rupee', 'BRL - Brazilian Real', 'EUR - Germany (Euro)', 'TRY - Turkish Lira'];
     const [tax, setTax] = useState<any>(0);
     const [form] = Form.useForm()
     const [discount, setDiscount] = useState<any>(0);
     const [shippingCharge, setShippingCharge] = useState<any>(0);
     const [paymentMethod, setPaymentMethod] = useState<any>('bank');
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [testFormData, setTestFormData] = useState([])
+    const [testFormData, setTestFormData] = useState<any>([])
     const [tableVisible, setTableVisible] = useState(false)
     const [filterMaterial, setFilterMaterial] = useState([])
-    const [filterTest, setFilterTest] = useState([])
-    const [invoiceFormData, setInvoiceFormData] = useState({})
+    const [filterTest, setFilterTest] = useState<any>([])
+    const [invoiceFormData, setInvoiceFormData] = useState<any>({})
+    const [selectedCustomerId, setSelectedCustomerId] = useState(null);
+    const [customerAddress, setCustomerAddress] = useState('');
+    const [formData, setFormData] = useState({
+        customer: "",
+        sales_mode: "",
+        project_name: "",
+        discount: "",
+        tax: "",
+        advance: "",
+        date: "",
+        payment_mode: "",
+        cheque_number: "",
+        bank: "",
+        amount_paid_date: ""
+    });
+    console.log('✌️formData --->', formData);
+
+    // console.log("abc", formData)
 
     const tableTogle = () => {
         setTableVisible(!tableVisible)
     }
-
-
+    const inputChange = ((e: any) => {
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        }
+        )
+    })
     // Get Single Product
     useEffect(() => {
         axios.get(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`, {
@@ -50,13 +72,53 @@ const Edit = () => {
                 "Authorization": `Token ${localStorage.getItem("token")}`
             }
         }).then((res) => {
-            setInvoiceFormData(res?.data)
+            let response = res.data;
+            let mergeArray: any = [response.customer, ...response.customers];
+            const uniqueArray = mergeArray.reduce((acc: any, obj: any) => {
+                const existingObj = acc.find((item: any) => item.id === obj.id);
+
+                if (!existingObj) {
+                    acc.push(obj);
+                }
+
+                return acc;
+            }, []);
+            console.log('✌️uniqueArray --->', uniqueArray);
+            const data = {
+                customers: uniqueArray,
+                invoice: response.invoice,
+                invoice_tests: response.invoice_tests,
+                payment_mode_choices: response.payment_mode_choices,
+                sales_mode: response.sales_mode,
+                taxs: response.taxs
+            }
+            console.log('✌️data --->', data);
+            setFormData(prevState => ({
+                ...prevState,
+                customer: uniqueArray[0].id,
+                sales_mode: response?.sales_mode[0].id,
+                project_name: response.invoice.project_name,
+                discount: response.invoice.discount,
+                tax: response?.taxs[0]?.id,
+                advance: response.invoice.advance,
+                date: response.invoice.date,
+                payment_mode: response.invoice.payment_mode,
+                cheque_number: response.invoice.cheque_number,
+                bank: response.invoice.bank,
+                amount_paid_date: response.invoice.amount_paid_date
+            }));
+
+            setInvoiceFormData(data)
+
+            setCustomerAddress(uniqueArray[0]?.address1);
+
+
         }).catch((error: any) => {
             console.log("error", error)
         })
-    },[id])
+    }, [id])
 
-    console.log("InvoiceFormData", invoiceFormData)
+    // console.log("InvoiceFormData", invoiceFormData)
 
     // get meterial test
     useEffect(() => {
@@ -72,7 +134,7 @@ const Edit = () => {
             console.log(error)
         })
     }, [])
-    console.log("testFormData", testFormData)
+    // console.log("testFormData", testFormData)
 
     // modal
     const showModal = () => {
@@ -112,109 +174,31 @@ const Edit = () => {
                 price: test.price_per_piece
             })) ?? [];
         setFilterMaterial(filteredMaterial);
-        console.log("filteredMaterial", filteredMaterial);
+        // console.log("filteredMaterial", filteredMaterial);
     };
 
 
-    console.log("FilterMaterial", filterMaterial)
+    // console.log("FilterMaterial", filterMaterial)
 
-    const [items, setItems] = useState<any>([
-        {
-            id: 1,
-            title: 'Density',
-            // description: 'Make Calendar App Dynamic',
-            quantity: 2,
-            amount: 120,
-            isTax: false,
-        },
-        {
-            id: 2,
-            title: 'Elongation Index',
-            // description: 'Customized Chat Application to resolve some Bug Fixes',
-            quantity: 1,
-            amount: 25,
-            isTax: false,
-        },
-    ]);
-    const [selectedCurrency, setSelectedCurrency] = useState('USD - US Dollar');
-    const [params, setParams] = useState<any>({
-        title: 'Tailwind',
-        invoiceNo: '#0001',
-        to: {
-            name: 'Alagu Raj',
-            email: 'raj@gmail.com',
-            address: '5/20, Hops Collage, Covai.',
-            phone: '7862113454',
-        },
-        invoiceDate: '',
-        dueDate: '',
-        bankInfo: {
-            no: '1234567890',
-            name: 'Bank of America',
-            swiftCode: 'VS70134',
-            country: 'United States',
-            ibanNo: 'K456G',
-        },
-        notes: 'It was a pleasure working with you and your team. We hope you will keep us in mind for future freelance projects. Thank You!',
-    });
 
-    useEffect(() => {
-        let dt: Date = new Date();
-        const month = dt.getMonth() + 1 < 10 ? '0' + (dt.getMonth() + 1) : dt.getMonth() + 1;
-        let date = dt.getDate() < 10 ? '0' + dt.getDate() : dt.getDate();
-        setParams({
-            ...params,
-            invoiceDate: dt.getFullYear() + '-' + month + '-' + date,
-            dueDate: dt.getFullYear() + '-' + month + '-' + date,
-        });
-    }, []);
 
-    // const addItem = () => {
-    //     let maxId = 0;
-    //     maxId = items?.length ? items.reduce((max: number, character: any) => (character.id > max ? character.id : max), items[0].id) : 0;
-
-    //     setItems([
-    //         ...items,
-    //         {
-    //             id: maxId + 1,
-    //             title: '',
-    //             description: '',
-    //             rate: 0,
-    //             quantity: 0,
-    //             amount: 0,
-    //         },
-    //     ]);
+    // const removeItem = (item: any = null) => {
+    //     setItems(items.filter((d: any) => d.id !== item.id));
     // };
 
-    const removeItem = (item: any = null) => {
-        setItems(items.filter((d: any) => d.id !== item.id));
-    };
 
-    const changeQuantityPrice = (type: string, value: string, id: number) => {
-        // const list = items;
-        const item = items.find((d: any) => d.id === id);
-        if (type === 'quantity') {
-            item.quantity = Number(value);
-        }
-        if (type === 'price') {
-            item.amount = Number(value);
-        }
-        setItems([...items]);
-    };
-
-
-
+    console.log("invoiceFormData", invoiceFormData)
     const onFinish = (values: any) => {
-        console.log('✌️values --->', values);
+        // console.log('✌️values --->', values);
         // Assuming 'id' and 'filterTest' are properties you want to include in the request
         values.invoice = Number(id);
 
         // const requestData = { ...values };
 
-        console.log("filterTest", filterTest)
+        // console.log("filterTest", filterTest)
         const body: any = {
             ...values,
-            tests: filterTest.map((item) => ({
+            tests: filterTest.map((item: any) => ({
                 ...values,
                 test: item?.value,
                 quantity: item.quantity,
@@ -223,7 +207,7 @@ const Edit = () => {
             }))
         }
 
-        console.log('✌️body --->', body);
+        // console.log('✌️body --->', body);
 
         axios.post('http://files.covaiciviltechlab.com/create_invoice_test/', body?.tests, {
             headers: {
@@ -231,7 +215,7 @@ const Edit = () => {
             }
         })
             .then((res) => {
-                console.log(res.data);
+                // console.log(res.data);
                 setIsModalOpen(false);
             })
             .catch((error) => {
@@ -242,7 +226,7 @@ const Edit = () => {
 
 
     const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
+        // console.log('Failed:', errorInfo);
     };
 
     type FieldType = {
@@ -250,7 +234,7 @@ const Edit = () => {
         test?: string;
     };
 
-    console.log("filterDAtss", filterTest)
+    // console.log("filterDAtss", filterTest)
 
     const quantityChange = ((e: any, index: number) => {
         // console.log('✌️e --->', e, index);
@@ -290,46 +274,79 @@ const Edit = () => {
     })
 
 
-    // invoice 
 
-    const invoiceQuantityChange = ((e: any, index: number) => {
-        // console.log('✌️e --->', e, index);
-        const updatedFilterTest: any = [...filterTest]; // Create a copy of the array
-        const filterItem: any = updatedFilterTest[index];
+    const invoiceFormSubmit = ((e: any) => {
+        console.log('FormData', formData, id)
 
-        if (filterItem) {
-            // Check if the item at the specified index exists
-            const updatedItem = {
-                ...filterItem,
-                quantity: Number(e),
-                total: Number(e) * Number(filterItem.price),
-            };
-            updatedFilterTest[index] = updatedItem;
-            setFilterTest(updatedFilterTest)
+        // let config = {
+        //     method: 'put',
+        //     maxBodyLength: Infinity,
+        //     url: `http://files.covaiciviltechlab.com/edit_invoice//`,
+        //     headers: {
+        //         'Authorization': 'Token b8a733d32b22d10e077fde4dce188adb9e981231',
+        //         'Content-Type': 'application/json'
+        //     },
+        //     data: formData
+        // };
 
-        }
+        const Token = localStorage.getItem('token');
+
+        axios.put(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`, formData, {
+            headers: {
+                'Authorization': `Token ${Token}`,
+                'Content-Type': 'application/json'
+            }
+        })
+            .then((response) => {
+                console.log(JSON.stringify(response.data));
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+
+        // let data = JSON.stringify({
+        //     "customer": 3,
+        //     "sales_mode": 1,
+        //     "project_name": "Project 2",
+        //     "discount": 12,
+        //     "tax": 1,
+        //     "advance": 10,
+        //     "date": "2023-12-05",
+        //     "payment_mode": "cheque",
+        //     "cheque_number": "!111",
+        //     "bank": "canara",
+        //     "amount_paid_date": "2023-12-04"
+        //   });
+        // axios.put(`http://files.covaiciviltechlab.com/edit_invoice/${id}`, data).then((res) => {
+        //     console.log(res.data)
+        // }).catch((error: any) => {
+        //     console.error('Error:', error);
+        // })
+
+        // e.preventDefault()
+        // console.log("formData", formData)
     })
 
-    const invoicePriceChange = ((e: any, index: number) => {
-        // console.log('✌️e --->', e, index);
-        const updatedFilterTest: any = [...filterTest]; // Create a copy of the array
-        const filterItem: any = updatedFilterTest[index];
 
-        if (filterItem) {
-            // Check if the item at the specified index exists
-            const updatedItem = {
-                ...filterItem,
-                price: Number(e),
-                total: Number(e) * Number(filterItem.quantity),
-            };
-            updatedFilterTest[index] = updatedItem;
-            setFilterTest(updatedFilterTest)
+    const handleSelectChange = (e: any) => {
 
-        }
-    })
+        // Find the selected customer in the data array
+        const selectedCustomer = invoiceFormData?.customers?.find((customer: any) => customer.id == Number(e.target.value));
 
+        setCustomerAddress(selectedCustomer?.address1 || '');
+        setFormData(prevState => ({
+            ...prevState,
+            customer: selectedCustomer.id
 
+        }));
 
+        // console.log('customerAddress', customerAddress);
+
+        // Update form values directly (assuming you have access to the form instance)
+        form.setFieldsValue({
+            'reciever-address': selectedCustomer?.address1 || '',
+        });
+    };
 
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
@@ -350,25 +367,13 @@ const Edit = () => {
                             <label htmlFor="number" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
                                 Invoice Number
                             </label>
-                            <input id="number" type="text" name="inv-num" className="form-input w-2/3 lg:w-[250px]"  defaultValue={invoiceFormData?.invoice?.invoice_no} />
-                        </div>
-                        <div className="mt-4 flex items-center">
-                            <label htmlFor="invoiceLabel" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
-                                Invoice Label
-                            </label>
-                            <input id="invoiceLabel" type="text" name="inv-label" className="form-input w-2/3 lg:w-[250px]" placeholder="Enter Invoice Label" defaultValue={params.title} />
+                            <input id="number" type="text" className="form-input w-2/3 lg:w-[250px]" name="invoice_no" defaultValue={invoiceFormData?.invoice?.invoice_no} />
                         </div>
                         <div className="mt-4 flex items-center">
                             <label htmlFor="startDate" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
                                 Invoice Date
                             </label>
-                            <input id="startDate" type="date" name="inv-date" className="form-input w-2/3 lg:w-[250px]" defaultValue={params.invoiceDate} />
-                        </div>
-                        <div className="mt-4 flex items-center">
-                            <label htmlFor="dueDate" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
-                                Due Date
-                            </label>
-                            <input id="dueDate" type="date" name="due-date" className="form-input w-2/3 lg:w-[250px]" defaultValue={params.dueDate} />
+                            <input id="startDate" type="date" className="form-input w-2/3 lg:w-[250px]" name="date" value={formData.date} onChange={inputChange} />
                         </div>
                     </div>
                 </div>
@@ -378,252 +383,123 @@ const Edit = () => {
                         <div className="mb-6 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
                             <div className="text-lg">Bill To :-</div>
                             <div className="mt-4 flex items-center">
-                                <label htmlFor="reciever-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Name
+                                <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Customer Name
                                 </label>
-                                <input id="reciever-name" type="text" name="reciever-name" className="form-input flex-1" defaultValue={invoiceFormData?.customer?.customer_name} placeholder="Enter Name" />
+                                <select id="country" className="form-select flex-1" name="customer" onChange={handleSelectChange}
+
+                                >
+
+                                    {invoiceFormData?.customers?.map((value: any) => (
+                                        <option key={value.id} value={value.id}>
+                                            {value?.customer_name}
+                                        </option>
+                                    ))}
+                                </select>
                             </div>
-                            <div className="mt-4 flex items-center">
-                                <label htmlFor="reciever-email" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Email
-                                </label>
-                                <input id="reciever-email" type="email" name="reciever-email" className="form-input flex-1" defaultValue={params.to.email} placeholder="Enter Email" />
-                            </div>
+
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="reciever-address" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Address
                                 </label>
-                                <input id="reciever-address" type="text" name="reciever-address" className="form-input flex-1" defaultValue={invoiceFormData?.customer?.address1} placeholder="Enter Address" />
+                                <textarea id="reciever-address" name="reciever-address" className="form-input flex-1" value={customerAddress} placeholder="Enter Address" />
                             </div>
                             <div className="mt-4 flex items-center">
-                                <label htmlFor="reciever-number" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Phone Number
+                                <label htmlFor="reciever-email" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Project Name
                                 </label>
-                                <input id="reciever-number" type="text" name="reciever-number" className="form-input flex-1" defaultValue={params.to.phone} placeholder="Enter Phone number" />
+                                <input id="reciever-email" type="email" className="form-input flex-1" name="project_name" value={formData?.project_name} onChange={inputChange} placeholder="Enter Email" />
                             </div>
                         </div>
                         <div className="w-full lg:w-1/2">
-                            <div className="text-lg">Payment Details:</div>
-                            <div className="mt-4 flex items-center">
-                                <label htmlFor="acno" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Account Number
-                                </label>
-                                <input id="acno" type="text" name="acno" className="form-input flex-1" defaultValue={params.bankInfo.no} placeholder="Enter Account Number" />
-                            </div>
+                            <div className="text-lg"></div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Bank Name
+                                    Discount
                                 </label>
-                                <input id="bank-name" type="text" name="bank-name" className="form-input flex-1" defaultValue={params.bankInfo.name} placeholder="Enter Bank Name" />
+                                <input id="bank-name" type="text" className="form-input flex-1" name="discount" value={formData?.discount} onChange={inputChange} placeholder="Enter Bank Name" />
                             </div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    SWIFT Number
+                                    Advance
                                 </label>
-                                <input id="swift-code" type="text" name="swift-code" className="form-input flex-1" defaultValue={params.bankInfo.swiftCode} placeholder="Enter SWIFT Number" />
+                                <input id="swift-code" type="text" className="form-input flex-1" name="advance" value={formData?.advance} onChange={inputChange} placeholder="Enter SWIFT Number" />
                             </div>
+
                             <div className="mt-4 flex items-center">
-                                <label htmlFor="iban-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    IBAN Number
+                                <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Amount Paid Date
                                 </label>
-                                <input id="iban-code" type="text" name="iban-code" className="form-input flex-1" defaultValue={params.bankInfo.ibanNo} placeholder="Enter IBAN Number" />
+                                <input id="swift-code" type="date" className="form-input flex-1" name="amount_paid_date" value={formData?.amount_paid_date} onChange={inputChange} placeholder="Enter SWIFT Number" />
                             </div>
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Country
+                                    Payment Mode
                                 </label>
-                                <select id="country" name="country" className="form-select flex-1" defaultValue={params.bankInfo.country}>
-                                    <option value="">Choose Country</option>
-                                    <option value="United States">United States</option>
-                                    <option value="United Kingdom">United Kingdom</option>
-                                    <option value="Canada">Canada</option>
-                                    <option value="Australia">Australia</option>
-                                    <option value="Germany">Germany</option>
-                                    <option value="Sweden">Sweden</option>
-                                    <option value="Denmark">Denmark</option>
-                                    <option value="Norway">Norway</option>
-                                    <option value="New-Zealand">New Zealand</option>
-                                    <option value="Afghanistan">Afghanistan</option>
-                                    <option value="Albania">Albania</option>
-                                    <option value="Algeria">Algeria</option>
-                                    <option value="American-Samoa">Andorra</option>
-                                    <option value="Angola">Angola</option>
-                                    <option value="Antigua Barbuda">Antigua &amp; Barbuda</option>
-                                    <option value="Argentina">Argentina</option>
-                                    <option value="Armenia">Armenia</option>
-                                    <option value="Aruba">Aruba</option>
-                                    <option value="Austria">Austria</option>
-                                    <option value="Azerbaijan">Azerbaijan</option>
-                                    <option value="Bahamas">Bahamas</option>
-                                    <option value="Bahrain">Bahrain</option>
-                                    <option value="Bangladesh">Bangladesh</option>
-                                    <option value="Barbados">Barbados</option>
-                                    <option value="Belarus">Belarus</option>
-                                    <option value="Belgium">Belgium</option>
-                                    <option value="Belize">Belize</option>
-                                    <option value="Benin">Benin</option>
-                                    <option value="Bermuda">Bermuda</option>
-                                    <option value="Bhutan">Bhutan</option>
-                                    <option value="Bolivia">Bolivia</option>
-                                    <option value="Bosnia">Bosnia &amp; Herzegovina</option>
-                                    <option value="Botswana">Botswana</option>
-                                    <option value="Brazil">Brazil</option>
-                                    <option value="British">British Virgin Islands</option>
-                                    <option value="Brunei">Brunei</option>
-                                    <option value="Bulgaria">Bulgaria</option>
-                                    <option value="Burkina">Burkina Faso</option>
-                                    <option value="Burundi">Burundi</option>
-                                    <option value="Cambodia">Cambodia</option>
-                                    <option value="Cameroon">Cameroon</option>
-                                    <option value="Cape">Cape Verde</option>
-                                    <option value="Cayman">Cayman Islands</option>
-                                    <option value="Central-African">Central African Republic</option>
-                                    <option value="Chad">Chad</option>
-                                    <option value="Chile">Chile</option>
-                                    <option value="China">China</option>
-                                    <option value="Colombia">Colombia</option>
-                                    <option value="Comoros">Comoros</option>
-                                    <option value="Costa-Rica">Costa Rica</option>
-                                    <option value="Croatia">Croatia</option>
-                                    <option value="Cuba">Cuba</option>
-                                    <option value="Cyprus">Cyprus</option>
-                                    <option value="Czechia">Czechia</option>
-                                    <option value="Côte">{`Côte d'Ivoire`}</option>
-                                    <option value="Djibouti">Djibouti</option>
-                                    <option value="Dominica">Dominica</option>
-                                    <option value="Dominican">Dominican Republic</option>
-                                    <option value="Ecuador">Ecuador</option>
-                                    <option value="Egypt">Egypt</option>
-                                    <option value="El-Salvador">El Salvador</option>
-                                    <option value="Equatorial-Guinea">Equatorial Guinea</option>
-                                    <option value="Eritrea">Eritrea</option>
-                                    <option value="Estonia">Estonia</option>
-                                    <option value="Ethiopia">Ethiopia</option>
-                                    <option value="Fiji">Fiji</option>
-                                    <option value="Finland">Finland</option>
-                                    <option value="France">France</option>
-                                    <option value="Gabon">Gabon</option>
-                                    <option value="Georgia">Georgia</option>
-                                    <option value="Ghana">Ghana</option>
-                                    <option value="Greece">Greece</option>
-                                    <option value="Grenada">Grenada</option>
-                                    <option value="Guatemala">Guatemala</option>
-                                    <option value="Guernsey">Guernsey</option>
-                                    <option value="Guinea">Guinea</option>
-                                    <option value="Guinea-Bissau">Guinea-Bissau</option>
-                                    <option value="Guyana">Guyana</option>
-                                    <option value="Haiti">Haiti</option>
-                                    <option value="Honduras">Honduras</option>
-                                    <option value="Hong-Kong">Hong Kong SAR China</option>
-                                    <option value="Hungary">Hungary</option>
-                                    <option value="Iceland">Iceland</option>
-                                    <option value="India">India</option>
-                                    <option value="Indonesia">Indonesia</option>
-                                    <option value="Iran">Iran</option>
-                                    <option value="Iraq">Iraq</option>
-                                    <option value="Ireland">Ireland</option>
-                                    <option value="Israel">Israel</option>
-                                    <option value="Italy">Italy</option>
-                                    <option value="Jamaica">Jamaica</option>
-                                    <option value="Japan">Japan</option>
-                                    <option value="Jordan">Jordan</option>
-                                    <option value="Kazakhstan">Kazakhstan</option>
-                                    <option value="Kenya">Kenya</option>
-                                    <option value="Kuwait">Kuwait</option>
-                                    <option value="Kyrgyzstan">Kyrgyzstan</option>
-                                    <option value="Laos">Laos</option>
-                                    <option value="Latvia">Latvia</option>
-                                    <option value="Lebanon">Lebanon</option>
-                                    <option value="Lesotho">Lesotho</option>
-                                    <option value="Liberia">Liberia</option>
-                                    <option value="Libya">Libya</option>
-                                    <option value="Liechtenstein">Liechtenstein</option>
-                                    <option value="Lithuania">Lithuania</option>
-                                    <option value="Luxembourg">Luxembourg</option>
-                                    <option value="Macedonia">Macedonia</option>
-                                    <option value="Madagascar">Madagascar</option>
-                                    <option value="Malawi">Malawi</option>
-                                    <option value="Malaysia">Malaysia</option>
-                                    <option value="Maldives">Maldives</option>
-                                    <option value="Mali">Mali</option>
-                                    <option value="Malta">Malta</option>
-                                    <option value="Mauritania">Mauritania</option>
-                                    <option value="Mauritius">Mauritius</option>
-                                    <option value="Mexico">Mexico</option>
-                                    <option value="Moldova">Moldova</option>
-                                    <option value="Monaco">Monaco</option>
-                                    <option value="Mongolia">Mongolia</option>
-                                    <option value="Montenegro">Montenegro</option>
-                                    <option value="Morocco">Morocco</option>
-                                    <option value="Mozambique">Mozambique</option>
-                                    <option value="Myanmar">Myanmar (Burma)</option>
-                                    <option value="Namibia">Namibia</option>
-                                    <option value="Nepal">Nepal</option>
-                                    <option value="Netherlands">Netherlands</option>
-                                    <option value="Nicaragua">Nicaragua</option>
-                                    <option value="Niger">Niger</option>
-                                    <option value="Nigeria">Nigeria</option>
-                                    <option value="North-Korea">North Korea</option>
-                                    <option value="Oman">Oman</option>
-                                    <option value="Pakistan">Pakistan</option>
-                                    <option value="Palau">Palau</option>
-                                    <option value="Palestinian">Palestinian Territories</option>
-                                    <option value="Panama">Panama</option>
-                                    <option value="Papua">Papua New Guinea</option>
-                                    <option value="Paraguay">Paraguay</option>
-                                    <option value="Peru">Peru</option>
-                                    <option value="Philippines">Philippines</option>
-                                    <option value="Poland">Poland</option>
-                                    <option value="Portugal">Portugal</option>
-                                    <option value="Puerto">Puerto Rico</option>
-                                    <option value="Qatar">Qatar</option>
-                                    <option value="Romania">Romania</option>
-                                    <option value="Russia">Russia</option>
-                                    <option value="Rwanda">Rwanda</option>
-                                    <option value="Réunion">Réunion</option>
-                                    <option value="Samoa">Samoa</option>
-                                    <option value="San-Marino">San Marino</option>
-                                    <option value="Saudi-Arabia">Saudi Arabia</option>
-                                    <option value="Senegal">Senegal</option>
-                                    <option value="Serbia">Serbia</option>
-                                    <option value="Seychelles">Seychelles</option>
-                                    <option value="Sierra-Leone">Sierra Leone</option>
-                                    <option value="Singapore">Singapore</option>
-                                    <option value="Slovakia">Slovakia</option>
-                                    <option value="Slovenia">Slovenia</option>
-                                    <option value="Solomon-Islands">Solomon Islands</option>
-                                    <option value="Somalia">Somalia</option>
-                                    <option value="South-Africa">South Africa</option>
-                                    <option value="South-Korea">South Korea</option>
-                                    <option value="Spain">Spain</option>
-                                    <option value="Sri-Lanka">Sri Lanka</option>
-                                    <option value="Sudan">Sudan</option>
-                                    <option value="Suriname">Suriname</option>
-                                    <option value="Swaziland">Swaziland</option>
-                                    <option value="Switzerland">Switzerland</option>
-                                    <option value="Syria">Syria</option>
-                                    <option value="Sao-Tome-and-Principe">São Tomé &amp; Príncipe</option>
-                                    <option value="Tajikistan">Tajikistan</option>
-                                    <option value="Tanzania">Tanzania</option>
-                                    <option value="Thailand">Thailand</option>
-                                    <option value="Timor-Leste">Timor-Leste</option>
-                                    <option value="Togo">Togo</option>
-                                    <option value="Tonga">Tonga</option>
-                                    <option value="Trinidad-and-Tobago">Trinidad &amp; Tobago</option>
-                                    <option value="Tunisia">Tunisia</option>
-                                    <option value="Turkey">Turkey</option>
-                                    <option value="Turkmenistan">Turkmenistan</option>
-                                    <option value="Uganda">Uganda</option>
-                                    <option value="Ukraine">Ukraine</option>
-                                    <option value="UAE">United Arab Emirates</option>
-                                    <option value="Uruguay">Uruguay</option>
-                                    <option value="Uzbekistan">Uzbekistan</option>
-                                    <option value="Vanuatu">Vanuatu</option>
-                                    <option value="Venezuela">Venezuela</option>
-                                    <option value="Vietnam">Vietnam</option>
-                                    <option value="Yemen">Yemen</option>
-                                    <option value="Zambia">Zambia</option>
-                                    <option value="Zimbabwe">Zimbabwe</option>
+                                <select id="country" className="form-select flex-1" name="payment_mode" value={formData?.payment_mode} onChange={inputChange} >
+                                    {
+                                        invoiceFormData?.payment_mode_choices?.map((value: any) => {
+                                            // console.log("valuevaluevalue", value)
+                                            return (
+                                                <option key={value.id} value={value.id}>{value.value}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                            </div>
+                           
+                            {/* {
+                              invoiceFormData?.payment_mode_choices === "cheque" ?
+                                    <>
+                                      
+                                    </>
+                                    :
+                                    <> */}
+                            {/* <div className="mt-4 flex items-center">
+                                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Cheque Number
+                                            </label>
+                                            <input id="swift-code" type="text" className="form-input flex-1" name="cheque_number" value={formData?.cheque_number} onChange={inputChange} placeholder="Enter SWIFT Number" />
+                                        </div>
+
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Bank
+                                            </label>
+                                            <input id="swift-code" type="text" className="form-input flex-1" name="bank" value={formData?.bank} onChange={inputChange} placeholder="Enter SWIFT Number" />
+                                        </div> */}
+                            {/* </>
+                            } */}
+
+
+                            <div className="mt-4 flex items-center">
+                                <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Sales Mode
+                                </label>
+                                <select id="country" name="sales_mode" value={formData?.sales_mode} onChange={inputChange} className="form-select flex-1">
+                                    {
+                                        invoiceFormData?.sales_mode?.map((value: any) => {
+                                            // console.log("valuevaluevalue", value)
+                                            return (
+                                                <option key={value.id} value={value.id}>{value.sales_mode}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                            </div>
+                            <div className="mt-4 flex items-center">
+                                <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Tax
+                                </label>
+                                <select id="country" name="tax" value={formData?.tax} onChange={inputChange} className="form-select flex-1">
+                                    {
+                                        invoiceFormData?.taxs?.map((value: any) => {
+                                            // console.log("valuevaluevalue", value)
+                                            return (
+                                                <option key={value.id} value={value.id}>{value.tax_name}</option>
+                                            )
+                                        })
+                                    }
                                 </select>
                             </div>
                         </div>
@@ -663,7 +539,7 @@ const Edit = () => {
                                                     placeholder="Quantity"
                                                     value={Number(item?.quantity)}
                                                     min={0}
-                                                    // onChange={(e) => invoiceQuantityChange(e.target.value, index)}
+                                                // onChange={(e) => invoiceQuantityChange(e.target.value, index)}
                                                 />
                                             </td>
                                             <td>
@@ -673,12 +549,14 @@ const Edit = () => {
                                                     placeholder="Price"
                                                     value={Number(item?.price_per_sample)}
                                                     min={0}
-                                                    // onChange={(e) => invoicePriceChange(e.target.value, index)}
+                                                // onChange={(e) => invoicePriceChange(e.target.value, index)}
                                                 />
                                             </td>
                                             <td>{item.quantity * item.price_per_sample}</td>
                                             <td>
-                                                <button type="button" onClick={() => removeItem(item)}>
+                                                <button type="button"
+                                                //  onClick={() =>  removeItem(item)}
+                                                >
                                                     <IconX className="w-5 h-5" />
                                                 </button>
                                             </td>
@@ -718,21 +596,21 @@ const Edit = () => {
                         </div>
                     </div>
                 </div>
-                <div className="mt-8 px-4">
+                {/* <div className="mt-8 px-4">
                     <label htmlFor="notes">Notes</label>
                     <textarea id="notes" name="notes" className="form-textarea min-h-[130px]" placeholder="Notes...." defaultValue={params.notes}></textarea>
-                </div>
+                </div> */}
             </div>
             <div className="mt-6 w-full xl:mt-0 xl:w-96">
                 <div className="panel mb-5">
-                    <label htmlFor="currency">Currency</label>
+                    {/* <label htmlFor="currency">Currency</label>
                     <select id="currency" name="currency" className="form-select" value={selectedCurrency} onChange={(e) => setSelectedCurrency(e.target.value)}>
                         {currencyList.map((currency, i) => (
                             <option value={currency} key={i}>
                                 {currency}
                             </option>
                         ))}
-                    </select>
+                    </select> */}
                     <div className="mt-4">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
@@ -769,7 +647,7 @@ const Edit = () => {
                 </div>
                 <div className="panel">
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1">
-                        <button type="button" className="btn btn-success w-full gap-2">
+                        <button type="button" className="btn btn-success w-full gap-2" onClick={invoiceFormSubmit}>
                             <IconSave className="ltr:mr-2 rtl:ml-2 shrink-0" />
                             Save
                         </button>
@@ -784,10 +662,6 @@ const Edit = () => {
                             Preview
                         </Link>
 
-                        {/* <button type="button" className="btn btn-secondary w-full gap-2">
-                            <IconDownload className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Download
-                        </button> */}
                     </div>
                 </div>
             </div>
