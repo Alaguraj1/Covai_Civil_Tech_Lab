@@ -14,7 +14,7 @@ const Tax = () => {
   const [form] = Form.useForm();
   const [editRecord, setEditRecord] = useState(null);
   const [drawerTitle, setDrawerTitle] = useState("Create Tax")
-  const [viewRecord, setViewRecord] = useState(null)
+  const [viewRecord, setViewRecord] = useState<any>(null)
   const [dataSource, setDataSource] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filterData, setFilterData] = useState(dataSource)

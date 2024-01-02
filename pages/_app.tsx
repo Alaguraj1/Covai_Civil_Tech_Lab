@@ -25,6 +25,16 @@ type AppPropsWithLayout = AppProps & {
 const App = ({ Component, pageProps }: AppPropsWithLayout) => {
     const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
 
+
+    // The pages that should not use the DefaultLayout
+    const pagesWithoutLayout = ['Preview'];
+
+    // Get the name of the current page component
+    const currentPageName = Component.displayName || Component.name;
+
+    // Check if the current page should use the layout
+    const shouldUseLayout = !pagesWithoutLayout.includes(currentPageName);
+
     return (
         <Provider store={store}>
             <Head>
@@ -36,7 +46,7 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
                 {/* <link rel="icon" href="/favicon.png" /> */}
             </Head>
 
-            {getLayout(<Component {...pageProps} />)}
+            {shouldUseLayout ? getLayout(<Component {...pageProps} />) : <Component {...pageProps} />}
         </Provider>
     );
 };

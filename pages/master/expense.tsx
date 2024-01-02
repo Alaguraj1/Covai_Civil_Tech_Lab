@@ -13,7 +13,7 @@ const Expense = () => {
   const [form] = Form.useForm();
   const [editRecord, setEditRecord] = useState(null)
   const [drawerTitle, setDrawerTitle] = useState("Create Expense")
-  const [viewRecord, setViewRecord] = useState(null)
+  const [viewRecord, setViewRecord] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [dataSource, setDataSource] = useState([])
 

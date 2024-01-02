@@ -15,9 +15,9 @@ const Report = () => {
   const [form] = Form.useForm();
   const [editRecord, setEditRecord] = useState(null)
   const [drawerTitle, setDrawerTitle] = useState("Create Report Templates")
-  const [viewRecord, setViewRecord] = useState(null)
+  const [viewRecord, setViewRecord] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formFields, setFormFields] = useState([])
+  const [formFields, setFormFields] = useState<any>([])
   const [dataSource, setDataSource] = useState([])
   const [editor, setEditor] = useState("")
 
@@ -74,7 +74,7 @@ const Report = () => {
   const showDrawer = (record: any) => {
 
     if (record) {
-      const templateRecord = {
+      const templateRecord:any = {
         material: record.material.id,
         report_template_name: record.report_template_name,
         print_format: record?.print_format.id,

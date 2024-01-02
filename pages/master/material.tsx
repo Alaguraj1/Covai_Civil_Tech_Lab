@@ -13,7 +13,7 @@ const Material = () => {
   const [DrawerTitle, setDrawerTitle] = useState("Create Material")
   const [editRecord, setEditRecord] = useState(null)
   const [dataSource, setDataSource] = useState([])
-  const [viewRecord, setViewRecord] = useState(null)
+  const [viewRecord, setViewRecord] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   // Model 
