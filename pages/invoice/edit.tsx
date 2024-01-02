@@ -49,7 +49,10 @@ const Edit = () => {
         payment_mode: "",
         cheque_number: "",
         bank: "",
-        amount_paid_date: ""
+        amount_paid_date: "",
+        before_tax: "",
+        after_tax: "",
+        balance:""
     });
     console.log('✌️formData --->', formData);
 
@@ -105,7 +108,8 @@ const Edit = () => {
                 payment_mode: response.invoice.payment_mode,
                 cheque_number: response.invoice.cheque_number,
                 bank: response.invoice.bank,
-                amount_paid_date: response.invoice.amount_paid_date
+                amount_paid_date: response.invoice.amount_paid_date,
+                before_tax: response?.invoice_tests.reduce((total:any, test:any) => total + parseFloat(test.total), 0),
             }));
 
             setInvoiceFormData(data)
@@ -413,18 +417,18 @@ const Edit = () => {
                         </div>
                         <div className="w-full lg:w-1/2">
                             <div className="text-lg"></div>
-                            <div className="mt-4 flex items-center">
+                            {/* <div className="mt-4 flex items-center">
                                 <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Discount
                                 </label>
                                 <input id="bank-name" type="text" className="form-input flex-1" name="discount" value={formData?.discount} onChange={inputChange} placeholder="Enter Bank Name" />
-                            </div>
-                            <div className="mt-4 flex items-center">
+                            </div> */}
+                            {/* <div className="mt-4 flex items-center">
                                 <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Advance
                                 </label>
                                 <input id="swift-code" type="text" className="form-input flex-1" name="advance" value={formData?.advance} onChange={inputChange} placeholder="Enter SWIFT Number" />
-                            </div>
+                            </div> */}
 
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
@@ -447,7 +451,7 @@ const Edit = () => {
                                     }
                                 </select>
                             </div>
-                           
+
                             {/* {
                               invoiceFormData?.payment_mode_choices === "cheque" ?
                                     <>
@@ -487,7 +491,7 @@ const Edit = () => {
                                     }
                                 </select>
                             </div>
-                            <div className="mt-4 flex items-center">
+                            {/* <div className="mt-4 flex items-center">
                                 <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Tax
                                 </label>
@@ -501,7 +505,7 @@ const Edit = () => {
                                         })
                                     }
                                 </select>
-                            </div>
+                            </div> */}
                         </div>
                     </div>
                 </div>
@@ -574,24 +578,55 @@ const Edit = () => {
                         </div>
                         <div className="sm:w-2/5">
                             <div className="flex items-center justify-between">
-                                <div>Subtotal</div>
+                                <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Discount
+                                </label>
+                                <input id="bank-name" type="text" className="form-input flex-1" name="discount" value={formData?.discount} onChange={inputChange} placeholder="Enter Discount" />
+                                {/* <div>Subtotal</div>
+                                <div>265.00</div> */}
+                            </div>
+                            <div className="mt-4 flex items-center justify-between">
+                                <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Before Tax
+                                </label>
+                                <input id="bank-name" type="text" className="form-input flex-1" name="before_tax" value={formData?.before_tax} onChange={inputChange} placeholder="Enter Before Tax" />
+                            </div>
+                            <div className="mt-4 flex items-center justify-between">
+                                <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Tax
+                                </label>
+                                <select id="country" name="tax" value={formData?.tax} onChange={inputChange} className="form-select flex-1">
+                                    {
+                                        invoiceFormData?.taxs?.map((value: any) => {
+                                            // console.log("valuevaluevalue", value)
+                                            return (
+                                                <option key={value.id} value={value.id}>{value.tax_name}</option>
+                                            )
+                                        })
+                                    }
+                                </select>
+                            </div>
+                            <div className="flex items-center justify-between">
+                                <div>SGST</div>
                                 <div>265.00</div>
                             </div>
                             <div className="mt-4 flex items-center justify-between">
-                                <div>Tax(%)</div>
-                                <div>0%</div>
+                                <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    After Tax
+                                </label>
+                                <input id="bank-name" type="text" className="form-input flex-1" name="after_tax" value={formData?.after_tax} onChange={inputChange} placeholder="Enter Before Tax" />
                             </div>
                             <div className="mt-4 flex items-center justify-between">
-                                <div>Shipping Rate($)</div>
-                                <div>0.00</div>
-                            </div>
-                            <div className="mt-4 flex items-center justify-between">
-                                <div>Discount(%)</div>
-                                <div>0%</div>
+                                <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Advance
+                                </label>
+                                <input id="swift-code" type="text" className="form-input flex-1" name="advance" value={formData?.advance} onChange={inputChange} placeholder="Enter SWIFT Number" />
                             </div>
                             <div className="mt-4 flex items-center justify-between font-semibold">
-                                <div>Total</div>
-                                <div>$265.00</div>
+                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                            Balance
+                                </label>
+                                <input id="swift-code" type="text" className="form-input flex-1" name="balance" value={formData?.balance} onChange={inputChange} placeholder="Enter SWIFT Number" />
                             </div>
                         </div>
                     </div>
@@ -602,15 +637,15 @@ const Edit = () => {
                 </div> */}
             </div>
             <div className="mt-6 w-full xl:mt-0 xl:w-96">
-                <div className="panel mb-5">
-                    {/* <label htmlFor="currency">Currency</label>
+                {/* <div className="panel mb-5">
+                    <label htmlFor="currency">Currency</label>
                     <select id="currency" name="currency" className="form-select" value={selectedCurrency} onChange={(e) => setSelectedCurrency(e.target.value)}>
                         {currencyList.map((currency, i) => (
                             <option value={currency} key={i}>
                                 {currency}
                             </option>
                         ))}
-                    </select> */}
+                    </select>
                     <div className="mt-4">
                         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                             <div>
@@ -644,7 +679,7 @@ const Edit = () => {
                             <option value="upi">UPI Transfer</option>
                         </select>
                     </div>
-                </div>
+                </div> */}
                 <div className="panel">
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1">
                         <button type="button" className="btn btn-success w-full gap-2" onClick={invoiceFormSubmit}>
