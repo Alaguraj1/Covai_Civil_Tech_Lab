@@ -745,8 +745,29 @@ border-right: 1px solid black;
     justify-content: space-between;
 }
 
-table tr td th{
-    border: 1px solid black;
+table tbody tr {
+    border-bottom-width: 0px;
+    border-color:none;
+}
+
+.table-1 table  {
+    border-width: 1px !important;
+    border-color:black !important;
+}
+
+.table-1 tr{
+    border-width: 1px !important;
+    border-color:black !important;
+}
+
+.table-1 th{
+    border-width: 1px !important;
+    border-color:black !important;
+}
+
+.table-1 td{
+    border-width: 1px !important;
+    border-color:black !important;
 }
 
 @media(max-width:992px) {
