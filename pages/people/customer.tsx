@@ -13,7 +13,7 @@ const Customer = () => {
     const [form] = Form.useForm();
     const [editRecord, setEditRecord] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState("Create Employee Details");
-    const [viewRecord, setViewRecord] = useState(null)
+    const [viewRecord, setViewRecord] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataSource, setDataSource] = useState([])
 
@@ -99,23 +99,42 @@ const Customer = () => {
             title: "Actions",
             key: "actions",
             render: (text: any, record: any) => (
-
                 <Space size="middle">
-                    <EyeOutlined style={{ cursor: "pointer" }}
-                        onClick={() => showModal(record)} className='view-icon' rev={undefined} />
+                    <EyeOutlined
+                        style={{ cursor: "pointer" }}
+                        onClick={() => showModal(record)}
+                        className='view-icon'
+                        rev={undefined}
+                    />
                     <EditOutlined
                         style={{ cursor: "pointer" }}
                         onClick={() => showDrawer(record)}
-                        className='edit-icon' rev={undefined} />
-                    <DeleteOutlined
-                        style={{ color: "red", cursor: "pointer" }}
-                        onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} />
+                        className='edit-icon'
+                        rev={undefined}
+                    />
+                    {
+                        localStorage.getItem('admin') === 'true' ? (
+                            <DeleteOutlined
+                                style={{ color: "red", cursor: "pointer" }}
+                                onClick={() => handleDelete(record)}
+                                className='delete-icon'
+                                rev={undefined}
+                            />
+                        ) : (
+                            <DeleteOutlined
+                                style={{ display: "none" }}
+                                onClick={() => handleDelete(record)}
+                                className='delete-icon'
+                                rev={undefined}
+                            />
+                        )
+                    }
+
                 </Space>
             ),
         }
+
     ];
-
-
 
     const handleDelete = (record: any) => {
         // Implement your delete logic here
@@ -126,30 +145,33 @@ const Customer = () => {
             okText: "Yes",
             okType: "danger",
             onOk: () => {
-                console.log(record, "values")
+
+                console.log(record, "values");
+
                 axios.delete(`http://files.covaiciviltechlab.com/delete_customer/${record.id}`, {
                     headers: {
                         "Authorization": `Token ${localStorage.getItem("token")}`
                     }
                 }).then((res) => {
-                    console.log(res)
-                    getCustomer()
+                    console.log(res);
+                    getCustomer();
                 }).catch((err) => {
-                    console.log(err)
-                })
+                    console.log(err);
+                });
 
             },
         });
     };
 
+
     const [filterData, setFilterData] = useState(dataSource)
 
     const inputChange = (e: any) => {
-      const searchValue = e.target.value.toLowerCase();
-      const filteredData = dataSource.filter((item: any) =>
-        item.customer_name.toLowerCase().includes(searchValue)
-      );
-      setFilterData(searchValue ? filteredData : dataSource);
+        const searchValue = e.target.value.toLowerCase();
+        const filteredData = dataSource.filter((item: any) =>
+            item.customer_name.toLowerCase().includes(searchValue)
+        );
+        setFilterData(searchValue ? filteredData : dataSource);
     };
 
 
@@ -159,17 +181,17 @@ const Customer = () => {
 
         // Check if editing or creating
         if (editRecord) {
-          axios.put(`http://files.covaiciviltechlab.com/edit_customer/${editRecord.id}/`, values, {
-            headers: {
-                "Authorization": `Token ${localStorage.getItem("token")}`
-            }
-          }).then((res) => {
-            console.log(res)
-            form.resetFields();
-            getCustomer()
-          }).catch((error) => {
-            console.log(error)
-          })
+            axios.put(`http://files.covaiciviltechlab.com/edit_customer/${editRecord.id}/`, values, {
+                headers: {
+                    "Authorization": `Token ${localStorage.getItem("token")}`
+                }
+            }).then((res) => {
+                console.log(res)
+                form.resetFields();
+                getCustomer()
+            }).catch((error) => {
+                console.log(error)
+            })
             // Clear editRecord state
             setEditRecord(null);
         } else {

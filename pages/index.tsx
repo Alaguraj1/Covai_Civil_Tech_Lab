@@ -44,6 +44,7 @@ const Index = () => {
         axios.post("http://files.covaiciviltechlab.com/login/", formData).then((res) => {
             console.log(res.data)
             localStorage.setItem("token", res?.data?.token)
+            localStorage.setItem("admin", res?.data?.is_admin)
             router.push('/people/customer');
             messageApi.open({
                 type: 'success',

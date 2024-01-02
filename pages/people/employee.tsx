@@ -14,7 +14,7 @@ const Employee = () => {
     const [form] = Form.useForm();
     const [editRecord, setEditRecord] = useState(null);
     const [drawerTitle, setDrawerTitle] = useState("Create Employee Details");
-    const [viewRecord, setViewRecord] = useState(null)
+    const [viewRecord, setViewRecord] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataSource, setDataSource] = useState([])
 
@@ -158,11 +158,11 @@ const Employee = () => {
     // input search
     const [filterData, setFilterData] = useState(dataSource)
 
-    const inputChange = ((e:any) => {
+    const inputChange = ((e: any) => {
         const SearchValue = e.target.value
 
-        const filteredData = dataSource.filter((item:any) => {
-            return(
+        const filteredData = dataSource.filter((item: any) => {
+            return (
                 item.employee_name.toLowerCase().includes(SearchValue.toLowerCase())
             )
         })
@@ -415,16 +415,16 @@ const Employee = () => {
                         </Form.Item>
 
                         <Form.Item label="DOB" name="dob"
-                         required={false}
-                         rules={[{ required: true, message: 'Please Select your DOB!' }]}
-                         >
+                            required={false}
+                            rules={[{ required: true, message: 'Please Select your DOB!' }]}
+                        >
                             <DatePicker style={{ width: "100%" }} />
                         </Form.Item>
 
                         <Form.Item label="Gender" name="gender"
-                         required={false}
-                         rules={[{ required: true, message: 'Please Select your Gender!' }]}
-                         >
+                            required={false}
+                            rules={[{ required: true, message: 'Please Select your Gender!' }]}
+                        >
                             <Radio.Group>
                                 <Radio value="M"> Male </Radio>
                                 <Radio value="F"> Female </Radio>
