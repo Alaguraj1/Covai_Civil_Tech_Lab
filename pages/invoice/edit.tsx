@@ -25,7 +25,6 @@ const Edit = () => {
     });
 
 
-    const [tax, setTax] = useState<any>(0);
     const [form] = Form.useForm()
     const [discount, setDiscount] = useState<any>(0);
     const [shippingCharge, setShippingCharge] = useState<any>(0);
@@ -38,6 +37,14 @@ const Edit = () => {
     const [invoiceFormData, setInvoiceFormData] = useState<any>({})
     const [selectedCustomerId, setSelectedCustomerId] = useState(null);
     const [customerAddress, setCustomerAddress] = useState('');
+    const [tax, setTax] = useState('')
+    const [taxPercentage, setTaxPercentage] = useState('')
+    const [balance, setBalance] = useState('')
+    const [taxCalculated, setTaxCalculated] = useState('')
+    const [afterTax, setAfterTax] = useState<any>('')
+    const [beforeTotalTax, setBeforeTotalTax] = useState<any>(0)
+    const [advance, setAdvance] = useState(0)
+
     const [formData, setFormData] = useState({
         customer: "",
         sales_mode: "",
@@ -51,10 +58,8 @@ const Edit = () => {
         bank: "",
         amount_paid_date: "",
         before_tax: "",
-        after_tax: "",
-        balance:""
     });
-    console.log('✌️formData --->', formData);
+    // console.log('✌️formData --->', formData);
 
     // console.log("abc", formData)
 
@@ -109,13 +114,33 @@ const Edit = () => {
                 cheque_number: response.invoice.cheque_number,
                 bank: response.invoice.bank,
                 amount_paid_date: response.invoice.amount_paid_date,
-                before_tax: response?.invoice_tests.reduce((total:any, test:any) => total + parseFloat(test.total), 0),
+                before_tax: response?.invoice_tests.reduce((total: any, test: any) => total + parseFloat(test.total), 0),
+
             }));
+
+            setBeforeTotalTax(response?.invoice_tests.reduce((total: any, test: any) => total + parseFloat(test.total), 0))
+
+            const Balance = afterTax - parseFloat(response.invoice.advance);
+            setBalance(Balance.toString());
 
             setInvoiceFormData(data)
 
             setCustomerAddress(uniqueArray[0]?.address1);
 
+            setTax(response?.taxs[0]?.tax_name)
+
+            setTaxPercentage(response?.taxs[0]?.tax_percentage)
+
+            const beforetax: any = response?.invoice_tests.reduce((total: any, test: any) => total + parseFloat(test.total), 0)
+            const tagPercentage: any = response?.taxs[0]?.tax_percentage
+            const calculatedtax: any = beforetax * tagPercentage / 100
+            setTaxCalculated(calculatedtax)
+
+            const afterCalculated = beforetax + calculatedtax
+            setAfterTax(afterCalculated)
+
+            const InitialBalance:any = afterCalculated - response.invoice.advance
+            setBalance(InitialBalance)
 
         }).catch((error: any) => {
             console.log("error", error)
@@ -191,7 +216,7 @@ const Edit = () => {
     // };
 
 
-    console.log("invoiceFormData", invoiceFormData)
+    // console.log("invoiceFormData", invoiceFormData)
     const onFinish = (values: any) => {
         // console.log('✌️values --->', values);
         // Assuming 'id' and 'filterTest' are properties you want to include in the request
@@ -295,7 +320,11 @@ const Edit = () => {
 
         const Token = localStorage.getItem('token');
 
-        axios.put(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`, formData, {
+        axios.put(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`,{
+            ...formData,   // Assuming formData is an object
+            advance: advance,
+            balance: balance,
+        },{
             headers: {
                 'Authorization': `Token ${Token}`,
                 'Content-Type': 'application/json'
@@ -351,6 +380,71 @@ const Edit = () => {
             'reciever-address': selectedCustomer?.address1 || '',
         });
     };
+
+    const handleTaxChange = (e: any) => {
+        const selectedTax = invoiceFormData?.taxs?.find((tax: any) => tax.id === Number(e.target.value));
+
+        setTax(selectedTax?.tax_name || '');
+        setTaxPercentage(selectedTax?.tax_percentage || '');
+
+        setFormData((prevState) => ({
+            ...prevState,
+            tax: selectedTax.id,
+        }));
+
+        const taxCalculation: any = (parseFloat(selectedTax?.tax_percentage || '0') * parseFloat(formData?.before_tax || '0')) / 100;
+        const After_tax = parseFloat(formData?.before_tax || '0') + taxCalculation;
+        const newBalance = After_tax - parseFloat(formData.advance || '0');
+
+        setBalance(newBalance.toString());
+        setTaxCalculated(taxCalculation);
+        setAfterTax(After_tax);
+    };
+
+
+    const handleAdvanceChange = (value: string) => {
+        const newAdvance = parseFloat(value) || 0;
+        setAdvance(newAdvance);
+        const newBalance = afterTax - newAdvance;
+        setBalance(newBalance.toString());
+    };
+
+
+    const handleDiscountChange = (e: any) => {
+
+        const discount = parseFloat(e) || 0;
+        const beforeTax = parseFloat(beforeTotalTax || '0');
+
+
+        // Calculate discounted amount and discountedBeforeTax
+        const discountedAmount = (beforeTax * discount) / 100;
+        const discountedBeforeTax = discount !== 0 ? beforeTax - discountedAmount : beforeTax;
+
+        // Calculate tax, After_tax, and newBalance
+        const taxCalculation: any = (parseFloat(taxPercentage) * discountedBeforeTax) / 100;
+        const After_tax = discountedBeforeTax + taxCalculation;
+        const newBalance = After_tax - parseFloat(formData.advance || '0');
+
+        // Update form data and state values
+
+        if (discount === 0) {
+            setFormData((prevState: any) => ({
+                ...prevState,
+                discount: discount,
+                before_tax: beforeTotalTax || '0', // Set your desired initial value
+            }));
+        } else {
+            setFormData((prevState: any) => ({
+                ...prevState,
+                discount: discount,
+                before_tax: discountedBeforeTax.toString(),
+            }));
+        }
+        setBalance(newBalance.toString());
+        setTaxCalculated(taxCalculation);
+        setAfterTax(After_tax);
+    };
+
 
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
@@ -417,18 +511,6 @@ const Edit = () => {
                         </div>
                         <div className="w-full lg:w-1/2">
                             <div className="text-lg"></div>
-                            {/* <div className="mt-4 flex items-center">
-                                <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Discount
-                                </label>
-                                <input id="bank-name" type="text" className="form-input flex-1" name="discount" value={formData?.discount} onChange={inputChange} placeholder="Enter Bank Name" />
-                            </div> */}
-                            {/* <div className="mt-4 flex items-center">
-                                <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Advance
-                                </label>
-                                <input id="swift-code" type="text" className="form-input flex-1" name="advance" value={formData?.advance} onChange={inputChange} placeholder="Enter SWIFT Number" />
-                            </div> */}
 
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
@@ -452,29 +534,6 @@ const Edit = () => {
                                 </select>
                             </div>
 
-                            {/* {
-                              invoiceFormData?.payment_mode_choices === "cheque" ?
-                                    <>
-                                      
-                                    </>
-                                    :
-                                    <> */}
-                            {/* <div className="mt-4 flex items-center">
-                                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                                Cheque Number
-                                            </label>
-                                            <input id="swift-code" type="text" className="form-input flex-1" name="cheque_number" value={formData?.cheque_number} onChange={inputChange} placeholder="Enter SWIFT Number" />
-                                        </div>
-
-                                        <div className="mt-4 flex items-center">
-                                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                                Bank
-                                            </label>
-                                            <input id="swift-code" type="text" className="form-input flex-1" name="bank" value={formData?.bank} onChange={inputChange} placeholder="Enter SWIFT Number" />
-                                        </div> */}
-                            {/* </>
-                            } */}
-
 
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
@@ -491,21 +550,6 @@ const Edit = () => {
                                     }
                                 </select>
                             </div>
-                            {/* <div className="mt-4 flex items-center">
-                                <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Tax
-                                </label>
-                                <select id="country" name="tax" value={formData?.tax} onChange={inputChange} className="form-select flex-1">
-                                    {
-                                        invoiceFormData?.taxs?.map((value: any) => {
-                                            // console.log("valuevaluevalue", value)
-                                            return (
-                                                <option key={value.id} value={value.id}>{value.tax_name}</option>
-                                            )
-                                        })
-                                    }
-                                </select>
-                            </div> */}
                         </div>
                     </div>
                 </div>
@@ -581,7 +625,7 @@ const Edit = () => {
                                 <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Discount
                                 </label>
-                                <input id="bank-name" type="text" className="form-input flex-1" name="discount" value={formData?.discount} onChange={inputChange} placeholder="Enter Discount" />
+                                <input id="bank-name" type="text" className="form-input flex-1" name="discount" value={formData?.discount} onChange={(e) => handleDiscountChange(e.target.value)} placeholder="Enter Discount" />
                                 {/* <div>Subtotal</div>
                                 <div>265.00</div> */}
                             </div>
@@ -589,13 +633,17 @@ const Edit = () => {
                                 <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Before Tax
                                 </label>
-                                <input id="bank-name" type="text" className="form-input flex-1" name="before_tax" value={formData?.before_tax} onChange={inputChange} placeholder="Enter Before Tax" />
+                                <input id="bank-name" type="text" className="form-input flex-1" name="before_tax" value={formData?.before_tax} onChange={inputChange} placeholder="Enter Before Tax" disabled />
                             </div>
                             <div className="mt-4 flex items-center justify-between">
+
                                 <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Tax
                                 </label>
-                                <select id="country" name="tax" value={formData?.tax} onChange={inputChange} className="form-select flex-1">
+                                <select id="country" name="tax" value={formData?.tax} className="form-select flex-1" onChange={handleTaxChange}
+
+                                >
+
                                     {
                                         invoiceFormData?.taxs?.map((value: any) => {
                                             // console.log("valuevaluevalue", value)
@@ -606,27 +654,28 @@ const Edit = () => {
                                     }
                                 </select>
                             </div>
-                            <div className="flex items-center justify-between">
-                                <div>SGST</div>
-                                <div>265.00</div>
+                            <div className="flex items-center justify-between" style={{ marginTop: "20px" }}>
+                                <div>{tax}</div>
+                                <div>{tax} :{taxPercentage}% = {taxCalculated}</div>
                             </div>
                             <div className="mt-4 flex items-center justify-between">
                                 <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     After Tax
                                 </label>
-                                <input id="bank-name" type="text" className="form-input flex-1" name="after_tax" value={formData?.after_tax} onChange={inputChange} placeholder="Enter Before Tax" />
+                                <input id="bank-name" type="text" className="form-input flex-1" name="after_tax" value={afterTax} onChange={inputChange} placeholder="Enter After Tax" disabled />
                             </div>
                             <div className="mt-4 flex items-center justify-between">
                                 <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Advance
                                 </label>
-                                <input id="swift-code" type="text" className="form-input flex-1" name="advance" value={formData?.advance} onChange={inputChange} placeholder="Enter SWIFT Number" />
+                                <input id="swift-code" type="text" className="form-input flex-1" name="advance" value={advance}
+                                    onChange={(e) => handleAdvanceChange(e.target.value)} placeholder="Enter SWIFT Number" />
                             </div>
                             <div className="mt-4 flex items-center justify-between font-semibold">
-                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                            Balance
+                                <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Balance
                                 </label>
-                                <input id="swift-code" type="text" className="form-input flex-1" name="balance" value={formData?.balance} onChange={inputChange} placeholder="Enter SWIFT Number" />
+                                <input id="swift-code" type="text" className="form-input flex-1" name="balance" value={balance} onChange={inputChange} placeholder="Enter SWIFT Number" />
                             </div>
                         </div>
                     </div>
