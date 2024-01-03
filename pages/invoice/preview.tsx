@@ -1,7 +1,12 @@
 import React, { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
+import axios from 'axios';
 
 const Preview = () => {
   const [wordAmt, setWordAmt] = useState('');
+  const router = useRouter();
+  const { id } = router.query;
+  const [printData, setPrintData] = useState<any>([])
 
   useEffect(() => {
     calcAmt();
@@ -23,6 +28,21 @@ const Preview = () => {
     setWordAmt(word);
   };
 
+
+  useEffect(() => {
+    axios.get(`http://files.covaiciviltechlab.com/print_invoice/${id}/`, {
+      headers: {
+        "Authorization": `Token ${localStorage.getItem("token")}`
+      }
+    }).then((res) => {
+      setPrintData(res?.data)
+    }).catch((error: any) => {
+      console.log(error)
+    })
+  }, [id])
+
+
+  console.log("printData", printData)
 
   return (
     <>
@@ -77,9 +97,9 @@ const Preview = () => {
           </tr>
           <tr>
             <td>
-              Date : 06-09-2023
+              Date : {printData?.invoice?.date}
               <br />
-              Bill No : 01422
+              Bill No : {printData?.invoice?.invoice_no}
             </td>
             <td>
               <ul style={{ listStyleType: "circle" }}>
@@ -91,17 +111,15 @@ const Preview = () => {
           </tr>
           <tr>
             <td>
-              M/s MCR Construction,15, Raja Street, Perundurai-638052,
-              <br />
-              Erode, Tamilnadu
+             {printData?.customer?.address1}
               <br />
             </td>
             <td>
-              Code : 33
+              Code : {printData?.customer?.code}
               <br />
-              Place of Testing : Tamilnadu
+              Place of Testing : {printData?.customer?.place_of_testing}
               <br />
-              GSTIN/UIN : 33AAZFM9314N1ZG
+              GSTIN/UIN : {printData?.customer?.gstin_no}
               <br />
             </td>
           </tr>
@@ -267,8 +285,8 @@ const Preview = () => {
             <td width="" style={{ textAlign: "center" }}>
               <img
                 src="/assets/images/qr_code.png"
-                style={{ textAlign: "center", width:"50%" }}
-                // alt='image'
+                style={{ textAlign: "center", width: "50%" }}
+              // alt='image'
               />
             </td>
             <td width="25%" style={{ textAlign: "right" }}>

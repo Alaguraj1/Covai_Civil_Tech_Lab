@@ -17,7 +17,6 @@ const Edit = () => {
     const router = useRouter();
     const { id } = router.query;
 
-    // console.log(id)
 
     const dispatch = useDispatch();
     useEffect(() => {
@@ -445,6 +444,10 @@ const Edit = () => {
         setAfterTax(After_tax);
     };
 
+    const handlePreviewClick = (id: any) => {
+        // Navigate to the /invoice/edit page with the record data as a query parameter
+        window.location.href = `/invoice/preview?id=${id}`;
+    };
 
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
@@ -741,10 +744,10 @@ const Edit = () => {
                             Send Invoice
                         </button>
 
-                        <Link href="/invoice/preview" className="btn btn-primary w-full gap-2">
+                        <button className="btn btn-primary w-full gap-2" onClick={() => handlePreviewClick(id)}>
                             <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
                             Preview
-                        </Link>
+                        </button>
 
                     </div>
                 </div>

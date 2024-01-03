@@ -13,7 +13,7 @@ const Invoice = () => {
     const { Search } = Input;
     const [form] = Form.useForm();
     const [dataSource, setDataSource] = useState([])
-    const [formFields, setFormFields] = useState([])
+    const [formFields, setFormFields] = useState<any>([])
     const [selectedCustomerId, setSelectedCustomerId] = useState(null);
     const [customerAddress, setCustomerAddress] = useState('');
 
@@ -103,7 +103,7 @@ const Invoice = () => {
                         style={{ cursor: "pointer" }}
                         className='edit-icon'
                     >
-                        <EditOutlined />
+                        <EditOutlined rev={undefined} />
                     </span>
                     <DeleteOutlined
                         style={{ color: "red", cursor: "pointer" }}
