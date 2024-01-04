@@ -16,7 +16,7 @@ const Test = () => {
     const [viewRecord, setViewRecord] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataSource, setDataSource] = useState([])
-    const [formFields, setFormFields] = useState([])
+    const [formFields, setFormFields] = useState<any>([])
 
     // get test 
     useEffect(() => {
@@ -97,7 +97,7 @@ const Test = () => {
         if (record) {
             console.log("usdhfshdfhsu", record);
 
-            const testRecord = {
+            const testRecord:any = {
                 material_name: record?.material_name?.id, // Use the primary key of the material_name field
                 test_name: record.test_name,
                 price_per_piece: record.price_per_piece,

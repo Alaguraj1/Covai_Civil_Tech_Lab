@@ -7,10 +7,11 @@ import IconSave from '@/components/Icon/IconSave';
 import IconSend from '@/components/Icon/IconSend';
 import IconEye from '@/components/Icon/IconEye';
 import IconDownload from '@/components/Icon/IconDownload';
-import { Button, Modal, Checkbox, Form, Input, Select, Space, Flex } from 'antd';
+import { Button, Modal, Checkbox, Form, Input, Select, Space, Drawer } from 'antd';
 import type { SelectProps } from 'antd';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import { DeleteOutlined, EditOutlined, PrinterOutlined, } from '@ant-design/icons';
 
 const Edit = () => {
 
@@ -23,7 +24,8 @@ const Edit = () => {
         dispatch(setPageTitle('Invoice Edit'));
     });
 
-
+    const [editRecord, setEditRecord] = useState(null);
+    const [open, setOpen] = useState(false);
     const [form] = Form.useForm()
     const [discount, setDiscount] = useState<any>(0);
     const [shippingCharge, setShippingCharge] = useState<any>(0);
@@ -34,7 +36,6 @@ const Edit = () => {
     const [filterMaterial, setFilterMaterial] = useState([])
     const [filterTest, setFilterTest] = useState<any>([])
     const [invoiceFormData, setInvoiceFormData] = useState<any>({})
-    const [selectedCustomerId, setSelectedCustomerId] = useState(null);
     const [customerAddress, setCustomerAddress] = useState('');
     const [tax, setTax] = useState('')
     const [taxPercentage, setTaxPercentage] = useState('')
@@ -72,14 +73,16 @@ const Edit = () => {
         }
         )
     })
-    // Get Single Product
-    useEffect(() => {
+
+
+    const getInvoiceTestData = () => {
         axios.get(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`, {
             headers: {
                 "Authorization": `Token ${localStorage.getItem("token")}`
             }
         }).then((res) => {
             let response = res.data;
+            console.table('✌️response --->', response);
             let mergeArray: any = [response.customer, ...response.customers];
             const uniqueArray = mergeArray.reduce((acc: any, obj: any) => {
                 const existingObj = acc.find((item: any) => item.id === obj.id);
@@ -138,12 +141,18 @@ const Edit = () => {
             const afterCalculated = beforetax + calculatedtax
             setAfterTax(afterCalculated)
 
-            const InitialBalance:any = afterCalculated - response.invoice.advance
+            const InitialBalance: any = afterCalculated - response.invoice.advance
             setBalance(InitialBalance)
+
+            setAdvance(response.invoice.advance)
 
         }).catch((error: any) => {
             console.log("error", error)
         })
+    }
+    // Get Single Product
+    useEffect(() => {
+        getInvoiceTestData()
     }, [id])
 
     // console.log("InvoiceFormData", invoiceFormData)
@@ -243,8 +252,9 @@ const Edit = () => {
             }
         })
             .then((res) => {
-                // console.log(res.data);
+                console.log(res.data);
                 setIsModalOpen(false);
+                getInvoiceTestData()
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -257,10 +267,7 @@ const Edit = () => {
         // console.log('Failed:', errorInfo);
     };
 
-    type FieldType = {
-        material_id?: string;
-        test?: string;
-    };
+
 
     // console.log("filterDAtss", filterTest)
 
@@ -319,11 +326,11 @@ const Edit = () => {
 
         const Token = localStorage.getItem('token');
 
-        axios.put(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`,{
+        axios.put(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`, {
             ...formData,   // Assuming formData is an object
             advance: advance,
             balance: balance,
-        },{
+        }, {
             headers: {
                 'Authorization': `Token ${Token}`,
                 'Content-Type': 'application/json'
@@ -388,7 +395,7 @@ const Edit = () => {
 
         setFormData((prevState) => ({
             ...prevState,
-            tax: selectedTax.id,
+            tax: selectedTax,
         }));
 
         const taxCalculation: any = (parseFloat(selectedTax?.tax_percentage || '0') * parseFloat(formData?.before_tax || '0')) / 100;
@@ -449,6 +456,104 @@ const Edit = () => {
         window.location.href = `/invoice/preview?id=${id}`;
     };
 
+    console.log("textextex", tax)
+
+    // drawer
+    // drawer
+    const showDrawer = (item: any) => {
+        setEditRecord(item);
+        form.setFieldsValue(item);
+        setOpen(true);
+
+    };
+
+    const onClose = () => {
+        setOpen(false);
+        form.resetFields()
+        setCustomerAddress('')
+    };
+
+
+    // Invoice Test Delete 
+    const handleDelete = (id: any,) => {
+
+        const Token = localStorage.getItem("token")
+
+        Modal.confirm({
+            title: "Are you sure, you want to delete this TAX record?",
+            okText: "Yes",
+            okType: "danger",
+            onOk: () => {
+                console.log(id, "values")
+                axios.delete(`http://files.covaiciviltechlab.com/delete_invoice_test/${id}`, {
+                    headers: {
+                        "Authorization": `Token ${Token}`
+                    }
+                }).then((res) => {
+                    console.log(res)
+                    getInvoiceTestData()
+                }).catch((err) => {
+                    console.log(err)
+                })
+
+            },
+        });
+    };
+
+    // invoice edit form onfinish
+    const onFinish2 = (values: any,) => {
+        console.log('Success:', editRecord, values);
+
+
+        const Token = localStorage.getItem("token")
+        console.log("TokenTokenTokenToken", Token)
+
+        axios.put(`http://files.covaiciviltechlab.com/edit_invoice_test/${editRecord.id}/`, values, {
+            headers: {
+                "Authorization": `Token ${Token}`
+            }
+        }).then((res: any) => {
+            getInvoiceTestData()
+            console.log(res);
+            setOpen(false);
+        }).catch((error: any) => {
+            console.log(error);
+        });
+        onClose();
+    }
+
+
+    const onFinishFailed2 = (errorInfo: any) => {
+        console.log('Failed:', errorInfo);
+    };
+
+    const handleQuantityChange = (value: any) => {
+        const pricePerSample = form.getFieldValue('price_per_sample') || 0;
+        form.setFieldsValue({
+            total: value * pricePerSample,
+        });
+    };
+
+    const handlePricePerSampleChange = (value: any) => {
+        const quantity = form.getFieldValue('quantity') || 0;
+        form.setFieldsValue({
+            total: value * quantity,
+        });
+    };
+
+    // invoice test Edit
+    // const handleEditClick = (item: any) => {
+    //     // Handle the edit click for the specific ID (item.id)
+    //     console.log(`Edit clicked for ID: ${item}`);
+    //     // Add your logic here, for example, open a modal for editing
+    // };
+
+
+    // Print
+    const handlePrint = (item: any) => {
+        // Navigate to the /invoice/edit page with the record data as a query parameter
+        window.location.href = `/invoice/invoiceReport?id=${item.id}`;
+    };
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
             <div className="panel flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
@@ -562,10 +667,11 @@ const Edit = () => {
                             <thead>
                                 <tr>
                                     <th>Test Name</th>
-                                    <th className="w-1">Quantity</th>
-                                    <th className="w-1">Price</th>
+                                    <th>Quantity</th>
+                                    <th >Price</th>
                                     <th>Total</th>
-                                    <th className="w-1"></th>
+                                    <th >Action</th>
+                                    <th >Report</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -579,37 +685,18 @@ const Edit = () => {
                                 {invoiceFormData.invoice_tests?.map((item: any, index: any) => {
                                     return (
                                         <tr className="align-top" key={item.id}>
-                                            <td>
-                                                <input type="text" className="form-input min-w-[200px]" placeholder="Enter Item Name" defaultValue={item.test_name} />
-                                                {/* <textarea className="form-textarea mt-4" placeholder="Enter Description" defaultValue={item.description}></textarea> */}
-                                            </td>
-                                            <td>
-                                                <input
-                                                    type="number"
-                                                    className="form-input w-32"
-                                                    placeholder="Quantity"
-                                                    value={Number(item?.quantity)}
-                                                    min={0}
-                                                // onChange={(e) => invoiceQuantityChange(e.target.value, index)}
-                                                />
-                                            </td>
-                                            <td>
-                                                <input
-                                                    type="number"
-                                                    className="form-input w-32"
-                                                    placeholder="Price"
-                                                    value={Number(item?.price_per_sample)}
-                                                    min={0}
-                                                // onChange={(e) => invoicePriceChange(e.target.value, index)}
-                                                />
-                                            </td>
+                                            <td>{item.test_name}</td>
+                                            <td>{Number(item?.quantity)}</td>
+                                            <td>  {Number(item?.price_per_sample)} </td>
                                             <td>{item.quantity * item.price_per_sample}</td>
                                             <td>
-                                                <button type="button"
-                                                //  onClick={() =>  removeItem(item)}
-                                                >
-                                                    <IconX className="w-5 h-5" />
-                                                </button>
+                                                <Space>
+                                                    <EditOutlined rev={undefined} className='edit-icon' onClick={() => showDrawer(item)} />
+                                                    <DeleteOutlined rev={undefined} style={{ color: "red", cursor: "pointer" }} className='delete-icon' onClick={() => handleDelete(item?.id)} />
+                                                </Space>
+                                            </td>
+                                            <td>
+                                                <PrinterOutlined rev={undefined} className='edit-icon' onClick={() => handlePrint(item)}/>
                                             </td>
                                         </tr>
                                     );
@@ -643,7 +730,7 @@ const Edit = () => {
                                 <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Tax
                                 </label>
-                                <select id="country" name="tax" value={formData?.tax} className="form-select flex-1" onChange={handleTaxChange}
+                                {/* <select id="country" name="tax" value={formData?.tax} className="form-select flex-1" onChange={handleTaxChange}
 
                                 >
 
@@ -655,7 +742,27 @@ const Edit = () => {
                                             )
                                         })
                                     }
+                                </select> */}
+                                <select
+                                    id="country"
+                                    name="tax"
+                                    value={formData?.tax}
+                                    className="form-select flex-1"
+                                    onChange={handleTaxChange}
+                                >
+                                    {/* Combining the first two options into a single option */}
+                                    <option key="grouped-option" value={`${invoiceFormData?.taxs?.[0]?.id}:${invoiceFormData?.taxs?.[1]?.id}`}>
+                                        {invoiceFormData?.taxs?.[0]?.tax_name} + {invoiceFormData?.taxs?.[1]?.tax_name}
+                                    </option>
+
+                                    {/* Remaining options */}
+                                    {invoiceFormData?.taxs?.slice(2).map((value: any) => (
+                                        <option key={value.id} value={value.id}>
+                                            {value.tax_name}
+                                        </option>
+                                    ))}
                                 </select>
+
                             </div>
                             <div className="flex items-center justify-between" style={{ marginTop: "20px" }}>
                                 <div>{tax}</div>
@@ -880,6 +987,69 @@ const Edit = () => {
                 </Form>
             </Modal>
 
+
+
+            {/* INvoice Edit Drawer */}
+            <Drawer title="Edit Invoice" placement="right" width={600} onClose={onClose} open={open}>
+                <Form
+                    name="basic"
+                    layout="vertical"
+                    form={form}
+                    initialValues={{ remember: true }}
+                    onFinish={onFinish2}
+                    onFinishFailed={onFinishFailed2}
+                    autoComplete="off"
+
+                >
+                    <Form.Item
+                        label="Test Name"
+                        name="test_name"
+                        required={false}
+                        rules={[{ required: true, message: 'Please input your Test Name!' }]}
+                    >
+                        <Input disabled />
+                    </Form.Item>
+
+                    <Form.Item
+                        label="Quantity"
+                        name="quantity"
+                        required={false}
+                        rules={[{ required: true, message: 'Please input your Quantity!' }]}
+                    >
+                        <Input onChange={(e) => handleQuantityChange(e.target.value)} />
+                    </Form.Item>
+
+                    <Form.Item label="Price Per Sample" name="price_per_sample"
+                        required={false}
+                        rules={[{ required: true, message: 'Please input your Tax Status!' }]}
+
+                    >
+                        <Input onChange={(e) => handlePricePerSampleChange(e.target.value)} />
+                    </Form.Item>
+
+                    <Form.Item label="Total" name="total"
+                        required={false}
+                    // rules={[{ required: true, message: 'Please input your !' }]}
+                    >
+                        <Input disabled />
+                    </Form.Item>
+
+                    <Form.Item >
+                        <div className='form-btn-main'>
+                            <Space>
+                                <Button danger htmlType="submit" onClick={() => onClose()}>
+                                    Cancel
+                                </Button>
+                                <Button type="primary" htmlType="submit">
+                                    Submit
+                                </Button>
+                            </Space>
+
+                        </div>
+
+                    </Form.Item>
+                </Form>
+            </Drawer>
 
         </div>
     );
