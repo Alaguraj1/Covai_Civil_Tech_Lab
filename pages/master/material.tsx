@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { Space, Table, Modal } from 'antd';
+import { Space, Table, Modal,Select, } from 'antd';
 import { Button, Drawer } from 'antd';
 import { Form, Input } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
 
+import "react-quill/dist/quill.snow.css";
+import dynamic from 'next/dynamic';
+const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 const Material = () => {
 
   const [open, setOpen] = useState(false);
@@ -15,7 +18,8 @@ const Material = () => {
   const [dataSource, setDataSource] = useState([])
   const [viewRecord, setViewRecord] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [editor, setEditor] = useState("")
+  const [formFields, setFormFields] = useState<any>([])
   // Model 
   const showModal = (record: any) => {
     setIsModalOpen(true);
@@ -35,6 +39,7 @@ const Material = () => {
   // Get Material Data
   useEffect(() => {
     getMaterial()
+    getDropDown()
   }, [])
 
   const getMaterial = (() => {
@@ -54,6 +59,24 @@ const Material = () => {
       })
   })
 
+  const getDropDown = (() => {
+
+    const Token = localStorage.getItem("token")
+    console.log("TokenTokenTokenToken", Token)
+
+    axios.get("http://files.covaiciviltechlab.com/create_report_template/", {
+      headers: {
+        "Authorization": `Token ${Token}`
+      }
+    }).then((res) => {
+      setFormFields(res?.data)
+    }).catch((error: any) => {
+      console.log(error)
+    })
+
+
+  })
+
 
   useEffect(() => {
     if (editRecord) {
@@ -62,6 +85,12 @@ const Material = () => {
       setDrawerTitle("Create Material")
     }
   }, [editRecord])
+
+  
+  // editor
+  const handleEditorChange = (value: any) => {
+    setEditor(value);
+  };
 
   // drawer
   const showDrawer = (record: any) => {
@@ -88,6 +117,7 @@ const Material = () => {
       dataIndex: 'material_name',
       key: 'material_name',
     },
+
     {
       title: 'Created At',
       dataIndex: 'created_date',
@@ -121,9 +151,26 @@ const Material = () => {
             style={{ cursor: "pointer" }}
             onClick={() => showDrawer(record)}
             className='edit-icon' rev={undefined} />
-          <DeleteOutlined
-            style={{ color: "red", cursor: "pointer" }}
-            onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} />
+
+{
+            localStorage.getItem('admin') === 'true' ? (
+              <DeleteOutlined
+                style={{ color: "red", cursor: "pointer" }}
+                onClick={() => handleDelete(record)}
+                className='delete-icon'
+                rev={undefined}
+              />
+            ) : (
+              <DeleteOutlined
+                style={{ display: "none" }}
+                onClick={() => handleDelete(record)}
+                className='delete-icon'
+                rev={undefined}
+              />
+            )
+          }
+
+        
         </Space>
       ),
     }
@@ -275,12 +322,12 @@ const Material = () => {
             <h1 className='tax-title'>Manage Material</h1>
           </div>
           <div>
-          <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
+          <Search placeholder="Input search text" onChange={inputChange} enterButton className='search-bar' />
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Material</button>
           </div>
         </div>
         <div>
-          <Table dataSource={filterData} columns={columns} pagination={false} />
+          <Table dataSource={filterData} columns={columns} />
         </div>
 
         <Drawer title={DrawerTitle} placement="right" width={600} onClose={onClose} open={open}>
@@ -296,10 +343,67 @@ const Material = () => {
             <Form.Item<FieldType>
               label="Material Name"
               name="material_name"
-              required={false}
-              rules={[{ required: true, message: 'Please input your Material Name!' }]}
+              required={true}
+              rules={[{ required: true, message: 'This field is required.' }]}
             >
               <Input />
+            </Form.Item>
+
+            <Form.Item
+              label="Templates"
+              name="template"
+              required={true}
+              rules={[{ required: true, message: 'This field is required.' }]}
+            >
+              <ReactQuill
+                value={editor}
+                onChange={handleEditorChange}
+                modules={{
+                  toolbar: [
+                    [{ header: [1, 2,3,4,5,6, false] }],
+                    ["bold", "italic", "underline", "strike"],
+                    ["blockquote", "code-block"],
+                    [{ list: "ordered" }, { list: "bullet" }],
+                    ["link", "image", "video"],
+                    ["clean"],
+                    ['code'],
+                    // Add your custom features here
+                  ],
+                }}
+              />
+            </Form.Item>
+
+
+            <Form.Item label="Print Format" name='print_format'
+             required={true}
+             rules={[{ required: true, message: 'This field is required.' }]}
+            >
+              <Select>
+                {
+                  formFields?.print_format?.map((val: any) => {
+                    return (
+                      <Select.Option value={val.id}>{val.name}</Select.Option>
+
+                    )
+                  })
+                }
+              </Select>
+            </Form.Item>
+
+            <Form.Item label="Letter Pad Logo" name='letter_pad_logo'
+             required={true}
+             rules={[{ required: true, message: 'This field is required.' }]}
+            >
+              <Select>
+                {
+                  formFields?.letter_pad_logo?.map((val: any) => {
+                    return (
+                      <Select.Option value={val?.id}>{val?.name}</Select.Option>
+
+                    )
+                  })
+                }
+              </Select>
             </Form.Item>
 
             <Form.Item >

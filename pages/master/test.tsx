@@ -1,8 +1,7 @@
-import { size } from 'lodash'
 import React, { useEffect, useState } from 'react'
 import { Space, Table, Modal } from 'antd';
 import { Button, Drawer } from 'antd';
-import { Checkbox, Form, Input, InputNumber, Select } from 'antd';
+import { Form, Input, InputNumber, Select } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
 
@@ -16,7 +15,7 @@ const Test = () => {
     const [viewRecord, setViewRecord] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataSource, setDataSource] = useState([])
-    const [formFields, setFormFields] = useState<any>([])
+    const [formFields, setFormFields] = useState([])
 
     // get test 
     useEffect(() => {
@@ -38,7 +37,6 @@ const Test = () => {
             console.log(error)
         })
     })
-    console.log("dataSource", dataSource)
 
 
     useEffect(() => {
@@ -54,19 +52,19 @@ const Test = () => {
             console.log(error)
         })
     }, [])
-    console.log("formFields", formFields)
+
 
 
     const showModal = (record: any) => {
-
+console.log('✌️record --->', record);
         const testRecord = {
-            material_name: record?.material_name?.id, // Use the primary key of the material_name field
+            material_name: record?.material_name,
             test_name: record.test_name,
             price_per_piece: record.price_per_piece,
             id: record.id,
-            created_by: record.created_by.username,
+            created_by: record.created_by,
             created_date: record.created_date,
-            modified_by: record.modified_by.username,
+            modified_by: record.modified_by,
             modified_date: record.modified_date
         };
 
@@ -95,10 +93,8 @@ const Test = () => {
     // drawer
     const showDrawer = (record: any) => {
         if (record) {
-            console.log("usdhfshdfhsu", record);
-
             const testRecord:any = {
-                material_name: record?.material_name?.id, // Use the primary key of the material_name field
+                material_name: record.id, 
                 test_name: record.test_name,
                 price_per_piece: record.price_per_piece,
                 id: record.id,
@@ -129,8 +125,7 @@ const Test = () => {
         {
             title: 'Material Name',
             dataIndex: 'material_name',
-            key: 'material',
-            render: (material: any) => (material && material?.material_name) || 'N/A',
+            key: 'material_name',
         },
         {
             title: 'Price',
@@ -149,9 +144,25 @@ const Test = () => {
                         style={{ cursor: "pointer" }}
                         onClick={() => showDrawer(record)}
                         className='edit-icon' rev={undefined} />
-                    <DeleteOutlined
-                        style={{ color: "red", cursor: "pointer" }}
-                        onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} />
+                    {
+                        localStorage.getItem('admin') === 'true' ? (
+                            <DeleteOutlined
+                                style={{ color: "red", cursor: "pointer" }}
+                                onClick={() => handleDelete(record)}
+                                className='delete-icon'
+                                rev={undefined}
+                            />
+                        ) : (
+                            <DeleteOutlined
+                                style={{ display: "none" }}
+                                onClick={() => handleDelete(record)}
+                                className='delete-icon'
+                                rev={undefined}
+                            />
+                        )
+                    }
+
+
                 </Space>
             ),
         }
@@ -168,7 +179,6 @@ const Test = () => {
             okText: "Yes",
             okType: "danger",
             onOk: () => {
-                console.log(record, "values")
                 axios.delete(`http://files.covaiciviltechlab.com/delete_test/${record.id}/`,
                     {
                         headers: {
@@ -199,12 +209,10 @@ const Test = () => {
 
     // form submit
     const onFinish = (values: any) => {
-
         const Token = localStorage.getItem("token")
 
         if (editRecord) {
 
-            console.log("editRecordeditRecoreeditRecord", editRecord)
 
             axios.put(`http://files.covaiciviltechlab.com/edit_test/${editRecord.id}/`, values, {
                 headers: {
@@ -266,8 +274,6 @@ const Test = () => {
             }).format(date);
         };
 
-        console.log("viewRecordviewRecord", viewRecord)
-
         const data = [
             {
                 label: "Test Name:",
@@ -317,7 +323,7 @@ const Test = () => {
                     </div>
                 </div>
                 <div>
-                    <Table dataSource={filterData} columns={columns} pagination={false} />
+                    <Table dataSource={filterData} columns={columns}  />
                 </div>
 
                 <Drawer title={drawertitle} placement="right" width={600} onClose={onClose} open={open}>
@@ -333,12 +339,12 @@ const Test = () => {
                         <Form.Item<FieldType>
                             label="Material Name"
                             name="material_name"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Material Name!' }]}
                         >
                             <Select>
                                 {formFields?.materials?.map((val: any) => (
-                                    <Select.Option key={val.material_name} value={val.id} >
+                                    <Select.Option key={val.id} value={val.id} >
                                         {val.material_name}
                                     </Select.Option>
                                 ))}
@@ -348,7 +354,7 @@ const Test = () => {
                         <Form.Item<FieldType>
                             label="Test Name"
                             name="test_name"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Test Name!' }]}
                         >
                             <Input />
@@ -357,7 +363,7 @@ const Test = () => {
                         <Form.Item<FieldType>
                             label="Price"
                             name="price_per_piece"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Price!' }]}
                         >
                             <InputNumber style={{ width: "100%" }} />
@@ -386,7 +392,6 @@ const Test = () => {
                 <Modal title="View Test" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
                     {
                         modalData()?.map((value: any) => {
-                            console.log("valuevaluevalue", value)
                             return (
                                 <>
                                     <div className='content-main' >

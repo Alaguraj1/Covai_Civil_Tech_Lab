@@ -13,7 +13,7 @@ const Employee = () => {
     const { Search } = Input;
     const [form] = Form.useForm();
     const [editRecord, setEditRecord] = useState(null);
-    const [drawerTitle, setDrawerTitle] = useState("Create Employee Details");
+    const [drawerTitle, setDrawerTitle] = useState("Create Employee");
     const [viewRecord, setViewRecord] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataSource, setDataSource] = useState([])
@@ -31,6 +31,8 @@ const Employee = () => {
                 "Authorization": `Token ${Token}`
             }
         }).then((res) => {
+            console.log("--------------------------")
+            console.log(res.data);
             setDataSource(res.data)
             setFilterData(res.data)
         }).catch((error: any) => {
@@ -56,18 +58,22 @@ const Employee = () => {
 
     useEffect(() => {
         if (editRecord) {
-            setDrawerTitle("Edit Employee Details");
+            setDrawerTitle("Edit Employee");
         } else {
-            setDrawerTitle("Create Employee Details");
+            setDrawerTitle("Create Employee");
         }
     }, [editRecord, open]);
 
 
     // drawer
     const showDrawer = (record: any) => {
+        console.log(record);
+        console.log("--------------------------");
         if (record) {
+           
             setEditRecord(record);
             form.setFieldsValue(record);
+           
         } else {
             setEditRecord(null);
             form.resetFields();
@@ -118,9 +124,24 @@ const Employee = () => {
                         style={{ cursor: "pointer" }}
                         onClick={() => showDrawer(record)}
                         className='edit-icon' rev={undefined} />
-                    <DeleteOutlined
-                        style={{ color: "red", cursor: "pointer" }}
-                        onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} />
+                    {
+                        localStorage.getItem('admin') === 'true' ? (
+                            <DeleteOutlined
+                                style={{ color: "red", cursor: "pointer" }}
+                                onClick={() => handleDelete(record)}
+                                className='delete-icon'
+                                rev={undefined}
+                            />
+                        ) : (
+                            <DeleteOutlined
+                                style={{ display: "none" }}
+                                onClick={() => handleDelete(record)}
+                                className='delete-icon'
+                                rev={undefined}
+                            />
+                        )
+                    }
+
                 </Space>
             ),
         }
@@ -163,7 +184,7 @@ const Employee = () => {
 
         const filteredData = dataSource.filter((item: any) => {
             return (
-                item.employee_name.toLowerCase().includes(SearchValue.toLowerCase())
+                item.employee_name.toLowerCase().includes(SearchValue.toLowerCase()) || item.email.toLowerCase().includes(SearchValue.toLowerCase()) || item.mobile_no.toLowerCase().includes(SearchValue.toLowerCase())
             )
         })
         setFilterData(filteredData)
@@ -249,23 +270,7 @@ const Employee = () => {
 
     // modal data
     const modalData = () => {
-        const formatDate = (dateString: any) => {
-            if (!dateString) {
-                return "N/A"; // or handle it according to your requirements
-            }
-
-            const date = new Date(dateString);
-
-            if (isNaN(date.getTime())) {
-                return "Invalid Date"; // or handle it according to your requirements
-            }
-
-            return new Intl.DateTimeFormat('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-            }).format(date);
-        };
+      
 
         console.log("viewRecord", viewRecord)
 
@@ -288,17 +293,18 @@ const Employee = () => {
                 value: viewRecord?.phone_number || "N/A",
             },
 
-            // {
-            //     label: "Address:",
-            //     value: viewRecord?.address || "N/A",
-            // },
-            // {
-            //     label: "Address:",
-            //     value: viewRecord?.address || "N/A",
-            // },
+             {
+                label: "DOJ:",
+              value: viewRecord?.joining_date || "N/A",
+             },
+          
+            {
+                label: "Created By:",
+                value: viewRecord?.created_by || "N/A",
+            },
             {
                 label: "Created Date:",
-                value: formatDate(viewRecord?.created_date),
+                value: viewRecord?.created_date,
             },
             {
                 label: "Modified By:",
@@ -306,7 +312,7 @@ const Employee = () => {
             },
             {
                 label: "Modified Date:",
-                value: formatDate(viewRecord?.modified_date),
+                value: viewRecord?.modified_date,
             },
         ];
 
@@ -322,12 +328,12 @@ const Employee = () => {
                         <h1 className='tax-title'>Employee Details</h1>
                     </div>
                     <div>
-                        <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
-                        <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Employee Details</button>
+                        <Search placeholder="Input search text" onChange={inputChange} enterButton className='search-bar' />
+                        <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Employee </button>
                     </div>
                 </div>
                 <div>
-                    <Table dataSource={filterData} columns={columns} pagination={false} />
+                    <Table dataSource={filterData} columns={columns}  />
                 </div>
 
                 <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>
@@ -343,7 +349,7 @@ const Employee = () => {
                         <Form.Item<FieldType>
                             label="Employee Name"
                             name="employee_name"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Employee Name!' }]}
                         >
                             <Input />
@@ -352,7 +358,7 @@ const Employee = () => {
                         <Form.Item<FieldType>
                             label="User Name"
                             name="username"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your User Name!' }]}
                         >
                             <Input />
@@ -362,7 +368,7 @@ const Employee = () => {
                         <Form.Item<FieldType>
                             label="Login Name"
                             name="login_name"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Login Name!' }]}
                         >
                             <Input />
@@ -371,7 +377,7 @@ const Employee = () => {
                         <Form.Item<FieldType>
                             label="Password"
                             name="password"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Password!' }]}
                         >
                             <Input />
@@ -380,7 +386,7 @@ const Employee = () => {
                         <Form.Item<FieldType>
                             label="Address"
                             name="address"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Address!' }]}
                         >
                             <TextArea rows={4} />
@@ -389,40 +395,40 @@ const Employee = () => {
                         <Form.Item<FieldType>
                             label="Mobile Number"
                             name="mobile_number"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Mobile Number!' }]}
                         >
-                            <Input />
+                            <Input maxLength={10} />
                         </Form.Item>
 
                         <Form.Item<FieldType>
                             label="Phone Number"
                             name="phone_number"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Phone Number!' }]}
+                            rules={[{ required: false, message: 'Please input your Phone Number!' }]}
                         >
-                            <Input />
+                            <Input maxLength={10} />
                         </Form.Item>
 
 
                         <Form.Item<FieldType>
                             label="Email"
                             name="email"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your EMail!' }]}
                         >
                             <Input />
                         </Form.Item>
 
                         <Form.Item label="DOB" name="dob"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please Select your DOB!' }]}
                         >
                             <DatePicker style={{ width: "100%" }} />
                         </Form.Item>
 
                         <Form.Item label="Gender" name="gender"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please Select your Gender!' }]}
                         >
                             <Radio.Group>
@@ -434,20 +440,21 @@ const Employee = () => {
                         <Form.Item<FieldType>
                             label="Qualification"
                             name="qualification"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Qualification!' }]}
                         >
                             <Input />
                         </Form.Item>
 
-                        <Form.Item label="Joining Date" name="joining_date">
+                        <Form.Item label="Joining Date" name="joining_date"  required={true}
+                            rules={[{ required: true, message: 'Please input DOJ!' }]} >
                             <DatePicker style={{ width: "100%" }} />
                         </Form.Item>
 
                         <Form.Item<FieldType>
                             label="Salary"
                             name="salary"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Salary!' }]}
                         >
                             <Input />

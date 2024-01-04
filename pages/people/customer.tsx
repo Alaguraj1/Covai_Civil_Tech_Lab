@@ -2,9 +2,10 @@ import { size } from 'lodash'
 import React, { useState, useEffect } from 'react'
 import { Space, Table, Modal } from 'antd';
 import { Button, Drawer } from 'antd';
-import { Checkbox, Form, Input, Radio, DatePicker, } from 'antd';
-import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { Checkbox, Form, Input, Radio, DatePicker, Select } from 'antd';
+import { EditOutlined, DeleteOutlined, EyeOutlined, AlertTwoTone } from "@ant-design/icons";
 import axios from "axios"
+import { message, } from 'antd';
 
 const Customer = () => {
 
@@ -16,11 +17,15 @@ const Customer = () => {
     const [viewRecord, setViewRecord] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataSource, setDataSource] = useState([])
+    const [formFields, setFormFields] = useState([])
+
+    const [messageApi, contextHolder] = message.useMessage();
 
 
 
     useEffect(() => {
         getCustomer()
+        getDropDownValues()
     }, [])
 
     const getCustomer = (() => {
@@ -35,6 +40,20 @@ const Customer = () => {
             console.log(error)
         })
     })
+
+    const getDropDownValues = (() => {
+        const Token = localStorage.getItem("token")
+        axios.get("http://files.covaiciviltechlab.com/create_customer/", {
+            headers: {
+                "Authorization": `Token ${Token}`
+            }
+        }).then((res) => {
+            setFormFields(res.data)
+        }).catch((error) => {
+            console.log(error)
+        })
+    })
+
     console.log("dataSource", dataSource)
 
     const showModal = (record: any) => {
@@ -53,9 +72,9 @@ const Customer = () => {
 
     useEffect(() => {
         if (editRecord) {
-            setDrawerTitle("Edit Customer Details");
+            setDrawerTitle("Edit Customer");
         } else {
-            setDrawerTitle("Create Customer Details");
+            setDrawerTitle("Create Customer");
         }
     }, [editRecord, open]);
 
@@ -63,8 +82,29 @@ const Customer = () => {
     // drawer
     const showDrawer = (record: any) => {
         if (record) {
-            setEditRecord(record);
-            form.setFieldsValue(record); // Set form values for editing
+
+       
+
+            const Token = localStorage.getItem("token")
+            axios.get("http://files.covaiciviltechlab.com/edit_customer/"+record.id+"/", {
+                headers: {
+                    "Authorization": `Token ${Token}`
+                }
+            }).then((res) => {
+                console.log(typeof(record),typeof(res.data))
+    
+                setEditRecord(record)
+                form.setFieldsValue(res.data); 
+            }).catch((error) => {
+                console.log(error)
+            })
+
+
+
+      
+
+
+            // Set form values for editing
         } else {
             setEditRecord(null); // Clear editRecord for create operation
             form.resetFields(); // Clear form fields for create operation
@@ -138,21 +178,22 @@ const Customer = () => {
 
     const handleDelete = (record: any) => {
         // Implement your delete logic here
-        console.log(`Delete record with key ${record}`);
-
         Modal.confirm({
             title: "Are you sure, you want to delete this CUSTOMER record?",
             okText: "Yes",
             okType: "danger",
             onOk: () => {
 
-                console.log(record, "values");
-
-                axios.delete(`http://files.covaiciviltechlab.com/delete_customer/${record.id}`, {
+                     axios.delete(`http://files.covaiciviltechlab.com/delete_customer/${record.id}`, {
                     headers: {
                         "Authorization": `Token ${localStorage.getItem("token")}`
                     }
                 }).then((res) => {
+                    messageApi.open({
+                        type: 'success',
+                        content: 'Deleted Successfully..!',
+                    });
+
                     console.log(res);
                     getCustomer();
                 }).catch((err) => {
@@ -169,7 +210,7 @@ const Customer = () => {
     const inputChange = (e: any) => {
         const searchValue = e.target.value.toLowerCase();
         const filteredData = dataSource.filter((item: any) =>
-            item.customer_name.toLowerCase().includes(searchValue)
+            item.customer_name.toLowerCase().includes(searchValue) || item.phone_no.toLowerCase().includes(searchValue) || item.email.toLowerCase().includes(searchValue)
         );
         setFilterData(searchValue ? filteredData : dataSource);
     };
@@ -389,12 +430,12 @@ const Customer = () => {
                         <h1 className='tax-title'>Customer Details</h1>
                     </div>
                     <div>
-                        <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
-                        <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Customer Details</button>
+                        <Search placeholder="Input search text" onChange={inputChange} enterButton className='search-bar' />
+                        <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Customer</button>
                     </div>
                 </div>
                 <div>
-                    <Table dataSource={filterData} columns={columns} pagination={false} />
+                    <Table dataSource={filterData} columns={columns}  />
                 </div>
 
                 <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>
@@ -411,7 +452,7 @@ const Customer = () => {
                         <Form.Item<FieldType>
                             label="Customer Name"
                             name="customer_name"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Customer Name!' }]}
                         >
                             <Input />
@@ -420,26 +461,27 @@ const Customer = () => {
                         <Form.Item<FieldType>
                             label="Phone Number"
                             name="phone_no"
-                            required={false}
+                            required={true}
+
                             rules={[{ required: true, message: 'Please input your Phone Number!' }]}
                         >
-                            <Input />
+                            <Input maxLength={10} />
                         </Form.Item>
 
                         <Form.Item<FieldType>
                             label="GST in"
                             name="gstin_no"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your GST in!' }]}
                         >
-                            <Input />
+                            <Input maxLength={15} />
                         </Form.Item>
 
                         <Form.Item<FieldType>
                             label="Email"
                             name="email"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your EMail!' }]}
+                            rules={[{ required: false, message: 'Please input your EMail!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -458,7 +500,7 @@ const Customer = () => {
                         <Form.Item<FieldType>
                             label="Address 1"
                             name="address1"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Address1!' }]}
                         >
                             <TextArea rows={4} />
@@ -467,34 +509,54 @@ const Customer = () => {
                         <Form.Item<FieldType>
                             label="City 1"
                             name="city1"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your City 1!' }]}
                         >
-                            <Input />
+
+                            <Select>
+                                {formFields?.city1?.map((val: any) => (
+                                    <Select.Option key={val.name} value={val.id} >
+                                        {val.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+                            
                         </Form.Item>
 
                         <Form.Item<FieldType>
                             label="State 1"
                             name="state1"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your State 1!' }]}
                         >
-                            <Input />
+                                 <Select>
+                                {formFields?.state1?.map((val: any) => (
+                                    <Select.Option key={val.name} value={val.id} >
+                                        {val.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
 
                         <Form.Item<FieldType>
                             label="Country 1"
                             name="country1"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Country 1!' }]}
                         >
-                            <Input />
+                            <Select>
+                                {formFields?.country1?.map((val: any) => (
+                                    <Select.Option key={val.name} value={val.id} >
+                                        {val.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
 
                         <Form.Item<FieldType>
                             label="Pincode 1"
                             name="pincode1"
-                            required={false}
+                            required={true}
                             rules={[{ required: true, message: 'Please input your Pincode 1!' }]}
                         >
                             <Input />
@@ -504,7 +566,7 @@ const Customer = () => {
                             label="Contact Person 1"
                             name="contact_person1"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Contact Person 1!' }]}
+                            rules={[{ required: false, message: 'Please input your Contact Person 1!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -513,7 +575,7 @@ const Customer = () => {
                             label="Mobile Number 1"
                             name="mobile_no1"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Mobile Number 1!' }]}
+                            rules={[{ required: false, message: 'Please input your Mobile Number 1!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -522,7 +584,16 @@ const Customer = () => {
                             label="Contact Person Email1"
                             name="contact_person_email1"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Contact Person Email 1!' }]}
+                            rules={[{ required: false, message: 'Please input your Contact Person Email 1!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item<FieldType>
+                            label="Code"
+                            name="code"
+                            required={true}
+                            rules={[{ required: true, message: 'Please input code..!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -532,7 +603,7 @@ const Customer = () => {
                             label="Address 2"
                             name="address2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Address 2!' }]}
+                            rules={[{ required: false, message: 'Please input your Address 2!' }]}
                         >
                             <TextArea rows={4} />
                         </Form.Item>
@@ -541,34 +612,53 @@ const Customer = () => {
                             label="City 2"
                             name="city2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your City 2!' }]}
+                            rules={[{ required: false, message: 'Please input your City 2!' }]}
                         >
-                            <Input />
+                            <Select>
+                                {formFields?.city2?.map((val: any) => (
+                                    <Select.Option key={val.name} value={val.id} >
+                                        {val.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
+
                         </Form.Item>
 
                         <Form.Item<FieldType>
                             label="State 2"
                             name="state2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your State 2!' }]}
+                            rules={[{ required: false, message: 'Please input your State 2!' }]}
                         >
-                            <Input />
+                            <Select>
+                                {formFields?.state2?.map((val: any) => (
+                                    <Select.Option key={val.name} value={val.id} >
+                                        {val.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
 
                         <Form.Item<FieldType>
                             label="Country 2"
                             name="country2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Country 2!' }]}
+                            rules={[{ required: false, message: 'Please input your Country 2!' }]}
                         >
-                            <Input />
+                            <Select>
+                                {formFields?.country2?.map((val: any) => (
+                                    <Select.Option key={val.name} value={val.id} >
+                                        {val.name}
+                                    </Select.Option>
+                                ))}
+                            </Select>
                         </Form.Item>
 
                         <Form.Item<FieldType>
                             label="Pincode 2"
                             name="pincode2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Pincode 2!' }]}
+                            rules={[{ required: false, message: 'Please input your Pincode 2!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -577,7 +667,7 @@ const Customer = () => {
                             label="Contact Person 2"
                             name="contact_person2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Contact Person 2!' }]}
+                            rules={[{ required: false, message: 'Please input your Contact Person 2!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -586,7 +676,7 @@ const Customer = () => {
                             label="Mobile Number 2"
                             name="mobile_no2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Mobile Number 2!' }]}
+                            rules={[{ required: false, message: 'Please input your Mobile Number 2!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -595,7 +685,7 @@ const Customer = () => {
                             label="Contact Person Email2"
                             name="contact_person_email2"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Contact Person Email2!' }]}
+                            rules={[{ required: false, message: 'Please input your Contact Person Email2!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -605,7 +695,7 @@ const Customer = () => {
                             label="Place Of Testing"
                             name="place_of_testing"
                             required={false}
-                            rules={[{ required: true, message: 'Please input your Place Of Testing!' }]}
+                            rules={[{ required: false, message: 'Please input your Place Of Testing!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -629,7 +719,7 @@ const Customer = () => {
 
 
                 {/* modal */}
-                <Modal title="View Employee" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
+                <Modal title="View Customer" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
                     {
                         modalData()?.map((value: any) => {
                             return (

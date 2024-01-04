@@ -116,9 +116,26 @@ const Expense = () => {
             style={{ cursor: "pointer" }}
             onClick={() => showDrawer(record)}
             className='edit-icon' rev={undefined} />
-          <DeleteOutlined
-            style={{ color: "red", cursor: "pointer" }}
-            onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} />
+          {
+            localStorage.getItem('admin') === 'true' ? (
+              <DeleteOutlined
+                style={{ color: "red", cursor: "pointer" }}
+                onClick={() => handleDelete(record)}
+                className='delete-icon'
+                rev={undefined}
+              />
+            ) : (
+              <DeleteOutlined
+                style={{ display: "none" }}
+                onClick={() => handleDelete(record)}
+                className='delete-icon'
+                rev={undefined}
+              />
+            )
+          }
+
+
+
         </Space>
       ),
     }

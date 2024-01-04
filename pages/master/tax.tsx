@@ -1,7 +1,7 @@
 import { size } from 'lodash'
 import React, { useState, useEffect } from 'react'
 import { Space, Table, Modal } from 'antd';
-import { Button, Drawer } from 'antd';
+import { Button, Drawer, InputNumber } from 'antd';
 import { Checkbox, Form, Input, Radio } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
@@ -116,9 +116,26 @@ const Tax = () => {
             style={{ cursor: "pointer" }}
             onClick={() => showDrawer(record)}
             className='edit-icon' rev={undefined} />
-          <DeleteOutlined
-            style={{ color: "red", cursor: "pointer" }}
-            onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} />
+
+
+          {
+            localStorage.getItem('admin') === 'true' ? (
+              <DeleteOutlined
+                style={{ color: "red", cursor: "pointer" }}
+                onClick={() => handleDelete(record)}
+                className='delete-icon'
+                rev={undefined}
+              />
+            ) : (
+              <DeleteOutlined
+                style={{ display: "none" }}
+                onClick={() => handleDelete(record)}
+                className='delete-icon'
+                rev={undefined}
+              />
+            )
+          }
+
         </Space>
       ),
     }
@@ -156,7 +173,7 @@ const Tax = () => {
   const inputChange = (e: any) => {
     const searchValue = e.target.value.toLowerCase();
     const filteredData = dataSource.filter((item: any) =>
-      item.tax_name.toLowerCase().includes(searchValue)
+      item.tax_name.toLowerCase().includes(searchValue) || item.tax_percentage.toLowerCase().includes(searchValue)
     );
     setFilterData(searchValue ? filteredData : dataSource);
   };
@@ -274,7 +291,7 @@ const Tax = () => {
             <h1 className='tax-title'>Manage Tax</h1>
           </div>
           <div>
-            <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
+            <Search placeholder="Input search text" onChange={inputChange} enterButton className='search-bar' />
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Tax</button>
           </div>
         </div>
@@ -296,8 +313,8 @@ const Tax = () => {
             <Form.Item<FieldType>
               label="Tax Name"
               name="tax_name"
-              required={false}
-              rules={[{ required: true, message: 'Please input your Tax Name!' }]}
+              required={true}
+              rules={[{ required: true, message: 'This field is required.' }]}
             >
               <Input />
             </Form.Item>
@@ -305,15 +322,28 @@ const Tax = () => {
             <Form.Item<FieldType>
               label="Tax Percentage"
               name="tax_percentage"
-              required={false}
-              rules={[{ required: true, message: 'Please input your Tax Percentage!' }]}
+              required={true}
+              rules={[
+                { required: true, message: 'This field is required.' },
+                {
+                  type: 'number',
+                  min: 0,
+                  max: 100,
+                  message: 'Please enter a valid percentage between 0 and 100.',
+                },
+              ]}
             >
-              <Input />
+              <InputNumber
+                style={{ width: '100%' }}
+                formatter={value => `${value}%`}
+                parser={value => value?.replace('%', '') || ''}
+                precision={2}
+              />
             </Form.Item>
 
             <Form.Item label="Tax Status" name="tax_status"
-              required={false}
-              rules={[{ required: true, message: 'Please input your Tax Status!' }]}
+              required={true}
+              rules={[{ required: true, message: 'This field is required.' }]}
             >
               <Radio.Group>
                 <Radio value="E"> Enable </Radio>

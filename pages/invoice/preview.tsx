@@ -13,11 +13,6 @@ const Preview = () => {
   }, []);
 
   const toWords = (amount: any) => {
-    // Implement or import the toWords function
-    // Example: return someConversionFunction(amount);
-    // Replace this with your actual implementation
-
-    // For example, if toWords is a mock function
     return `Words for ${amount}`;
   };
 
@@ -43,6 +38,26 @@ const Preview = () => {
 
 
   console.log("printData", printData)
+
+  const invoiceTests = printData.invoice_tests || [];
+  const totalAmount = invoiceTests.reduce((acc: any, invoiceTest: any) => {
+    return acc + parseFloat(invoiceTest.total);
+  }, 0);
+  console.log('Total Amount:', totalAmount);
+
+
+  const TaxData: any = totalAmount * 9 / 100
+  console.log('TaxData --->', TaxData);
+
+
+  const invoiceTestsTotal = invoiceTests.reduce((acc: any, item: any) => acc + parseFloat(item.total), 0);
+
+  // Assuming TaxData is a single numeric value
+  const taxDataValue = parseFloat(TaxData);
+
+  // Combine the totals and log the result
+  const TotalData = invoiceTestsTotal + taxDataValue + taxDataValue;
+  console.log('✌️TotalData --->', TotalData);
 
   return (
     <>
@@ -71,7 +86,7 @@ const Preview = () => {
                       <br /> All Building Material Testing and Building Repair
                       Consultancy
                       <br />
-                      GSTIN : 33AAFCC7634Q1Z7
+                      GSTIN : {printData?.customer?.gstin_no}
                     </td>
                     <td width="5%">
                       <img
@@ -111,7 +126,7 @@ const Preview = () => {
           </tr>
           <tr>
             <td>
-             {printData?.customer?.address1}
+              {printData?.customer?.address1}
               <br />
             </td>
             <td>
@@ -143,7 +158,25 @@ const Preview = () => {
                       <th style={{ width: "100px" }}>Rate/Sample(INR)</th>
                       <th style={{ width: "100px" }}>Amount(INR)</th>
                     </tr>
-                    <tr>
+
+                    {
+                      printData?.invoice_tests?.map((invoice: any) => {
+                        return (
+                          <>
+                            <tr>
+                              <td>{invoice?.id}</td>
+                              <td>{invoice?.test_name} - <span style={{ fontWeight: "bold" }}>{invoice?.material_name}</span></td>
+                              <td>{invoice?.qty}</td>
+                              <td>{invoice?.price_per_sample}</td>
+                              <td>{invoice?.total}</td>
+                            </tr>
+
+                          </>
+                        )
+                      })
+
+                    }
+                    {/* <tr>
                       <td style={{ textAlign: "center" }}>1</td>
                       <td>
                         <i>Soil - Compaction Factor </i>-<b>Compaction</b>
@@ -160,7 +193,7 @@ const Preview = () => {
                       <td style={{ textAlign: "center" }}>1</td>
                       <td style={{ textAlign: "right" }}>700.00 </td>
                       <td style={{ textAlign: "right" }}>700.00 </td>
-                    </tr>
+                    </tr> */}
                     <tr>
                       <td colSpan={5} id="" style={{ textAlign: "center" }}>
                         GST 18%
@@ -171,7 +204,7 @@ const Preview = () => {
                       <td>Add : CGST @ 9.00 % </td>
                       <td style={{ textAlign: "center" }}>-</td>
                       <td style={{ textAlign: "center" }}>-</td>
-                      <td style={{ textAlign: "right" }}>873.00 </td>
+                      <td style={{ textAlign: "right" }}>{TaxData}</td>
                     </tr>
                     <tr>
                       {" "}
@@ -179,7 +212,7 @@ const Preview = () => {
                       <td>Add : SGST @ 9.00 % </td>
                       <td style={{ textAlign: "center" }}>-</td>
                       <td style={{ textAlign: "center" }}>-</td>
-                      <td style={{ textAlign: "right" }}>873.00 </td>
+                      <td style={{ textAlign: "right" }}>{TaxData}</td>
                     </tr>
                     <tr></tr>
                     <tr>
@@ -188,7 +221,7 @@ const Preview = () => {
                         Total Rs.
                       </td>
                       <td style={{ textAlign: "right", fontWeight: "bold" }}>
-                        11,446.00{" "}
+                        {TotalData}{" "}
                         <input
                           type="hidden"
                           id="amt"
@@ -199,7 +232,7 @@ const Preview = () => {
                     </tr>
                     <tr>
                       <td colSpan={4} id="words_amt">
-                        11,446.00{" "}
+                        {TotalData}{" "}
                         <input
                           type="hidden"
                           id="amt"
@@ -234,23 +267,23 @@ const Preview = () => {
                     </tr>
                     <tr style={{ textAlign: "right" }}>
                       <th>998346</th>
-                      <td>9,700.00</td>
+                      <td>{totalAmount}</td>
                       <td>9.00%</td>
-                      <td>873.00</td>
+                      <td>{TaxData}</td>
                       <td>9.00%</td>
-                      <td>873.00</td>
+                      <td>{TaxData}</td>
                     </tr>
                     <tr style={{ textAlign: "right", fontWeight: "bold" }}>
                       <th>Total</th>
-                      <td>9,700.00</td>
+                      <td>{totalAmount}</td>
                       <td />
-                      <td>873.00</td>
+                      <td>{TaxData}</td>
                       <td />
-                      <td>873.00</td>
+                      <td>{TaxData}</td>
                     </tr>
                     <tr>
                       <td colSpan={6} id="words_amt2">
-                        11,446.00{" "}
+                       {printData?.invoice?.inr}{" "}
                         <input
                           type="hidden"
                           id="amt"
@@ -284,7 +317,7 @@ const Preview = () => {
             </td>
             <td width="" style={{ textAlign: "center" }}>
               <img
-                src="/assets/images/qr_code.png"
+                src={printData?.invoice?.qr}
                 style={{ textAlign: "center", width: "50%" }}
               // alt='image'
               />

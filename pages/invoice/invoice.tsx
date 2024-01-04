@@ -70,8 +70,8 @@ const Invoice = () => {
     const columns = [
         {
             title: 'Invoice Id',
-            dataIndex: 'id',
-            key: 'id',
+            dataIndex: 'invoice_no',
+            key: 'invoice_no',
         },
         {
             title: 'Customer Name',

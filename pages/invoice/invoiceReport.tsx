@@ -18,10 +18,9 @@ const InvoiceReport = () => {
   const [editor, setEditor] = useState<any>("<p>Your HTML content here</p>")
 
 
-
-  useEffect(() => {
-
+  const getTestReport = (() => {
     const Token = localStorage.getItem("token")
+
     axios.get(`http://files.covaiciviltechlab.com/edit_invoice_test_template/${id}/`,
       {
         headers: {
@@ -33,6 +32,10 @@ const InvoiceReport = () => {
       }).catch((error: any) => {
         console.log(error)
       })
+  })
+
+  useEffect(() => {
+    getTestReport()
   }, [id])
 
   console.log("invoiceReport", invoiceReport)
@@ -41,19 +44,20 @@ const InvoiceReport = () => {
 
   // form submit
   const onFinish = () => {
-console.log("editoreditor", editor)
+    console.log("editoreditor", editor)
 
-const body = {
-  report_template : editor
-}
+    const body = {
+      report_template: editor
+    }
 
     const Token = localStorage.getItem("token");
 
-    axios.put(`http://files.covaiciviltechlab.com/edit_invoice_test_template/${id}/`, body , {
+    axios.put(`http://files.covaiciviltechlab.com/edit_invoice_test_template/${id}/`, body, {
       headers: {
         "Authorization": `Token ${Token}`,
       },
     }).then((res) => {
+      getTestReport()
       console.log("Report template updated successfully:", res.data);
     }).catch((error) => {
       console.error("Error updating report template:", error);
@@ -67,11 +71,19 @@ const body = {
 
 
   const handleEditorChange = (value: any) => {
-console.log('✌️value --->', value);
+    // console.log('✌️value --->', value);
     setEditor(value);
   };
 
   console.log("editor", editor)
+
+console.log("invoiceReport", invoiceReport)
+ // Print
+ const handlePrint = () => {
+  // Navigate to the /invoice/edit page with the record data as a query parameter
+  window.location.href = `/invoice/print?id=${id}`;
+};
+
   return (
     <>
       <div style={{ padding: "50px" }}>
@@ -88,9 +100,9 @@ console.log('✌️value --->', value);
             label="Report Template"
             name="report_template"
             required={false}
-            // rules={[{ required: true, message: 'Please input your Report Templates!' }]}
+          // rules={[{ required: true, message: 'Please input your Report Templates!' }]}
           >
-            <div dangerouslySetInnerHTML={{ __html: editor }} style={{display:"none"}} />
+            <div dangerouslySetInnerHTML={{ __html: editor }} style={{ display: "none" }} />
             <ReactQuill
               value={editor}
               onChange={handleEditorChange}
@@ -110,6 +122,9 @@ console.log('✌️value --->', value);
           <Form.Item >
             <div className='form-btn-main'>
               <Space>
+                <Button type="primary" onClick={()=>handlePrint()} >
+                  Print
+                </Button>
                 <Button type="primary" htmlType="submit">
                   Submit
                 </Button>
