@@ -33,7 +33,7 @@ const Print = () => {
     console.log("invoiceReport", invoiceReport)
     return (
         <>
-            <div>
+            <div style={{padding:"50px"}}>
                 <div dangerouslySetInnerHTML={{__html : invoiceReport?.invoice_test?.report_template}}></div>
             </div>
         </>
