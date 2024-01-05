@@ -45,7 +45,7 @@ const Index = () => {
             console.log(res.data)
             localStorage.setItem("token", res?.data?.token)
             localStorage.setItem("admin", res?.data?.is_admin)
-            router.push('/people/customer');
+            router.push('/dashboard');
             messageApi.open({
                 type: 'success',
                 content: 'Login Successfull',
