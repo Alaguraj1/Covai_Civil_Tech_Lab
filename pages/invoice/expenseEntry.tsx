@@ -15,7 +15,7 @@ const ExpenseEntry = () => {
   const { Search } = Input;
   const [form] = Form.useForm();
   const [editRecord, setEditRecord] = useState(null);
-  const [drawerTitle, setDrawerTitle] = useState("Create Tax")
+  const [drawerTitle, setDrawerTitle] = useState("Create Expense")
   const [viewRecord, setViewRecord] = useState(null)
   const [dataSource, setDataSource] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -79,9 +79,9 @@ const ExpenseEntry = () => {
 
   useEffect(() => {
     if (editRecord) {
-      setDrawerTitle("Edit Tax");
+      setDrawerTitle("Edit Expense");
     } else {
-      setDrawerTitle("Create Tax");
+      setDrawerTitle("Create Expense");
     }
   }, [editRecord, open]);
 
@@ -131,8 +131,8 @@ const ExpenseEntry = () => {
     },
     {
       title: 'Expense Category',
-      dataIndex: 'expense_category',
-      key: 'expense_category',
+      dataIndex: 'expense_category_name',
+      key: 'expense_category_name',
     },
     {
       title: 'Amount',
@@ -201,7 +201,7 @@ const inputChange = ((e:any) => {
 
   const filteredData = dataSource.filter((item:any) => {
     return(
-      item?.narration?.toLowerCase().includes(SearchValue.toLowerCase())
+      item?.narration?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.expense_category_name?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.expense_user?.toLowerCase().includes(SearchValue.toLowerCase())
     )
   })
   setFilterData(filteredData)
@@ -321,6 +321,22 @@ const inputChange = ((e:any) => {
         label: "Date:",
         value: formatDate(viewRecord?.date),
       },
+      {
+        label: "Created By:",
+        value: viewRecord?.created_by || "N/A",
+      },
+      {
+        label: "Created Date:",
+        value: formatDate(viewRecord?.created_date),
+      },
+      {
+        label: "Modified By:",
+        value: viewRecord?.modified_by || "N/A",
+      },
+      {
+        label: "Modified Date:",
+        value: formatDate(viewRecord?.modified_date),
+      },
     ];
 
     return data;
@@ -335,7 +351,7 @@ const inputChange = ((e:any) => {
             <h1 className='tax-title'>Manage Expense Entry</h1>
           </div>
           <div>
-            <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
+            <Search placeholder="Input search text" onChange={inputChange} enterButton className='search-bar' />
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Expense Entry</button>
           </div>
         </div>
@@ -357,27 +373,20 @@ const inputChange = ((e:any) => {
             <Form.Item
               label="Expense User"
               name="expense_user"
-              required={false}
-              rules={[{ required: true, message: 'Please select Expense User!' }]}
+              required={true}
+              rules={[{ required: true, message: 'This field is required.' }]}
             >
-              <Select
-                placeholder="Select a customer">
-                {formFields?.expense_user?.map((val: any) => (
-                  <Select.Option key={val.id} value={val.id}>
-                    {val.name}
-                  </Select.Option>
-                ))}
-              </Select>
+              <Input />
             </Form.Item>
 
             <Form.Item
               label="Expense Category"
               name="expense_category"
-              required={false}
-              rules={[{ required: true, message: 'Please select Expense Category!' }]}
+              required={true}
+              rules={[{ required: true, message: 'This field is required.' }]}
             >
               <Select
-                placeholder="Select a customer">
+                placeholder="Select a expense category">
                 {formFields?.expense?.map((val: any) => (
                   <Select.Option key={val.id} value={val.id}>
                     {val.expense_name}
@@ -389,8 +398,8 @@ const inputChange = ((e:any) => {
             <Form.Item<FieldType>
               label="Amount"
               name="amount"
-              required={false}
-              rules={[{ required: true, message: 'Please input your Amount!' }]}
+              required={true}
+              rules={[{ required: true, message: 'This field is required.' }]}
             >
               <Input />
             </Form.Item>
@@ -398,14 +407,14 @@ const inputChange = ((e:any) => {
             <Form.Item<FieldType>
               label="Narration"
               name="narration"
-              required={false}
+              required={true}
               rules={[{ required: true, message: 'Please input your Narration!' }]}
             >
               <Input />
             </Form.Item>
 
             <Form.Item label="Date" name="date"
-              required={false}
+              required={true}
               rules={[{ required: true, message: 'Please input your Date!' }]}>
               <DatePicker style={{ width: "100%" }} />
             </Form.Item>

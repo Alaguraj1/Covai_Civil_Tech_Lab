@@ -201,7 +201,7 @@ console.log('✌️record --->', record);
     const inputChange = (e: any) => {
         const searchValue = e.target.value.toLowerCase();
         const filteredData = dataSource.filter((item: any) =>
-            item.test_name.toLowerCase().includes(searchValue)
+            item.test_name.toLowerCase().includes(searchValue) || item.material_name.toLowerCase().includes(searchValue) || item.price_per_piece.toLowerCase().includes(searchValue)
         );
         setFilterData(searchValue ? filteredData : dataSource);
     };

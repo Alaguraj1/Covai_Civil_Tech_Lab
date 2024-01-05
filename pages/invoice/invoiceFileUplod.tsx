@@ -77,9 +77,9 @@ const InvoiceFileUpload = () => {
 
   useEffect(() => {
     if (editRecord) {
-      setDrawerTitle("Edit Invoice File Upload");
+      setDrawerTitle("Edit File Upload");
     } else {
-      setDrawerTitle("Create Invoice File Upload");
+      setDrawerTitle("+ File Upload");
     }
   }, [editRecord, open]);
 
@@ -92,6 +92,7 @@ console.log('✌️record --->', record);
       setEditRecord(record);
       form.setFieldsValue({
         invoice: record.invoice,
+        category:record.category,
         file:
           [
             {
@@ -122,12 +123,22 @@ console.log('✌️record --->', record);
 
   const columns = [
     {
-      title: 'Invoice',
-      dataIndex: 'invoice',
-      key: 'invoice',
+      title: 'id',
+      dataIndex: 'id',
+      key: 'id',
     },
     {
-      title: 'file_url',
+      title: 'Category',
+      dataIndex: 'category_name',
+      key: 'category_name',
+    },
+    {
+      title: 'Invoice No',
+      dataIndex: 'invoice_no',
+      key: 'invoice_no',
+    },
+    {
+      title: 'File url',
       dataIndex: 'file_url',
       key: 'file_url',
     },
@@ -204,7 +215,12 @@ const [filterData, setFilterData] = useState(dataSource)
     // Create a FormData object to send files
     const formData = new FormData();
     formData.append("file", values.file.file.originFileObj);
-    formData.append('invoice', values.invoice);
+    if(values.invoice !== undefined){
+    
+      formData.append('invoice', values.invoice);
+    }
+    
+    formData.append('category', values.category);
 
 
     // Check if editing or creating
@@ -256,6 +272,7 @@ const [filterData, setFilterData] = useState(dataSource)
   type FieldType = {
     invoice?: string;
     file?: string;
+    category?: string;
   };
   // console.log("viewRecordviewRecord", viewRecord)
 
@@ -284,12 +301,33 @@ const [filterData, setFilterData] = useState(dataSource)
 
     const data = [
       {
-        label: "invoice:",
+        label: "Invoice:",
         value: viewRecord?.invoice|| "N/A",
       },
       {
-        label: "file_url:",
+        label: "Download:",
         value: viewRecord?.file_url || "N/A",
+      },
+      {
+        label: "Category:",
+        value: viewRecord?.category_name || "N/A",
+      },
+      {
+        label: "Created By:",
+        value: viewRecord?.created_by || "N/A",
+      },
+      {
+        label: "Modified By:",
+        value: viewRecord?.modified_by || "N/A",
+      },
+
+      {
+        label: "Created Date:",
+        value: viewRecord?.created_date || "N/A",
+      },
+      {
+        label: "Modified Date:",
+        value: viewRecord?.modified_date || "N/A",
       },
     ];
 
@@ -330,11 +368,11 @@ const [filterData, setFilterData] = useState(dataSource)
       <div>
         <div className='tax-heading-main'>
           <div>
-            <h1 className='tax-title'>Manage Invoice File Upload</h1>
+            <h1 className='tax-title'>Manage Invoice/Expense File Upload</h1>
           </div>
           <div>
-            <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
-            <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Invoice File Upload</button>
+            <Search placeholder="Input search text" onChange={inputChange} enterButton className='search-bar' />
+            <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ File Upload</button>
           </div>
         </div>
         <div>
@@ -356,13 +394,30 @@ const [filterData, setFilterData] = useState(dataSource)
               label="Invoice"
               name="invoice"
               required={false}
-              rules={[{ required: true, message: 'Please select Expense User!' }]}
+              rules={[{ required: false, message: 'This field is required.' }]}
             >
               <Select
                 placeholder="Select a Invoice">
                 {formFields?.invoices?.map((val: any) => (
                   <Select.Option key={val.id} value={val.id}>
-                    {val.id}
+                    {val.invoice_no} - {val.customer} - {val.customer_no}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+
+
+            <Form.Item
+              label="Category"
+              name="category"
+              required={true}
+              rules={[{ required: true, message: 'This field is required.' }]}
+            >
+              <Select
+                placeholder="Select a Category">
+                {formFields?.categories?.map((val: any) => (
+                  <Select.Option key={val.id} value={val.id}>
+                    {val.name}
                   </Select.Option>
                 ))}
               </Select>
@@ -371,6 +426,7 @@ const [filterData, setFilterData] = useState(dataSource)
             <Form.Item<FieldType>
               label="File"
               name="file"
+              required={true}
             >
               <Dragger {...props} >
                 <p className="ant-upload-drag-icon">
@@ -405,7 +461,7 @@ const [filterData, setFilterData] = useState(dataSource)
 
 
         {/* Modal */}
-        <Modal title="View Tax" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
+        <Modal title="View File" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
           <div  style={{overflow:"scroll"}}>
           {
             modalData()?.map((value: any) => {

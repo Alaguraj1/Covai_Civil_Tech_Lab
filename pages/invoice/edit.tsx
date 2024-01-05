@@ -37,7 +37,8 @@ const Edit = () => {
     const [filterTest, setFilterTest] = useState<any>([])
     const [invoiceFormData, setInvoiceFormData] = useState<any>({})
     const [customerAddress, setCustomerAddress] = useState('');
-    const [tax, setTax] = useState('')
+    const [tax, setTax] = useState([])
+    
     const [taxPercentage, setTaxPercentage] = useState('')
     const [balance, setBalance] = useState('')
     const [taxCalculated, setTaxCalculated] = useState('')
@@ -82,7 +83,6 @@ const Edit = () => {
             }
         }).then((res) => {
             let response = res.data;
-            console.table('✌️response --->', response);
             let mergeArray: any = [response.customer, ...response.customers];
             const uniqueArray = mergeArray.reduce((acc: any, obj: any) => {
                 const existingObj = acc.find((item: any) => item.id === obj.id);
@@ -93,7 +93,7 @@ const Edit = () => {
 
                 return acc;
             }, []);
-            console.log('✌️uniqueArray --->', uniqueArray);
+           
             const data = {
                 customers: uniqueArray,
                 invoice: response.invoice,
@@ -115,6 +115,7 @@ const Edit = () => {
                 payment_mode: response.invoice.payment_mode,
                 cheque_number: response.invoice.cheque_number,
                 bank: response.invoice.bank,
+                place_of_testing: response.place_of_testing,
                 amount_paid_date: response.invoice.amount_paid_date,
                 before_tax: response?.invoice_tests.reduce((total: any, test: any) => total + parseFloat(test.total), 0),
 
@@ -389,7 +390,7 @@ const Edit = () => {
 
     const handleTaxChange = (e: any) => {
         const selectedTax = invoiceFormData?.taxs?.find((tax: any) => tax.id === Number(e.target.value));
-
+      
         setTax(selectedTax?.tax_name || '');
         setTaxPercentage(selectedTax?.tax_percentage || '');
 
@@ -563,9 +564,13 @@ const Edit = () => {
                             <img src="/assets/images/civil-techno-logo.png" alt="img" style={{ width: "30%" }} />
                         </div>
                         <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
-                            <div>13 Tetrick Road, Cypress Gardens, Florida, 33884, US</div>
-                            <div>civiltechno@gmail.com</div>
-                            <div>+1 (070) 123-4567</div>
+                        <div className="mt-4 flex items-center">
+                            <label htmlFor="place_of_testing" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
+                                Place of testing
+                            </label>
+                            <input id="place_of_testing" type="text" className="form-input w-2/3 lg:w-[250px]" name="place_of_testing" value={formData.place_of_testing} onChange={inputChange} />
+                        </div>
+                           
                         </div>
                     </div>
                     <div className="w-full lg:w-1/2 lg:max-w-fit">
@@ -581,6 +586,7 @@ const Edit = () => {
                             </label>
                             <input id="startDate" type="date" className="form-input w-2/3 lg:w-[250px]" name="date" value={formData.date} onChange={inputChange} />
                         </div>
+                      
                     </div>
                 </div>
                 <hr className="my-6 border-white-light dark:border-[#1b2e4b]" />
@@ -730,9 +736,8 @@ const Edit = () => {
                                 <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Tax
                                 </label>
-                                {/* <select id="country" name="tax" value={formData?.tax} className="form-select flex-1" onChange={handleTaxChange}
-
-                                >
+                                {
+                                    <select id="country" name="tax" value={formData?.tax} className="form-select flex-1" onChange={handleTaxChange} multiple>
 
                                     {
                                         invoiceFormData?.taxs?.map((value: any) => {
@@ -742,26 +747,9 @@ const Edit = () => {
                                             )
                                         })
                                     }
-                                </select> */}
-                                <select
-                                    id="country"
-                                    name="tax"
-                                    value={formData?.tax}
-                                    className="form-select flex-1"
-                                    onChange={handleTaxChange}
-                                >
-                                    {/* Combining the first two options into a single option */}
-                                    <option key="grouped-option" value={`${invoiceFormData?.taxs?.[0]?.id}:${invoiceFormData?.taxs?.[1]?.id}`}>
-                                        {invoiceFormData?.taxs?.[0]?.tax_name} + {invoiceFormData?.taxs?.[1]?.tax_name}
-                                    </option>
-
-                                    {/* Remaining options */}
-                                    {invoiceFormData?.taxs?.slice(2).map((value: any) => (
-                                        <option key={value.id} value={value.id}>
-                                            {value.tax_name}
-                                        </option>
-                                    ))}
-                                </select>
+                                </select> }
+                                
+                          
 
                             </div>
                             <div className="flex items-center justify-between" style={{ marginTop: "20px" }}>

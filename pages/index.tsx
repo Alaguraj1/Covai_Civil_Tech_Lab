@@ -45,16 +45,16 @@ const Index = () => {
             console.log(res.data)
             localStorage.setItem("token", res?.data?.token)
             localStorage.setItem("admin", res?.data?.is_admin)
-            router.push('/dashboard');
+            router.push('/people/customer');
             messageApi.open({
                 type: 'success',
-                content: 'login successfully!',
+                content: 'Login Successfull',
             });
         }).catch((error: any) => {
             console.log(error.code)
             messageApi.open({
                 type: 'error',
-                content: 'please enter your correct usernme and password',
+                content: 'The username or password you entered is incorrect.',
             });
         })
 
@@ -158,14 +158,14 @@ const Index = () => {
                         <div className="w-full max-w-[440px] lg:mt-16">
                             <div className="mb-10">
                                 <h1 className="text-3xl font-extrabold uppercase !leading-snug text-primary md:text-4xl">Sign in</h1>
-                                <p className="text-base font-bold leading-normal text-white-dark">Enter your email and password to Sign in</p>
+                                <p className="text-base font-bold leading-normal text-white-dark">Enter your email and password to Sign In</p>
                             </div>
                             {contextHolder}
                             <form className="space-y-5 dark:text-white" onSubmit={submitForm}>
                                 <div>
                                     <label htmlFor="Email">Email</label>
                                     <div className="relative text-white-dark">
-                                        <input id="Email" type="email" placeholder="Enter Email" className="form-input ps-10 placeholder:text-white-dark" name='username' value={formData?.username} onChange={inputChange} />
+                                        <input required id="Email" type="email" placeholder="Enter Email" className="form-input ps-10 placeholder:text-white-dark" name='username' value={formData?.username} onChange={inputChange} />
                                         <span className="absolute start-4 top-1/2 -translate-y-1/2">
                                             <IconMail fill={true} />
                                         </span>
@@ -174,7 +174,7 @@ const Index = () => {
                                 <div>
                                     <label htmlFor="Password">Password</label>
                                     <div className="relative text-white-dark">
-                                        <input id="Password" type="password" placeholder="Enter Password" className="form-input ps-10 placeholder:text-white-dark" name='password' value={formData?.password} onChange={inputChange} />
+                                        <input required id="Password" type="password" placeholder="Enter Password" className="form-input ps-10 placeholder:text-white-dark" name='password' value={formData?.password} onChange={inputChange} />
                                         <span className="absolute start-4 top-1/2 -translate-y-1/2">
                                             <IconLockDots fill={true} />
                                         </span>
@@ -242,7 +242,7 @@ const Index = () => {
                                 </Link>
                             </div> */}
                         </div>
-                        <p className="absolute bottom-6 w-full text-center dark:text-white">© {new Date().getFullYear()}.CIVIL_TECHNO_LAB All Rights Reserved.</p>
+                        <p className="absolute bottom-6 w-full text-center dark:text-white">© {new Date().getFullYear()}.Covai Civil Tech Lab. All Rights Reserved.</p>
                     </div>
                 </div>
             </div>

@@ -411,7 +411,7 @@ const Header = () => {
                                         fill="currentColor"
                                     />
                                 </svg>
-                                <span className="px-1"> <Link href="/dashboard">{t('Dashboard')} </Link></span>
+                                <span className="px-1"> <Link href="/">{t('Dashboard')} </Link></span>
                             </div>
                             {/* <div className="right_arrow">
                                 <svg className="rotate-90" width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -563,18 +563,14 @@ const Header = () => {
                             <li>
                                 <Link href="/master/material">{t('Material')}</Link>
                             </li>
-                            <li>
-                                <Link href="/master/reportTemplate">{t('Report Templates')}</Link>
-                            </li>
+                        
                             <li>
                                 <Link href="/master/test">{t('Test')}</Link>
                             </li>
                             <li>
                                 <Link href="/master/expense">{t('Expense')}</Link>
                             </li>
-                            <li>
-                                <Link href="/master/expenseUser">{t('Expense User')}</Link>
-                            </li>
+                        
                             {/* <li>
                                 <Link href="/components/counter">{t('counter')}</Link>
                             </li>
