@@ -5,6 +5,7 @@ import { Space, Table, Modal, Form, Input, Select, Button, Drawer } from 'antd';
 import "react-quill/dist/quill.snow.css";
 import dynamic from 'next/dynamic';
 import form from 'antd/es/form';
+import Link from 'next/link';
 
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
@@ -82,6 +83,7 @@ console.log("invoiceReport", invoiceReport)
  const handlePrint = () => {
   // Navigate to the /invoice/edit page with the record data as a query parameter
   window.location.href = `/invoice/print?id=${id}`;
+  // window.open("/invoice/print?id=${id}", "_self");
 };
 
   return (
@@ -97,7 +99,7 @@ console.log("invoiceReport", invoiceReport)
           autoComplete="off"
         >
           <Form.Item
-            label="Report Template"
+            label="Edit Report Template"
             name="report_template"
             required={false}
           // rules={[{ required: true, message: 'Please input your Report Templates!' }]}
@@ -122,6 +124,9 @@ console.log("invoiceReport", invoiceReport)
           <Form.Item >
             <div className='form-btn-main'>
               <Space>
+              <Button type="primary" ><Link href="/">  Go Back</Link>
+               
+                </Button>
                 <Button type="primary" onClick={()=>handlePrint()} >
                   Print
                 </Button>

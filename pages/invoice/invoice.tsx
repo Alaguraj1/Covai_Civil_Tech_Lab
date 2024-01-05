@@ -254,7 +254,7 @@ const Invoice = () => {
                                 value={selectedCustomerId}>
                                 {formFields?.customer?.map((val: any) => (
                                     <Select.Option key={val.id} value={val.id}>
-                                        {val.customer_name}
+                                        {val.customer_name} - {val.phone_no}
                                     </Select.Option>
                                 ))}
                             </Select>

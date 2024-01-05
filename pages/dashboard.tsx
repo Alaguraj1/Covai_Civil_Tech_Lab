@@ -32,7 +32,7 @@ const Dashboard = () => {
                     <Col span={12}>
                         <Card bordered={false} >
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <h2 style={{ fontSize: "24px", fontWeight: "600" }}>customer_count : {dashboard?.customer_count}</h2>
+                                <h2 style={{ fontSize: "24px", fontWeight: "600" }}>Customer Count : {dashboard?.customer_count}</h2>
                                 <Button type="primary" size='large'><Link href='/people/customer'>View</Link></Button>
                             </div>
 
@@ -41,7 +41,7 @@ const Dashboard = () => {
                     <Col span={12}>
                         <Card bordered={false} >
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
-                                <h2 style={{ fontSize: "24px", fontWeight: "600" }}>pending_payment_count : {dashboard?.pending_payment_count}</h2>
+                                <h2 style={{ fontSize: "24px", fontWeight: "600" }}>Pending Payment Count : {dashboard?.pending_payment_count}</h2>
                                 <Button type="primary" size='large'><Link href='/invoice/pendingPayment'>View</Link></Button>
                             </div>
 
@@ -54,8 +54,8 @@ const Dashboard = () => {
                         <Card bordered={false} >
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <div>
-                                    <h2 style={{ fontSize: "24px", fontWeight: "600" }}>this_month_expense_entry_count : {dashboard?.this_month_expense_entry_count}</h2>
-                                    <h2 style={{ fontSize: "24px", fontWeight: "600" }}>this_month_expense_total : {dashboard?.this_month_expense_total}</h2>
+                                    <h2 style={{ fontSize: "24px", fontWeight: "600" }}>This Month Expense Entry Count : {dashboard?.this_month_expense_entry_count}</h2>
+                                    <h2 style={{ fontSize: "24px", fontWeight: "600" }}>This Month Expense Total : {dashboard?.this_month_expense_total}</h2>
                                 </div>
 
                                 <Button type="primary" size='large'><Link href='/report/expenseReport'>View</Link></Button>
@@ -67,8 +67,8 @@ const Dashboard = () => {
                         <Card bordered={false} >
                             <div style={{ display: "flex", justifyContent: "space-between" }}>
                                 <div>
-                                    <h2 style={{ fontSize: "24px", fontWeight: "600" }}>this_month_generated_invoice : {dashboard?.this_month_generated_invoice}</h2>
-                                    <h2 style={{ fontSize: "24px", fontWeight: "600" }}>this_month_pending_payment_count : {dashboard?.this_month_pending_payment_count}</h2>
+                                    <h2 style={{ fontSize: "24px", fontWeight: "600" }}>This Month Generated Invoice : {dashboard?.this_month_generated_invoice}</h2>
+                                    <h2 style={{ fontSize: "24px", fontWeight: "600" }}>This Month Pending Payment Count : {dashboard?.this_month_pending_payment_count}</h2>
                                 </div>
                                 <Button type="primary" size='large'><Link href='/invoice/pendingPayment'>View</Link></Button>
                             </div>

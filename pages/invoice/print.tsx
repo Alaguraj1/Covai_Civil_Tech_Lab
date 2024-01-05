@@ -33,8 +33,8 @@ const Print = () => {
     console.log("invoiceReport", invoiceReport)
     return (
         <>
-            <div style={{padding:"50px"}}>
-                <div dangerouslySetInnerHTML={{__html : invoiceReport?.invoice_test?.report_template}}></div>
+            <div style={{padding:"50px 100px"}}>
+                <div dangerouslySetInnerHTML={{__html : invoiceReport?.invoice_test?.final_html}}></div>
             </div>
         </>
     )
