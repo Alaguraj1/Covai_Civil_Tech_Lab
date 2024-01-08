@@ -80,7 +80,7 @@ const Preview = () => {
                     </td>
                     <td width="82%" align="center" valign="middle">
                       <span className="style3">
-                        CIVIL TECHNO LAB PRIVATE LIMITED
+                       COVAI CIVIL TECH LAB PRIVATE LIMITED
                         <br /> AN ISO 9001:2008 CERTIFIED LAB
                       </span>
                       <br /> All Building Material Testing and Building Repair
@@ -324,7 +324,7 @@ const Preview = () => {
             </td>
             <td width="25%" style={{ textAlign: "right" }}>
               <b>
-                <br /> CIVIL TECHNO LAB Pvt Ltd
+                <br />COVAI CIVIL TECH LAB Pvt Ltd
                 <br />
                 <br /> <br /> <br /> <br />{" "}
                 <b style={{ textAlign: "right" }}>S.CHANDRASEKAR.,ME.,</b>

@@ -27,9 +27,9 @@ const Edit = () => {
     const [editRecord, setEditRecord] = useState(null);
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm()
-    const [discount, setDiscount] = useState<any>(0);
-    const [shippingCharge, setShippingCharge] = useState<any>(0);
-    const [paymentMethod, setPaymentMethod] = useState<any>('bank');
+    // const [discount, setDiscount] = useState<any>(0);
+    // const [shippingCharge, setShippingCharge] = useState<any>(0);
+    // const [paymentMethod, setPaymentMethod] = useState<any>('bank');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [testFormData, setTestFormData] = useState<any>([])
     const [tableVisible, setTableVisible] = useState(false)
@@ -38,20 +38,28 @@ const Edit = () => {
     const [invoiceFormData, setInvoiceFormData] = useState<any>({})
     const [customerAddress, setCustomerAddress] = useState('');
     const [tax, setTax] = useState([])
-    
-    const [taxPercentage, setTaxPercentage] = useState('')
-    const [balance, setBalance] = useState('')
+    const [balance, setBalance] = useState<any>('')
     const [taxCalculated, setTaxCalculated] = useState('')
     const [afterTax, setAfterTax] = useState<any>('')
     const [beforeTotalTax, setBeforeTotalTax] = useState<any>(0)
     const [advance, setAdvance] = useState(0)
+    const [mainTax, setMainTax] = useState([])
+    const [checkedItems, setCheckedItems] = useState({});
+    const [finalTotal, setFinalTotal] = useState(0)
+    const [totalPercentage, setTotalPercentage] = useState(0);
+    const [selectedIDs, setSelectedIDs] = useState([]);
+    const [totalTaxPercentage, setTotalTaxPercentage] = useState(0);
+    const [updateBeforeTax, setUpdateBeforeTax] = useState(0);
+    const [updatedSum, setUpdatedSum] = useState(0);
+
+
+
 
     const [formData, setFormData] = useState({
         customer: "",
         sales_mode: "",
         project_name: "",
         discount: "",
-        tax: "",
         advance: "",
         date: "",
         payment_mode: "",
@@ -59,10 +67,9 @@ const Edit = () => {
         bank: "",
         amount_paid_date: "",
         before_tax: "",
+        tax: [],
     });
-    // console.log('✌️formData --->', formData);
 
-    // console.log("abc", formData)
 
     const tableTogle = () => {
         setTableVisible(!tableVisible)
@@ -76,6 +83,34 @@ const Edit = () => {
     })
 
 
+    const formatTotal = () => {
+
+        const selectedPercentages = invoiceFormData?.taxs?.filter(
+            (item: any) => checkedItems[item.id]
+        );
+
+        if (selectedPercentages?.length > 0) {
+            const percentagesArray = selectedPercentages.map((item: any) =>
+                parseFloat(item.tax_percentage)
+            );
+            const selectedName = selectedPercentages.map((item: any) =>
+                (item.tax_name)
+            );
+            const nameString = selectedName.join(" + ");
+
+            const percentagesString = percentagesArray.join(" + ");
+            return `${nameString} : ${percentagesString} = ${totalTaxPercentage}`;
+        }
+        return "";
+    };
+
+
+    // Get Single Product
+    useEffect(() => {
+        getInvoiceTestData()
+    }, [id])
+
+
     const getInvoiceTestData = () => {
         axios.get(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`, {
             headers: {
@@ -83,6 +118,7 @@ const Edit = () => {
             }
         }).then((res) => {
             let response = res.data;
+            console.log('✌️response --->', response);
             let mergeArray: any = [response.customer, ...response.customers];
             const uniqueArray = mergeArray.reduce((acc: any, obj: any) => {
                 const existingObj = acc.find((item: any) => item.id === obj.id);
@@ -93,7 +129,9 @@ const Edit = () => {
 
                 return acc;
             }, []);
-           
+
+            setSelectedIDs(response?.invoice.tax)
+
             const data = {
                 customers: uniqueArray,
                 invoice: response.invoice,
@@ -102,61 +140,184 @@ const Edit = () => {
                 sales_mode: response.sales_mode,
                 taxs: response.taxs
             }
-            console.log('✌️data --->', data);
+            // if (update) {
+            const convertedObj = {}
+
+            data?.taxs.forEach((item: any) => {
+                convertedObj[item.id] = data?.invoice?.tax.includes(item.id);
+            });
+
+            setCheckedItems(convertedObj);
+
+
+            //Before tax
+            const beforetax: any = response?.invoice_tests.reduce((total: any, test: any) => total + parseFloat(test.total), 0)
+            const discountedAmount = (beforetax * response.invoice.discount) / 100;
+            const discountedBeforeTax = response.invoice.discount !== 0 ? beforetax - discountedAmount : beforetax;
+            console.log('✌️discountedBeforeTax --->', discountedBeforeTax);
+            setUpdateBeforeTax(discountedBeforeTax)
+            setBeforeTotalTax(beforetax)
+            // -------------------------------------------------------------------------------------------
+            // Tax total prrcentage
+            const matchedTaxs = data?.taxs.filter(item => data?.invoice?.tax.includes(item.id));
+            const sumPercentage = matchedTaxs.reduce((sum, item) => {
+                return sum + parseFloat(item.tax_percentage);
+            }, 0);
+
+            const sumAsNumber = Number(sumPercentage);
+            const totalPer:any = sumAsNumber * discountedBeforeTax / 100
+            setTotalTaxPercentage(parseInt(totalPer,10))
+
+            // -------------------------------------------------------------------------------------------
+            //After tax
+            const After_tax = discountedBeforeTax + totalPer;
+            setAfterTax(parseInt(After_tax,10))
+            // -------------------------------------------------------------------------------------------
+
             setFormData(prevState => ({
                 ...prevState,
                 customer: uniqueArray[0].id,
-                sales_mode: response?.sales_mode[0].id,
+                sales_mode: response?.invoice.sales_mode
+                ,
                 project_name: response.invoice.project_name,
                 discount: response.invoice.discount,
-                tax: response?.taxs[0]?.id,
                 advance: response.invoice.advance,
                 date: response.invoice.date,
                 payment_mode: response.invoice.payment_mode,
                 cheque_number: response.invoice.cheque_number,
                 bank: response.invoice.bank,
-                place_of_testing: response.place_of_testing,
+                place_of_testing: response.invoice.place_of_testing,
                 amount_paid_date: response.invoice.amount_paid_date,
-                before_tax: response?.invoice_tests.reduce((total: any, test: any) => total + parseFloat(test.total), 0),
-
+                before_tax: discountedBeforeTax,
+                invoice_tests: response?.invoice_tests
+                // tax: response.invoice.tax || [],
             }));
 
-            setBeforeTotalTax(response?.invoice_tests.reduce((total: any, test: any) => total + parseFloat(test.total), 0))
-
-            const Balance = afterTax - parseFloat(response.invoice.advance);
-            setBalance(Balance.toString());
-
             setInvoiceFormData(data)
-
             setCustomerAddress(uniqueArray[0]?.address1);
 
-            setTax(response?.taxs[0]?.tax_name)
-
-            setTaxPercentage(response?.taxs[0]?.tax_percentage)
-
-            const beforetax: any = response?.invoice_tests.reduce((total: any, test: any) => total + parseFloat(test.total), 0)
-            const tagPercentage: any = response?.taxs[0]?.tax_percentage
-            const calculatedtax: any = beforetax * tagPercentage / 100
-            setTaxCalculated(calculatedtax)
-
-            const afterCalculated = beforetax + calculatedtax
-            setAfterTax(afterCalculated)
-
-            const InitialBalance: any = afterCalculated - response.invoice.advance
-            setBalance(InitialBalance)
-
+            const InitialBalance: any = After_tax - response.invoice.advance
+            setBalance(parseInt(InitialBalance,10))
             setAdvance(response.invoice.advance)
 
         }).catch((error: any) => {
             console.log("error", error)
         })
     }
-    // Get Single Product
-    useEffect(() => {
-        getInvoiceTestData()
-    }, [id])
 
-    // console.log("InvoiceFormData", invoiceFormData)
+    const handleDiscountChange = (e: any) => {
+        const discount = parseFloat(e) || 0;
+        const beforeTax = parseFloat(beforeTotalTax || '0');
+        const discountedAmount = (beforeTax * discount) / 100;
+        const discountedBeforeTax = discount !== 0 ? beforeTax - discountedAmount : beforeTax;
+        let checkedItem = checkedItems
+
+        let sum = 0;
+
+        invoiceFormData.taxs.forEach(item => {
+            if (checkedItem[item.id]) {
+                sum += parseFloat(item.tax_percentage);
+            }
+        });
+
+        setUpdatedSum(sum)
+
+        const finals = (discountedBeforeTax * sum) / 100
+
+        //total percentage
+        setUpdateBeforeTax(discountedBeforeTax)
+
+        const totalPer = updatedSum * discountedBeforeTax / 100
+        // setTotalTaxPercentage(parseInt(totalPer, 10))
+        setTotalTaxPercentage(parseInt(finals, 10))
+
+        // -------------------------------------------------------------------------------------------------------
+        //After tax
+        const After_tax = discountedBeforeTax + totalPer;
+        setAfterTax(parseInt(After_tax, 10))
+        // -------------------------------------------------------------------------------------------------------
+
+        //Balance
+        const InitialBalance: any = parseInt(After_tax, 10) - advance
+        setBalance(InitialBalance)
+        // -------------------------------------------------------------------------------------------------------
+
+
+        if (discount === 0) {
+            setFormData((prevState: any) => ({
+                ...prevState,
+                discount: discount,
+                before_tax: beforeTotalTax || '0', // Set your desired initial value,
+
+            }));
+        } else {
+            setFormData((prevState: any) => ({
+                ...prevState,
+                discount: discount,
+                before_tax: discountedBeforeTax.toString(),
+            }));
+        }
+
+    };
+
+    const handleAdvanceChange = (value: string) => {
+        const newAdvance = parseFloat(value) || 0;
+        setAdvance(newAdvance);
+        const newBalance = afterTax - newAdvance;
+        setBalance(newBalance.toString());
+    };
+
+    const handleChange = (id: any, percentage: any) => {
+
+        const beforeTax = updateBeforeTax
+
+        let checkedItem = { ...checkedItems, [id]: !checkedItems[id] }
+
+        let sum = 0;
+
+        invoiceFormData.taxs.forEach(item => {
+            if (checkedItem[item.id]) {
+                sum += parseFloat(item.tax_percentage);
+            }
+        });
+
+        setUpdatedSum(sum)
+
+        const finals = (beforeTax * sum) / 100
+
+
+        setCheckedItems(checkedItem);
+        setSelectedIDs((prevSelectedIDs: any) => {
+            if (prevSelectedIDs.includes(id)) {
+                return prevSelectedIDs.filter((selectedID: any) => selectedID !== id);
+            } else {
+                return [...prevSelectedIDs, id];
+            }
+        });
+
+
+        setTotalTaxPercentage(parseInt(finals, 10));
+
+        const totalPer = sum * beforeTax / 100
+
+        //After tax
+        const After_tax = updateBeforeTax + totalPer;
+        setAfterTax(parseInt(After_tax, 10))
+        // -------------------------------------------------------------------------------------------------------
+
+        //Balance
+        const InitialBalance: any = parseInt(After_tax, 10) - advance
+        setBalance(InitialBalance)
+        // -------------------------------------------------------------------------------------------------------
+
+
+    };
+
+
+    useEffect(() => {
+        formatTotal()
+    }, [updateBeforeTax, totalTaxPercentage])
+
 
     // get meterial test
     useEffect(() => {
@@ -253,7 +414,6 @@ const Edit = () => {
             }
         })
             .then((res) => {
-                console.log(res.data);
                 setIsModalOpen(false);
                 getInvoiceTestData()
             })
@@ -265,12 +425,10 @@ const Edit = () => {
 
 
     const onFinishFailed = (errorInfo: any) => {
-        // console.log('Failed:', errorInfo);
     };
 
 
 
-    // console.log("filterDAtss", filterTest)
 
     const quantityChange = ((e: any, index: number) => {
         // console.log('✌️e --->', e, index);
@@ -312,59 +470,49 @@ const Edit = () => {
 
 
     const invoiceFormSubmit = ((e: any) => {
-        console.log('FormData', formData, id)
 
         // let config = {
         //     method: 'put',
         //     maxBodyLength: Infinity,
-        //     url: `http://files.covaiciviltechlab.com/edit_invoice//`,
+        //     url: `http://files.covaiciviltechlab.com/edit_iputnvoice//`,
         //     headers: {
         //         'Authorization': 'Token b8a733d32b22d10e077fde4dce188adb9e981231',
         //         'Content-Type': 'application/json'
         //     },
         //     data: formData
         // };
-
         const Token = localStorage.getItem('token');
-
-        axios.put(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`, {
-            ...formData,   // Assuming formData is an object
-            advance: advance,
-            balance: balance,
-        }, {
+        const body = {
+            "customer": formData.customer,
+            "sales_mode": Number(formData.sales_mode),
+            "project_name": formData.project_name,
+            "discount": formData.discount,
+            "tax": selectedIDs,
+            "total_amount": parseInt(afterTax,10),
+            "advance": advance,
+            "balance": parseInt(balance,10),
+            "amount_paid_date": formData.amount_paid_date,
+            "bank": formData.bank,
+            "cheque_number": formData.cheque_number,
+            "payment_mode": formData.payment_mode,
+            "date": formData.date,
+            "place_of_testing": formData.place_of_testing
+        }
+        console.log('✌️body --->', body);
+        axios.put(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`, body, {
             headers: {
                 'Authorization': `Token ${Token}`,
                 'Content-Type': 'application/json'
             }
         })
             .then((response) => {
-                console.log(JSON.stringify(response.data));
+                getInvoiceTestData()
+                console.log('✌️response --->', response);
             })
             .catch((error) => {
                 console.log(error);
             });
 
-        // let data = JSON.stringify({
-        //     "customer": 3,
-        //     "sales_mode": 1,
-        //     "project_name": "Project 2",
-        //     "discount": 12,
-        //     "tax": 1,
-        //     "advance": 10,
-        //     "date": "2023-12-05",
-        //     "payment_mode": "cheque",
-        //     "cheque_number": "!111",
-        //     "bank": "canara",
-        //     "amount_paid_date": "2023-12-04"
-        //   });
-        // axios.put(`http://files.covaiciviltechlab.com/edit_invoice/${id}`, data).then((res) => {
-        //     console.log(res.data)
-        // }).catch((error: any) => {
-        //     console.error('Error:', error);
-        // })
-
-        // e.preventDefault()
-        // console.log("formData", formData)
     })
 
 
@@ -380,84 +528,18 @@ const Edit = () => {
 
         }));
 
-        // console.log('customerAddress', customerAddress);
 
-        // Update form values directly (assuming you have access to the form instance)
         form.setFieldsValue({
             'reciever-address': selectedCustomer?.address1 || '',
         });
-    };
+    }
 
-    const handleTaxChange = (e: any) => {
-        const selectedTax = invoiceFormData?.taxs?.find((tax: any) => tax.id === Number(e.target.value));
-      
-        setTax(selectedTax?.tax_name || '');
-        setTaxPercentage(selectedTax?.tax_percentage || '');
-
-        setFormData((prevState) => ({
-            ...prevState,
-            tax: selectedTax,
-        }));
-
-        const taxCalculation: any = (parseFloat(selectedTax?.tax_percentage || '0') * parseFloat(formData?.before_tax || '0')) / 100;
-        const After_tax = parseFloat(formData?.before_tax || '0') + taxCalculation;
-        const newBalance = After_tax - parseFloat(formData.advance || '0');
-
-        setBalance(newBalance.toString());
-        setTaxCalculated(taxCalculation);
-        setAfterTax(After_tax);
-    };
-
-
-    const handleAdvanceChange = (value: string) => {
-        const newAdvance = parseFloat(value) || 0;
-        setAdvance(newAdvance);
-        const newBalance = afterTax - newAdvance;
-        setBalance(newBalance.toString());
-    };
-
-
-    const handleDiscountChange = (e: any) => {
-
-        const discount = parseFloat(e) || 0;
-        const beforeTax = parseFloat(beforeTotalTax || '0');
-
-
-        // Calculate discounted amount and discountedBeforeTax
-        const discountedAmount = (beforeTax * discount) / 100;
-        const discountedBeforeTax = discount !== 0 ? beforeTax - discountedAmount : beforeTax;
-
-        // Calculate tax, After_tax, and newBalance
-        const taxCalculation: any = (parseFloat(taxPercentage) * discountedBeforeTax) / 100;
-        const After_tax = discountedBeforeTax + taxCalculation;
-        const newBalance = After_tax - parseFloat(formData.advance || '0');
-
-        // Update form data and state values
-
-        if (discount === 0) {
-            setFormData((prevState: any) => ({
-                ...prevState,
-                discount: discount,
-                before_tax: beforeTotalTax || '0', // Set your desired initial value
-            }));
-        } else {
-            setFormData((prevState: any) => ({
-                ...prevState,
-                discount: discount,
-                before_tax: discountedBeforeTax.toString(),
-            }));
-        }
-        setBalance(newBalance.toString());
-        setTaxCalculated(taxCalculation);
-        setAfterTax(After_tax);
-    };
 
     const handlePreviewClick = (id: any) => {
         // Navigate to the /invoice/edit page with the record data as a query parameter
         window.location.href = `/invoice/preview?id=${id}`;
     };
 
-    console.log("textextex", tax)
 
     // drawer
     // drawer
@@ -485,13 +567,11 @@ const Edit = () => {
             okText: "Yes",
             okType: "danger",
             onOk: () => {
-                console.log(id, "values")
                 axios.delete(`http://files.covaiciviltechlab.com/delete_invoice_test/${id}`, {
                     headers: {
                         "Authorization": `Token ${Token}`
                     }
                 }).then((res) => {
-                    console.log(res)
                     getInvoiceTestData()
                 }).catch((err) => {
                     console.log(err)
@@ -503,11 +583,9 @@ const Edit = () => {
 
     // invoice edit form onfinish
     const onFinish2 = (values: any,) => {
-        console.log('Success:', editRecord, values);
 
 
         const Token = localStorage.getItem("token")
-        console.log("TokenTokenTokenToken", Token)
 
         axios.put(`http://files.covaiciviltechlab.com/edit_invoice_test/${editRecord.id}/`, values, {
             headers: {
@@ -515,7 +593,6 @@ const Edit = () => {
             }
         }).then((res: any) => {
             getInvoiceTestData()
-            console.log(res);
             setOpen(false);
         }).catch((error: any) => {
             console.log(error);
@@ -564,13 +641,13 @@ const Edit = () => {
                             <img src="/assets/images/civil-techno-logo.png" alt="img" style={{ width: "30%" }} />
                         </div>
                         <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
-                        <div className="mt-4 flex items-center">
-                            <label htmlFor="place_of_testing" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
-                                Place of testing
-                            </label>
-                            <input id="place_of_testing" type="text" className="form-input w-2/3 lg:w-[250px]" name="place_of_testing" value={formData.place_of_testing} onChange={inputChange} />
-                        </div>
-                           
+                            <div className="mt-4 flex items-center">
+                                <label htmlFor="place_of_testing" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
+                                    Place of testing
+                                </label>
+                                <input id="place_of_testing" type="text" className="form-input w-2/3 lg:w-[250px]" name="place_of_testing" value={formData.place_of_testing} onChange={inputChange} />
+                            </div>
+
                         </div>
                     </div>
                     <div className="w-full lg:w-1/2 lg:max-w-fit">
@@ -586,7 +663,7 @@ const Edit = () => {
                             </label>
                             <input id="startDate" type="date" className="form-input w-2/3 lg:w-[250px]" name="date" value={formData.date} onChange={inputChange} />
                         </div>
-                      
+
                     </div>
                 </div>
                 <hr className="my-6 border-white-light dark:border-[#1b2e4b]" />
@@ -641,7 +718,7 @@ const Edit = () => {
                                         invoiceFormData?.payment_mode_choices?.map((value: any) => {
                                             // console.log("valuevaluevalue", value)
                                             return (
-                                                <option key={value.id} value={value.id}>{value.value}</option>
+                                                <option key={value.id} value={value.value}>{value.value}</option>
                                             )
                                         })
                                     }
@@ -702,7 +779,7 @@ const Edit = () => {
                                                 </Space>
                                             </td>
                                             <td>
-                                                <PrinterOutlined rev={undefined} className='edit-icon' onClick={() => handlePrint(item)}/>
+                                                <PrinterOutlined rev={undefined} className='edit-icon' onClick={() => handlePrint(item)} />
                                             </td>
                                         </tr>
                                     );
@@ -736,25 +813,47 @@ const Edit = () => {
                                 <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Tax
                                 </label>
-                                {
-                                    <select id="country" name="tax" value={formData?.tax} className="form-select flex-1" onChange={handleTaxChange} multiple>
 
-                                    {
-                                        invoiceFormData?.taxs?.map((value: any) => {
-                                            // console.log("valuevaluevalue", value)
-                                            return (
-                                                <option key={value.id} value={value.id}>{value.tax_name}</option>
-                                            )
-                                        })
-                                    }
-                                </select> }
-                                
-                          
+                                {/* <select
+                                    id="country"
+                                    name="tax"
+                                    value={formData?.tax}
+                                    className="form-select flex-1"
+                                    onChange={handleTaxChange}
+                                    multiple  // This enables multiple selections
+                                >
+                                    {invoiceFormData?.taxs?.map((value: any) => (
+                                        <option key={value.id} value={value.id}>
+                                            {value.tax_name}
+                                        </option>
+                                    ))}
+                                </select> */}
+
+                                {invoiceFormData?.taxs?.map((item: any) => {
+
+                                    return (
+                                        <div key={item.id}>
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    value={item.tax_name}
+                                                    checked={checkedItems[item.id]}
+                                                    onChange={() => handleChange(item.id, item.tax_percentage)}
+                                                />
+                                                {item.tax_name}
+                                            </label>
+                                        </div>
+
+
+                                    )
+                                })}
 
                             </div>
                             <div className="flex items-center justify-between" style={{ marginTop: "20px" }}>
-                                <div>{tax}</div>
-                                <div>{tax} :{taxPercentage}% = {taxCalculated}</div>
+                                {formatTotal() && <p> {formatTotal()}</p>}
+
+                                {/* <div>{tax}</div>
+                                <div>{tax} : {taxPercentage}% = {taxCalculated}</div> */}
                             </div>
                             <div className="mt-4 flex items-center justify-between">
                                 <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
@@ -778,55 +877,10 @@ const Edit = () => {
                         </div>
                     </div>
                 </div>
-                {/* <div className="mt-8 px-4">
-                    <label htmlFor="notes">Notes</label>
-                    <textarea id="notes" name="notes" className="form-textarea min-h-[130px]" placeholder="Notes...." defaultValue={params.notes}></textarea>
-                </div> */}
+
             </div>
             <div className="mt-6 w-full xl:mt-0 xl:w-96">
-                {/* <div className="panel mb-5">
-                    <label htmlFor="currency">Currency</label>
-                    <select id="currency" name="currency" className="form-select" value={selectedCurrency} onChange={(e) => setSelectedCurrency(e.target.value)}>
-                        {currencyList.map((currency, i) => (
-                            <option value={currency} key={i}>
-                                {currency}
-                            </option>
-                        ))}
-                    </select>
-                    <div className="mt-4">
-                        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-                            <div>
-                                <label htmlFor="tax">Tax(%) </label>
-                                <input id="tax" type="number" name="tax" className="form-input" placeholder="Tax" value={tax} onChange={(e) => setTax(e.target.value)} />
-                            </div>
-                            <div>
-                                <label htmlFor="discount">Discount(%) </label>
-                                <input id="discount" type="number" name="discount" className="form-input" placeholder="Discount" value={discount} onChange={(e) => setDiscount(e.target.value)} />
-                            </div>
-                        </div>
-                    </div>
-                    <div className="mt-4">
-                        <label htmlFor="shipping-charge">Shipping Charge($) </label>
-                        <input
-                            id="shipping-charge"
-                            type="number"
-                            name="shipping-charge"
-                            className="form-input"
-                            placeholder="Shipping Charge"
-                            value={shippingCharge}
-                            onChange={(e) => setShippingCharge(e.target.value)}
-                        />
-                    </div>
-                    <div className="mt-4">
-                        <label htmlFor="payment-method">Accept Payment Via</label>
-                        <select id="payment-method" name="payment-method" className="form-select" defaultValue={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
-                            <option value=" ">Select Payment</option>
-                            <option value="bank">Bank Account</option>
-                            <option value="paypal">Paypal</option>
-                            <option value="upi">UPI Transfer</option>
-                        </select>
-                    </div>
-                </div> */}
+
                 <div className="panel">
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1">
                         <button type="button" className="btn btn-success w-full gap-2" onClick={invoiceFormSubmit}>
