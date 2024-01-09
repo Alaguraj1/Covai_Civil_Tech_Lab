@@ -94,9 +94,11 @@ const InvoiceReport = () => {
   console.log("invoiceReport", invoiceReport)
   // Print
   const handlePrint = () => {
-    // Navigate to the /invoice/edit page with the record data as a query parameter
-    window.location.href = `/invoice/print?id=${id}`;
-    // window.open("/invoice/print?id=${id}", "_self");
+
+    var id: any = invoiceReport.invoice_test.id;
+    var url = `/invoice/print?id=${id}`;
+
+    window.open(url, '_blank');
   };
 
   console.log("invoiceReport", invoiceReport)
@@ -104,7 +106,11 @@ const InvoiceReport = () => {
 
   // Print
   const handlePrint1 = () => {
-    window.location.href = `/invoice/print1?id=${id}`;
+
+    var id: any = invoiceReport.invoice_test.id;
+    var url = `/invoice/print1?id=${id}`;
+
+    window.open(url, '_blank');  
   };
 
 

@@ -127,7 +127,7 @@ const Edit = () => {
                 taxs: response.taxs
             }
             // if (update) {
-            const convertedObj:any = {}
+            const convertedObj: any = {}
 
             data?.taxs.forEach((item: any) => {
                 convertedObj[item.id] = data?.invoice?.tax.includes(item.id);
@@ -194,11 +194,11 @@ const Edit = () => {
         const beforeTax = parseFloat(beforeTotalTax || '0');
         const discountedAmount = (beforeTax * discount) / 100;
         const discountedBeforeTax = discount !== 0 ? beforeTax - discountedAmount : beforeTax;
-        let checkedItem:any = checkedItems
+        let checkedItem: any = checkedItems
 
         let sum = 0;
 
-        invoiceFormData.taxs.forEach((item:any) => {
+        invoiceFormData.taxs.forEach((item: any) => {
             if (checkedItem[item.id]) {
                 sum += parseFloat(item.tax_percentage);
             }
@@ -206,7 +206,7 @@ const Edit = () => {
 
         setUpdatedSum(sum)
 
-        const finals:any = (discountedBeforeTax * sum) / 100
+        const finals: any = (discountedBeforeTax * sum) / 100
 
         //total percentage
         setUpdateBeforeTax(discountedBeforeTax)
@@ -217,7 +217,7 @@ const Edit = () => {
 
         // -------------------------------------------------------------------------------------------------------
         //After tax
-        const After_tax:any = discountedBeforeTax + totalPer;
+        const After_tax: any = discountedBeforeTax + totalPer;
         setAfterTax(parseInt(After_tax, 10))
         // -------------------------------------------------------------------------------------------------------
 
@@ -528,8 +528,11 @@ const Edit = () => {
 
 
     const handlePreviewClick = (id: any) => {
-        // Navigate to the /invoice/edit page with the record data as a query parameter
-        window.location.href = `/invoice/preview?id=${id}`;
+
+        var id: any = id;
+        var url = `/invoice/preview?id=${id}`;
+
+        window.open(url, '_blank');
 
     };
 
@@ -864,7 +867,7 @@ const Edit = () => {
                 </div>
 
             </div>
-            
+
             {/* Modal */}
             <Modal title="Create Invoice" open={isModalOpen} width={900} onOk={handleOk} onCancel={handleCancel} footer={false}>
                 <Form
