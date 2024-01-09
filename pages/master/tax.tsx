@@ -12,7 +12,7 @@ const Tax = () => {
   const [open, setOpen] = useState(false);
   const { Search } = Input;
   const [form] = Form.useForm();
-  const [editRecord, setEditRecord] = useState(null);
+  const [editRecord, setEditRecord] = useState<any>(null);
   const [drawerTitle, setDrawerTitle] = useState("Create Tax")
   const [viewRecord, setViewRecord] = useState<any>(null)
   const [dataSource, setDataSource] = useState([])

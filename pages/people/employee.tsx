@@ -1,8 +1,7 @@
-import { size } from 'lodash'
 import React, { useState, useEffect } from 'react'
 import { Space, Table, Modal } from 'antd';
 import { Button, Drawer } from 'antd';
-import { Checkbox, Form, Input, Radio, DatePicker, } from 'antd';
+import {  Form, Input, Radio, DatePicker, } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
 import moment from 'moment';
@@ -12,8 +11,7 @@ const Employee = () => {
     const [open, setOpen] = useState(false);
     const { Search } = Input;
     const [form] = Form.useForm();
-    const [editRecord, setEditRecord] = useState(null);
-    console.log('✌️editRecord --->', editRecord);
+    const [editRecord, setEditRecord] = useState<any>(null);
     const [drawerTitle, setDrawerTitle] = useState("Create Employee");
     const [viewRecord, setViewRecord] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState(false);

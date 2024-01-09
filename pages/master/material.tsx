@@ -14,7 +14,7 @@ const Material = () => {
   const { Search } = Input;
   const [form] = Form.useForm();
   const [DrawerTitle, setDrawerTitle] = useState("Create Material")
-  const [editRecord, setEditRecord] = useState(null)
+  const [editRecord, setEditRecord] = useState<any>(null)
   const [dataSource, setDataSource] = useState([])
   const [viewRecord, setViewRecord] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false);
