@@ -47,11 +47,11 @@ const Expense = () => {
 
     const [paymentsData, setPayments] = useState([])
     const [invoiceMonthData, setInvoiceMonthData] = useState([])
-    console.log(invoiceMonthData,"---------------------mDDDDDDDDDDDD----------------")
+    console.log(invoiceMonthData, "---------------------mDDDDDDDDDDDD----------------")
     const [invoices, setinvoices] = useState([])
     const [expenses, setexpenses] = useState([])
 
-    const [expense_amount_sum,setexpense_amount_sum]  = useState(0)
+    const [expense_amount_sum, setexpense_amount_sum] = useState(0)
 
 
 
@@ -93,179 +93,179 @@ const Expense = () => {
         0,
         0])
 
-        const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
+    const isDark = useSelector((state: IRootState) => state.themeConfig.theme === 'dark' || state.themeConfig.isDarkMode);
 
-        const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
-    
-    
+    const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;
+
+
     const [initialSeriesData] = [
-            {
-                name: 'Total',
-                data: total,
-            },
-            {
-                name: 'Paid Amount',
-                data: paid,
-            },
-            {
-                name: 'Unpaid Amount',
-                data: unpaid,
-            },
-        ]
+        {
+            name: 'Total',
+            data: total,
+        },
+        {
+            name: 'Paid Amount',
+            data: paid,
+        },
+        {
+            name: 'Unpaid Amount',
+            data: unpaid,
+        },
+    ]
 
-        const [initialOptions] = [{
-            chart: {
-                height: 325,
-                type: 'area',
-                fontFamily: 'Nunito, sans-serif',
-                zoom: {
-                    enabled: false,
-                },
-                toolbar: {
-                    show: false,
-                },
-            },
-
-            dataLabels: {
+    const [initialOptions] = [{
+        chart: {
+            height: 325,
+            type: 'area',
+            fontFamily: 'Nunito, sans-serif',
+            zoom: {
                 enabled: false,
             },
-            stroke: {
+            toolbar: {
+                show: false,
+            },
+        },
+
+        dataLabels: {
+            enabled: false,
+        },
+        stroke: {
+            show: true,
+            curve: 'smooth',
+            width: 2,
+            lineCap: 'square',
+        },
+        dropShadow: {
+            enabled: true,
+            opacity: 0.2,
+            blur: 10,
+            left: -7,
+            top: 22,
+        },
+        colors: isDark ? ['#2196F3', '#E7515A', '#e670f8'] : ['#1B55E2', '#E7515A', '#e670f8'],
+        markers: {
+            discrete: [
+                {
+                    seriesIndex: 0,
+                    dataPointIndex: 6,
+                    fillColor: '#1B55E2',
+                    strokeColor: 'transparent',
+                    size: 7,
+                },
+                {
+                    seriesIndex: 1,
+                    dataPointIndex: 5,
+                    fillColor: '#E7515A',
+                    strokeColor: 'transparent',
+                    size: 7,
+                },
+                {
+                    seriesIndex: 2,
+                    dataPointIndex: 5,
+                    fillColor: '#e670f8',
+                    strokeColor: 'transparent',
+                    size: 7,
+                },
+            ],
+        },
+        labels: monthName,
+        xaxis: {
+            axisBorder: {
+                show: false,
+            },
+            axisTicks: {
+                show: false,
+            },
+            crosshairs: {
                 show: true,
-                curve: 'smooth',
-                width: 2,
-                lineCap: 'square',
             },
-            dropShadow: {
-                enabled: true,
-                opacity: 0.2,
-                blur: 10,
-                left: -7,
-                top: 22,
+            labels: {
+                offsetX: isRtl ? 2 : 0,
+                offsetY: 5,
+                style: {
+                    fontSize: '12px',
+                    cssClass: 'apexcharts-xaxis-title',
+                },
             },
-            colors: isDark ? ['#2196F3', '#E7515A', '#e670f8'] : ['#1B55E2', '#E7515A', '#e670f8'],
-            markers: {
-                discrete: [
-                    {
-                        seriesIndex: 0,
-                        dataPointIndex: 6,
-                        fillColor: '#1B55E2',
-                        strokeColor: 'transparent',
-                        size: 7,
-                    },
-                    {
-                        seriesIndex: 1,
-                        dataPointIndex: 5,
-                        fillColor: '#E7515A',
-                        strokeColor: 'transparent',
-                        size: 7,
-                    },
-                    {
-                        seriesIndex: 2,
-                        dataPointIndex: 5,
-                        fillColor: '#e670f8',
-                        strokeColor: 'transparent',
-                        size: 7,
-                    },
-                ],
+        },
+        yaxis: {
+            tickAmount: 7,
+            labels: {
+                formatter: (value: number) => {
+                    return value;
+                },
+                offsetX: isRtl ? -30 : -10,
+                offsetY: 0,
+                style: {
+                    fontSize: '12px',
+                    cssClass: 'apexcharts-yaxis-title',
+                },
             },
-            labels: monthName,
+            opposite: isRtl ? true : false,
+        },
+        grid: {
+            borderColor: isDark ? '#191E3A' : '#E0E6ED',
+            strokeDashArray: 5,
             xaxis: {
-                axisBorder: {
+                lines: {
                     show: false,
-                },
-                axisTicks: {
-                    show: false,
-                },
-                crosshairs: {
-                    show: true,
-                },
-                labels: {
-                    offsetX: isRtl ? 2 : 0,
-                    offsetY: 5,
-                    style: {
-                        fontSize: '12px',
-                        cssClass: 'apexcharts-xaxis-title',
-                    },
                 },
             },
             yaxis: {
-                tickAmount: 7,
-                labels: {
-                    formatter: (value: number) => {
-                        return value;
-                    },
-                    offsetX: isRtl ? -30 : -10,
-                    offsetY: 0,
-                    style: {
-                        fontSize: '12px',
-                        cssClass: 'apexcharts-yaxis-title',
-                    },
-                },
-                opposite: isRtl ? true : false,
-            },
-            grid: {
-                borderColor: isDark ? '#191E3A' : '#E0E6ED',
-                strokeDashArray: 5,
-                xaxis: {
-                    lines: {
-                        show: false,
-                    },
-                },
-                yaxis: {
-                    lines: {
-                        show: true,
-                    },
-                },
-                padding: {
-                    top: 0,
-                    right: 0,
-                    bottom: 0,
-                    left: 0,
-                },
-            },
-            legend: {
-                position: 'top',
-                horizontalAlign: 'right',
-                fontSize: '16px',
-                markers: {
-                    width: 10,
-                    height: 10,
-                    offsetX: -2,
-                },
-                itemMargin: {
-                    horizontal: 10,
-                    vertical: 5,
-                },
-            },
-            tooltip: {
-                marker: {
+                lines: {
                     show: true,
                 },
-                x: {
-                    show: false,
-                },
             },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shadeIntensity: 1,
-                    inverseColors: !1,
-                    opacityFrom: isDark ? 0.19 : 0.28,
-                    opacityTo: 0.05,
-                    stops: isDark ? [100, 100] : [45, 100],
-                },
+            padding: {
+                top: 0,
+                right: 0,
+                bottom: 0,
+                left: 0,
             },
-        }]
+        },
+        legend: {
+            position: 'top',
+            horizontalAlign: 'right',
+            fontSize: '16px',
+            markers: {
+                width: 10,
+                height: 10,
+                offsetX: -2,
+            },
+            itemMargin: {
+                horizontal: 10,
+                vertical: 5,
+            },
+        },
+        tooltip: {
+            marker: {
+                show: true,
+            },
+            x: {
+                show: false,
+            },
+        },
+        fill: {
+            type: 'gradient',
+            gradient: {
+                shadeIntensity: 1,
+                inverseColors: !1,
+                opacityFrom: isDark ? 0.19 : 0.28,
+                opacityTo: 0.05,
+                stops: isDark ? [100, 100] : [45, 100],
+            },
+        },
+    }]
 
 
-        
-  
+
+
     const [revenueChart, setRevenueChart] = useState({
         series: initialSeriesData,
         options: initialOptions,
-      });
+    });
 
-      const [salesinitdata] = [
+    const [salesinitdata] = [
         {
             chart: {
                 type: 'donut',
@@ -343,43 +343,43 @@ const Expense = () => {
                 },
             },
         }
-      ]
+    ]
 
-      const [salesByCategory, setsalesByCategory] = useState({
+    const [salesByCategory, setsalesByCategory] = useState({
         series: [],
         options: salesinitdata,
-      });
-      
+    });
+
     const [expenseChart, setExpenseChart] = useState<any>(null)
     const [pending_payment, setpending_payment] = useState('')
     const [pending_payment_this_month, setpending_payment_this_month] = useState('')
     const [expenseMonthWise, setexpenseMonthWise] = useState([])
 
-    const[payments_sum,setpayments_sum] = useState(0)
+    const [payments_sum, setpayments_sum] = useState(0)
 
     const [isMounted, setIsMounted] = useState(false);
     // useEffect(() => {
     //     setIsMounted(true);
-        
+
     // });
 
     // useEffect(() => {
     //     getExpense()
-       
-      
+
+
     // }, [])
-    useEffect(()=>{
+    useEffect(() => {
         setIsMounted(true);
         getExpense()
-      
 
-    },[])
 
-    useEffect(()=>{
-       
+    }, [])
+
+    useEffect(() => {
+
         updateChart()
 
-    },[expenseMonthWise,invoiceMonthData])
+    }, [expenseMonthWise, invoiceMonthData])
 
     const headers = {
         'Content-Type': 'application/json',
@@ -402,7 +402,7 @@ const Expense = () => {
                 "Authorization": `Token ${Token}`
             }
         }).then((res) => {
-            console.log("expenses_name",res.data)
+            console.log("expenses_name", res.data)
             setDataSource(res.data)
             setFilterData(res.data)
             setCustomerCount(res.data.customer_count)
@@ -428,23 +428,23 @@ const Expense = () => {
 
 
             console.log(res.data.expense_amount_list)
-            console.log(expenseMonthWise,'check by raj')
+            console.log(expenseMonthWise, 'check by raj')
 
         }).catch((error: any) => {
             console.log(error)
         })
 
-         console.log(expenseMonthWise,'expensemonthwise')
+        console.log(expenseMonthWise, 'expensemonthwise')
         updateChart()
 
 
-        
+
     })
 
 
     const updateChart = (() => {
-        
-        setRevenueChart((prevData:any) => ({
+
+        setRevenueChart((prevData: any) => ({
             ...prevData,
             series: [
                 {
@@ -460,9 +460,9 @@ const Expense = () => {
                     data: unpaid,
                 },
             ],
-          }));
+        }));
 
- 
+
 
         console.log(expenseMonthWise)
 
@@ -471,7 +471,7 @@ const Expense = () => {
                 {
                     name: 'Amount',
                     data: expenseMonthWise,
-                }          
+                }
             ],
             options: {
                 chart: {
@@ -603,12 +603,12 @@ const Expense = () => {
                 },
             },
         });
-        console.log(payments_sum,"---------------------mk----------------")
+        console.log(payments_sum, "---------------------mk----------------")
 
         setsalesByCategory((prevData) => ({
             ...prevData,
             series: invoiceMonthData,
-            options:{
+            options: {
                 chart: {
                     type: 'donut',
                     height: 460,
@@ -685,10 +685,10 @@ const Expense = () => {
                     },
                 },
             }
-            
-          }));
 
- 
+        }));
+
+
 
     })
 
@@ -863,7 +863,7 @@ const Expense = () => {
         return data;
     };
 
-    
+
     return (
         <>
             <div>
@@ -942,10 +942,10 @@ const Expense = () => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mb-6">
                         {/*  Favorites  */}
-                        <div>
-                            <div className="panel mb-5 flex items-center font-bold">
+                        <div className="panel h-full">
+                            <div className="mb-5 flex items-center font-bold">
                                 <span className="text-lg">Payment</span>
                             </div>
                             <div className=" h-full xl:col-span-2">
@@ -953,7 +953,7 @@ const Expense = () => {
                                 <div className="relative">
                                     <div className="rounded-lg bg-white dark:bg-black">
                                         {isMounted ? (
-                                            <ReactApexChart  series={revenueChart.series} options={revenueChart.options} type="area" height={325} width={'100%'} />
+                                            <ReactApexChart series={revenueChart.series} options={revenueChart.options} type="area" height={325} width={'100%'} />
                                         ) : (
                                             <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
                                                 <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
@@ -986,7 +986,7 @@ const Expense = () => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-12">
+                    <div className="grid grid-cols-1 gap-12 mb-6">
                         <div className="panel h-full w-full">
                             <div className="mb-5 flex items-center justify-between">
                                 <h5 className="text-lg font-semibold dark:text-white-light">Recent Invoices</h5>
@@ -995,7 +995,7 @@ const Expense = () => {
                                 <table>
                                     <thead>
                                         <tr>
-                                        <th className="ltr:rounded-l-md rtl:rounded-r-md">Customer</th>
+                                            <th className="ltr:rounded-l-md rtl:rounded-r-md">Customer</th>
                                             <th>Invoice No</th>
                                             <th>Amount</th>
                                             <th>Balance</th>
@@ -1011,21 +1011,21 @@ const Expense = () => {
                                                 <td>{item.balance}</td>
                                                 <td>{item.project_name}</td>
                                             </tr>
-                                        ))}                                        
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
-                        </div>  
+                        </div>
                     </div>
 
 
-                        <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mb-6">
                         {/*  Favorites  */}
-                        <div>
+                        <div className='panel h-full '>
                             <div className="mb-5 flex items-center font-bold">
                                 <span className="text-lg">Expense - ({expense_amount_sum})</span>
                             </div>
-                            <div className="panel h-full xl:col-span-2">
+                            <div className="xl:col-span-2">
 
                                 <div className="relative">
                                     <div className="rounded-lg bg-white dark:bg-black">
@@ -1045,37 +1045,37 @@ const Expense = () => {
 
                             <div className="panel h-full">
 
-                            <div className="panel h-full w-full">
-                            <div className="mb-5 flex items-center justify-between">
-                                <h5 className="text-lg font-semibold dark:text-white-light">Recent Expenses</h5>
-                            </div>
-                            <div className="table-responsive">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                        <th className="ltr:rounded-l-md rtl:rounded-r-md">Expense User</th>
-                                            <th>Date</th>
-                                            <th>Category</th>
-                                            <th>Amount</th>
-                                            
-                                         
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {expenses.map((item, rowIndex) => (
-                                            <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                                <td>{item.expense_user}</td>
-                                                <td>{item.date}</td>
-                                                <td>{item.expense_category_name}</td>
-                                              
-                                                <td>{item.amount}</td>
-                                            </tr>
-                                        ))}                                        
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>  
-                            {/*
+                                <div >
+                                    <div className="mb-5 flex items-center justify-between">
+                                        <h5 className="text-lg font-semibold dark:text-white-light">Recent Expenses</h5>
+                                    </div>
+                                    <div className="table-responsive">
+                                        <table>
+                                            <thead>
+                                                <tr>
+                                                    <th className="ltr:rounded-l-md rtl:rounded-r-md">Expense User</th>
+                                                    <th>Date</th>
+                                                    <th>Category</th>
+                                                    <th>Amount</th>
+
+
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {expenses.map((item, rowIndex) => (
+                                                    <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
+                                                        <td>{item.expense_user}</td>
+                                                        <td>{item.date}</td>
+                                                        <td>{item.expense_category_name}</td>
+
+                                                        <td>{item.amount}</td>
+                                                    </tr>
+                                                ))}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                                {/*
                                 <div className="mb-5 flex items-center">
                                     <h5 className="text-lg font-semibold dark:text-white-light">{thisMonthName} Expense</h5>
                                 </div>
@@ -1091,16 +1091,16 @@ const Expense = () => {
                                     </div>
                                 </div>
 
-                                */} 
+                                */}
 
-                             
+
                             </div>
 
                         </div>
                     </div>
 
                     <div className="grid grid-cols-1 gap-12">
-                       
+
                     </div>
                 </div>
             </div>
