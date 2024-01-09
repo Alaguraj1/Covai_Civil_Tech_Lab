@@ -6,7 +6,7 @@ import IconEye from '@/components/Icon/IconEye';
 import { Button, Modal, Form, Input, Select, Space, Drawer, message } from 'antd';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { DeleteOutlined, EditOutlined, PrinterOutlined, } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, } from '@ant-design/icons';
 
 const Edit = () => {
 
@@ -160,7 +160,7 @@ const Edit = () => {
             setAfterTax(parseInt(After_tax, 10))
             // -------------------------------------------------------------------------------------------
 
-            setFormData(prevState => ({
+            setFormData((prevState:any) => ({
                 ...prevState,
                 customer: uniqueArray[0].id,
                 project_name: response.invoice.project_name,
@@ -172,7 +172,7 @@ const Edit = () => {
                 bank: response.invoice.bank,
                 place_of_testing: response.invoice.place_of_testing,
                 amount_paid_date: response.invoice.amount_paid_date,
-                before_tax: discountedBeforeTax,
+                before_tax: parseInt(discountedBeforeTax, 10) || 0,
                 invoice_tests: response?.invoice_tests
                 // tax: response.invoice.tax || [],
             }));
