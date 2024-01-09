@@ -1,14 +1,9 @@
-import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { setPageTitle } from '../../store/themeConfigSlice';
-import IconX from '@/components/Icon/IconX';
 import IconSave from '@/components/Icon/IconSave';
-import IconSend from '@/components/Icon/IconSend';
 import IconEye from '@/components/Icon/IconEye';
-import IconDownload from '@/components/Icon/IconDownload';
-import { Button, Modal, Checkbox, Form, Input, Select, Space, Drawer, message } from 'antd';
-import type { SelectProps } from 'antd';
+import { Button, Modal, Form, Input, Select, Space, Drawer, message } from 'antd';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { DeleteOutlined, EditOutlined, PrinterOutlined, } from '@ant-design/icons';
@@ -27,9 +22,6 @@ const Edit = () => {
     const [editRecord, setEditRecord] = useState(null);
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm()
-    // const [discount, setDiscount] = useState<any>(0);
-    // const [shippingCharge, setShippingCharge] = useState<any>(0);
-    // const [paymentMethod, setPaymentMethod] = useState<any>('bank');
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [testFormData, setTestFormData] = useState<any>([])
     const [tableVisible, setTableVisible] = useState(false)
@@ -37,23 +29,16 @@ const Edit = () => {
     const [filterTest, setFilterTest] = useState<any>([])
     const [invoiceFormData, setInvoiceFormData] = useState<any>({})
     const [customerAddress, setCustomerAddress] = useState('');
-    const [tax, setTax] = useState([])
     const [balance, setBalance] = useState<any>('')
-    const [taxCalculated, setTaxCalculated] = useState('')
     const [afterTax, setAfterTax] = useState<any>('')
     const [beforeTotalTax, setBeforeTotalTax] = useState<any>(0)
     const [advance, setAdvance] = useState(0)
-    const [mainTax, setMainTax] = useState([])
     const [checkedItems, setCheckedItems] = useState({});
-    const [finalTotal, setFinalTotal] = useState(0)
-    const [totalPercentage, setTotalPercentage] = useState(0);
     const [selectedIDs, setSelectedIDs] = useState([]);
     const [totalTaxPercentage, setTotalTaxPercentage] = useState(0);
     const [updateBeforeTax, setUpdateBeforeTax] = useState(0);
     const [updatedSum, setUpdatedSum] = useState(0);
     const [messageApi, contextHolder] = message.useMessage();
-
-
 
 
     const [formData, setFormData] = useState({
@@ -142,7 +127,7 @@ const Edit = () => {
                 taxs: response.taxs
             }
             // if (update) {
-            const convertedObj = {}
+            const convertedObj:any = {}
 
             data?.taxs.forEach((item: any) => {
                 convertedObj[item.id] = data?.invoice?.tax.includes(item.id);
@@ -209,11 +194,11 @@ const Edit = () => {
         const beforeTax = parseFloat(beforeTotalTax || '0');
         const discountedAmount = (beforeTax * discount) / 100;
         const discountedBeforeTax = discount !== 0 ? beforeTax - discountedAmount : beforeTax;
-        let checkedItem = checkedItems
+        let checkedItem:any = checkedItems
 
         let sum = 0;
 
-        invoiceFormData.taxs.forEach(item => {
+        invoiceFormData.taxs.forEach((item:any) => {
             if (checkedItem[item.id]) {
                 sum += parseFloat(item.tax_percentage);
             }
@@ -221,7 +206,7 @@ const Edit = () => {
 
         setUpdatedSum(sum)
 
-        const finals = (discountedBeforeTax * sum) / 100
+        const finals:any = (discountedBeforeTax * sum) / 100
 
         //total percentage
         setUpdateBeforeTax(discountedBeforeTax)
@@ -232,7 +217,7 @@ const Edit = () => {
 
         // -------------------------------------------------------------------------------------------------------
         //After tax
-        const After_tax = discountedBeforeTax + totalPer;
+        const After_tax:any = discountedBeforeTax + totalPer;
         setAfterTax(parseInt(After_tax, 10))
         // -------------------------------------------------------------------------------------------------------
 
@@ -483,7 +468,7 @@ const Edit = () => {
         const Token = localStorage.getItem('token');
         const body = {
             "customer": formData.customer,
-            "sales_mode": Number(formData.sales_mode),
+            // "sales_mode": Number(formData.sales_mode),
             "project_name": formData.project_name,
             "discount": formData.discount,
             "tax": selectedIDs,
@@ -879,31 +864,7 @@ const Edit = () => {
                 </div>
 
             </div>
-            {/* <div className="mt-6 w-full xl:mt-0 xl:w-96">
-
-                <div className="panel">
-                    <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1">
-                        <button type="button" className="btn btn-success w-full gap-2" onClick={invoiceFormSubmit}>
-                            <IconSave className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                         Update
-                        </button>
-
-                        <button type="button" className="btn btn-info w-full gap-2">
-                            <IconSend className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Send Invoice
-                        </button>
-
-                        <button className="btn btn-primary w-full gap-2" onClick={() => handlePreviewClick(id)}>
-                            <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                            Preview
-                        </button>
-
-                    </div>
-                </div>
-            </div> */}
-
-
-
+            
             {/* Modal */}
             <Modal title="Create Invoice" open={isModalOpen} width={900} onOk={handleOk} onCancel={handleCancel} footer={false}>
                 <Form

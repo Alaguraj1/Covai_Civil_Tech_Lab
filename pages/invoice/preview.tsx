@@ -179,83 +179,83 @@ const Preview = () => {
                     <th style={{ textAlign: "right" }}>Amount(INR)</th>
                   </tr>
                 </thead>
-<tbody>
-                {
-                  printData?.invoice_tests?.map((invoice: any) => {
-                    return (
-                      <>
-                        <tr>
-                          <td>{invoice?.id}</td>
-                          <td>{invoice?.test_name} - <span style={{ fontWeight: "bold" }}>{invoice?.material_name}</span></td>
-                          <td>998346</td>
-                          <td >{invoice?.qty}</td>
-                          <td style={{ textAlign: "right" }}>{invoice?.price_per_sample}</td>
-                          <td style={{ textAlign: "right" }}>{invoice?.total}</td>
-                        </tr>
+                <tbody>
+                  {
+                    printData?.invoice_tests?.map((invoice: any) => {
+                      return (
+                        <>
+                          <tr>
+                            <td>{invoice?.id}</td>
+                            <td>{invoice?.test_name} - <span style={{ fontWeight: "bold" }}>{invoice?.material_name}</span></td>
+                            <td>998346</td>
+                            <td >{invoice?.qty}</td>
+                            <td style={{ textAlign: "right" }}>{invoice?.price_per_sample}</td>
+                            <td style={{ textAlign: "right" }}>{parseInt(invoice?.total,10)}</td>
+                          </tr>
 
-                      </>
-                    )
-                  })
+                        </>
+                      )
+                    })
 
-                }
+                  }
 
-                <tr>
-                  <td> </td>
-                  <td> </td>
-                  <td> </td>
-                  <td> </td>
+                  <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
 
-                  <td style={{ textAlign: "right" }}><b> GST :18%</b></td>
-                  <td> </td>
-                </tr>
-                <tr>
-                  <td> </td>
-                  <td> </td>
-                  <td> </td>
-                  <td> </td>
-                  <td style={{ textAlign: "right" }}>Add : CGST @ 9.00 %</td>
-                  <td style={{ textAlign: "right" }}>{TaxData}</td>
-                </tr>
-                <tr>
-                  <td> </td>
-                  <td> </td>
-                  <td></td>
-                  <td style={{ textAlign: "center" }}></td>
-                  <td style={{ textAlign: "right" }}>Add : SGST @ 9.00 % </td>
-                  <td style={{ textAlign: "right" }}>{TaxData}</td>
-                </tr>
-                <tr></tr>
-                <tr>
-                  <td> </td>
-                  <td> </td>
-                  <td> </td>
-                  <td ></td>
-                  <td style={{ textAlign: "right" }}>
-                    Total Rs.
-                  </td>
-                  <td style={{ textAlign: "right", fontWeight: "bold" }}>
-                    {TotalData}{" "}
-                    <input
-                      type="hidden"
-                      id="amt"
-                      name="amt"
-                      defaultValue="11,446.00"
-                    />
-                  </td>
-                </tr>
-                <tr>
+                    <td style={{ textAlign: "right" }}><b> GST :18%</b></td>
+                    <td> </td>
+                  </tr>
+                  <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td style={{ textAlign: "right" }}>Add : CGST @ 9.00 %</td>
+                    <td style={{ textAlign: "right" }}>{parseInt(TaxData, 10)}</td>
+                  </tr>
+                  <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td></td>
+                    <td style={{ textAlign: "center" }}></td>
+                    <td style={{ textAlign: "right" }}>Add : SGST @ 9.00 % </td>
+                    <td style={{ textAlign: "right" }}>{parseInt(TaxData, 10)} </td>
+                  </tr>
+                  <tr></tr>
+                  <tr>
+                    <td> </td>
+                    <td> </td>
+                    <td> </td>
+                    <td ></td>
+                    <td style={{ textAlign: "right" }}>
+                      Total Rs.
+                    </td>
+                    <td style={{ textAlign: "right", fontWeight: "bold" }}>
+                      {parseInt(TotalData, 10)}{" "}
+                      <input
+                        type="hidden"
+                        id="amt"
+                        name="amt"
+                        defaultValue="11,446.00"
+                      />
+                    </td>
+                  </tr>
+                  <tr>
 
-                  <td id="words_amt" colSpan={"5"} style={{ textAlign: "right" }}>
-                    {TotalData}{" "}
-                    <input
-                      type="hidden"
-                      id="amt"
-                      name="amt"
-                      defaultValue="11,446.00"
-                    />
-                  </td>
-                  <td style={{ textAlign: "right" }}>E &amp; OE</td>
-                </tr>
+                    <td id="words_amt" colSpan={"5"} style={{ textAlign: "right" }}>
+                      {TotalData}{" "}
+                      <input
+                        type="hidden"
+                        id="amt"
+                        name="amt"
+                        defaultValue="11,446.00"
+                      />
+                    </td>
+                    <td style={{ textAlign: "right" }}>E &amp; OE</td>
+                  </tr>
                 </tbody>
               </table>
 
