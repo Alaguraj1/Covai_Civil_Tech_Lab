@@ -160,8 +160,8 @@ const Edit = () => {
             setBeforeTotalTax(beforetax)
             // -------------------------------------------------------------------------------------------
             // Tax total prrcentage
-            const matchedTaxs = data?.taxs.filter(item => data?.invoice?.tax.includes(item.id));
-            const sumPercentage = matchedTaxs.reduce((sum, item) => {
+            const matchedTaxs = data?.taxs.filter((item:any) => data?.invoice?.tax.includes(item.id));
+            const sumPercentage = matchedTaxs.reduce((sum:any, item:any) => {
                 return sum + parseFloat(item.tax_percentage);
             }, 0);
 

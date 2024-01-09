@@ -83,25 +83,25 @@ const Customer = () => {
     const showDrawer = (record: any) => {
         if (record) {
 
-       
+
 
             const Token = localStorage.getItem("token")
-            axios.get("http://files.covaiciviltechlab.com/edit_customer/"+record.id+"/", {
+            axios.get("http://files.covaiciviltechlab.com/edit_customer/" + record.id + "/", {
                 headers: {
                     "Authorization": `Token ${Token}`
                 }
             }).then((res) => {
-                console.log(typeof(record),typeof(res.data))
-    
+                console.log(typeof (record), typeof (res.data))
+
                 setEditRecord(record)
-                form.setFieldsValue(res.data); 
+                form.setFieldsValue(res.data);
             }).catch((error) => {
                 console.log(error)
             })
 
 
 
-      
+
 
 
             // Set form values for editing
@@ -146,13 +146,26 @@ const Customer = () => {
                         className='view-icon'
                         rev={undefined}
                     />
-                    <EditOutlined
-                        style={{ cursor: "pointer" }}
-                        onClick={() => showDrawer(record)}
-                        className='edit-icon'
-                        rev={undefined}
-                    />
+
                     {
+                        localStorage.getItem('admin') === 'true' ? (
+                            <EditOutlined
+                                style={{ cursor: "pointer" }}
+                                onClick={() => showDrawer(record)}
+                                className='edit-icon'
+                                rev={undefined}
+                            />
+                        ) : (
+                            <EditOutlined
+                                style={{ cursor: "pointer", display:"none" }}
+                                onClick={() => showDrawer(record)}
+                                className='edit-icon'
+                                rev={undefined}
+                            />
+                        )
+                    }
+
+                    {/* {
                         localStorage.getItem('admin') === 'true' ? (
                             <DeleteOutlined
                                 style={{ color: "red", cursor: "pointer" }}
@@ -168,7 +181,7 @@ const Customer = () => {
                                 rev={undefined}
                             />
                         )
-                    }
+                    } */}
 
                 </Space>
             ),
@@ -184,7 +197,7 @@ const Customer = () => {
             okType: "danger",
             onOk: () => {
 
-                     axios.delete(`http://files.covaiciviltechlab.com/delete_customer/${record.id}`, {
+                axios.delete(`http://files.covaiciviltechlab.com/delete_customer/${record.id}`, {
                     headers: {
                         "Authorization": `Token ${localStorage.getItem("token")}`
                     }
@@ -435,7 +448,7 @@ const Customer = () => {
                     </div>
                 </div>
                 <div>
-                    <Table dataSource={filterData} columns={columns}  />
+                    <Table dataSource={filterData} columns={columns} />
                 </div>
 
                 <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>
@@ -520,7 +533,7 @@ const Customer = () => {
                                     </Select.Option>
                                 ))}
                             </Select>
-                            
+
                         </Form.Item>
 
                         <Form.Item<FieldType>
@@ -529,7 +542,7 @@ const Customer = () => {
                             required={true}
                             rules={[{ required: true, message: 'Please input your State 1!' }]}
                         >
-                                 <Select>
+                            <Select>
                                 {formFields?.state1?.map((val: any) => (
                                     <Select.Option key={val.name} value={val.id} >
                                         {val.name}

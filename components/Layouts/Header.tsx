@@ -317,7 +317,7 @@ const Header = () => {
                                             </div>
                                         </div>
                                     </li>
-                                    <li>
+                                    {/* <li>
                                         <Link href="/users/profile" className="dark:hover:text-white">
                                             <svg className="ltr:mr-2 rtl:ml-2 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <circle cx="12" cy="6" r="4" stroke="currentColor" strokeWidth="1.5" />
@@ -373,9 +373,9 @@ const Header = () => {
                                             </svg>
                                             Lock Screen
                                         </Link>
-                                    </li>
+                                    </li> */}
                                     <li className="border-t border-white-light dark:border-white-light/10">
-                                        <Link href="/auth/login" className="!py-3 text-danger">
+                                        <Link href="/" className="!py-3 text-danger">
                                             <svg className="rotate-90 ltr:mr-2 rtl:ml-2 shrink-0" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path
                                                     opacity="0.5"
