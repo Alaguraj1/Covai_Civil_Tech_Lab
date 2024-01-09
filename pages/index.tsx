@@ -38,6 +38,13 @@ const Index = () => {
     )
     const [messageApi, contextHolder] = message.useMessage();
 
+useEffect(() => {
+    const Token = localStorage.getItem("token")
+    Token ? router.push('/dashboard') : null
+
+},[])
+
+
     const submitForm = async (e: any) => {
         e.preventDefault();
 
