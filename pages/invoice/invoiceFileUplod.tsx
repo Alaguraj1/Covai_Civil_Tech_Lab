@@ -15,7 +15,7 @@ const InvoiceFileUpload = () => {
   const [form] = Form.useForm();
   const [editRecord, setEditRecord] = useState(null);
   const [drawerTitle, setDrawerTitle] = useState("Create Tax")
-  const [viewRecord, setViewRecord] = useState(null)
+  const [viewRecord, setViewRecord] = useState<any>(null)
   const [dataSource, setDataSource] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formFields, setFormFields] = useState([])
@@ -365,7 +365,7 @@ const [filterData, setFilterData] = useState(dataSource)
 
   return (
     <>
-      <div>
+      <div  className='panel'>
         <div className='tax-heading-main'>
           <div>
             <h1 className='tax-title'>Manage Invoice/Expense File Upload</h1>

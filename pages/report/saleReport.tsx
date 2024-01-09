@@ -171,7 +171,7 @@ const SaleReport = () => {
 
     return (
         <>
-            <div>
+            <div  className='panel'>
                 <div>
 
                     <Form

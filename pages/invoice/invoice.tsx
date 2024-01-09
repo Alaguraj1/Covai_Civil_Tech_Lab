@@ -229,7 +229,7 @@ const Invoice = () => {
 
     return (
         <>
-            <div>
+            <div  className='panel'>
                 <div className='tax-heading-main'>
                     <div>
                         <h1 className='tax-title'>Manage Invoices</h1>

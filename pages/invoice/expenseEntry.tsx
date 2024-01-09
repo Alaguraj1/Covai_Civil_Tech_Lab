@@ -345,7 +345,7 @@ const inputChange = ((e:any) => {
 
   return (
     <>
-      <div>
+      <div  className='panel'>
         <div className='tax-heading-main'>
           <div>
             <h1 className='tax-title'>Manage Expense Entry</h1>

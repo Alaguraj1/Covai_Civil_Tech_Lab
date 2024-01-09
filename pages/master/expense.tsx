@@ -273,7 +273,7 @@ const Expense = () => {
   console.log("viewRecord", viewRecord)
   return (
     <>
-      <div>
+      <div  className='panel'>
         <div className='tax-heading-main'>
           <div>
             <h1 className='tax-title'>Manage Expense</h1>

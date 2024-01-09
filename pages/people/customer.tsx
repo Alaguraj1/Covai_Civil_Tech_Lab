@@ -437,7 +437,7 @@ const Customer = () => {
 
     return (
         <>
-            <div>
+            <div className='panel '>
                 <div className='tax-heading-main'>
                     <div>
                         <h1 className='tax-title'>Customer Details</h1>

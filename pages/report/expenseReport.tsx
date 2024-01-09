@@ -109,7 +109,7 @@ const ExpenseReport = () => {
 
   return (
     <>
-      <div>
+      <div  className='panel'>
         <div className='tax-heading-main'>
           <div>
             <h1 className='tax-title'>Expense Report</h1>

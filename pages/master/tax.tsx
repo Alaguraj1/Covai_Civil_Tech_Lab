@@ -285,7 +285,7 @@ const Tax = () => {
   console.log("ilterDatailterData", filterData)
   return (
     <>
-      <div>
+      <div  className='panel'>
         <div className='tax-heading-main'>
           <div>
             <h1 className='tax-title'>Manage Tax</h1>

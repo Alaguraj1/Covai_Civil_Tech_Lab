@@ -70,10 +70,14 @@ const Preview = () => {
               "\n.style3 {\n\tfont-size: 22px;\n\tfont-weight: bold;\n}\n\ntable td, th {\n\tfont-size: 13px;\n}\n"
           }}
         />
-        <div className="container">
+        <div className="container" style={{ padding: "30px 0px" }}>
           <div className="panel">
             <div className="flex justify-between flex-wrap gap-4 px-4 grid-cols-3">
-              <div className="text-3xl font-semibold uppercase">Invoice</div>
+              <div>
+                <div className="text-3xl font-semibold uppercase">Invoice</div>
+                <p>Invoice No : {printData?.invoice?.invoice_no}</p>
+              </div>
+
               <div className="ltr:text-right rtl:text-left px-7 grid-cols-9">
                 <div className="shrink-0">
                   <img src="/assets/images/logo-in.png" alt="img" className="w-17 ltr:ml-auto rtl:mr-auto" />
@@ -190,7 +194,7 @@ const Preview = () => {
                             <td>998346</td>
                             <td >{invoice?.qty}</td>
                             <td style={{ textAlign: "right" }}>{invoice?.price_per_sample}</td>
-                            <td style={{ textAlign: "right" }}>{parseInt(invoice?.total,10)}</td>
+                            <td style={{ textAlign: "right" }}>{parseInt(invoice?.total, 10)}</td>
                           </tr>
 
                         </>

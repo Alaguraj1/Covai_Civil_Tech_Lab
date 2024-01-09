@@ -633,9 +633,9 @@ const Edit = () => {
             <div className="panel flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
                 <div className="flex flex-wrap justify-between px-4">
                     <div className="mb-6 w-full lg:w-1/2">
-                        <div className="flex shrink-0 items-center text-black dark:text-white">
+                        {/* <div className="flex shrink-0 items-center text-black dark:text-white">
                             <img src="/assets/images/civil-techno-logo.png" alt="img" style={{ width: "30%" }} />
-                        </div>
+                        </div> */}
                         <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="place_of_testing" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
