@@ -402,7 +402,7 @@ const Expense = () => {
                 "Authorization": `Token ${Token}`
             }
         }).then((res) => {
-            console.log(res.data)
+            console.log("expenses_name",res.data)
             setDataSource(res.data)
             setFilterData(res.data)
             setCustomerCount(res.data.customer_count)
@@ -429,14 +429,6 @@ const Expense = () => {
 
             console.log(res.data.expense_amount_list)
             console.log(expenseMonthWise,'check by raj')
-
-         
-          
-   
-   
-   
-          
-
 
         }).catch((error: any) => {
             console.log(error)
@@ -953,10 +945,10 @@ const Expense = () => {
                     <div className="grid grid-cols-1 gap-6 xl:grid-cols-2">
                         {/*  Favorites  */}
                         <div>
-                            <div className="mb-5 flex items-center font-bold">
+                            <div className="panel mb-5 flex items-center font-bold">
                                 <span className="text-lg">Payment</span>
                             </div>
-                            <div className="panel h-full xl:col-span-2">
+                            <div className=" h-full xl:col-span-2">
 
                                 <div className="relative">
                                     <div className="rounded-lg bg-white dark:bg-black">

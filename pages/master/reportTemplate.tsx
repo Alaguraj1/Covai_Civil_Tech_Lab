@@ -298,7 +298,7 @@ const Report = () => {
       <div>
         <div className='tax-heading-main'>
           <div>
-            <h1 className='tax-title'>Manage Report Templates</h1>
+            <h1 className='text-lg font-semibold dark:text-white-light'>Manage Report Templates</h1>
           </div>
           <div>
             <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />

@@ -112,7 +112,7 @@ const ExpenseReport = () => {
       <div  className='panel'>
         <div className='tax-heading-main'>
           <div>
-            <h1 className='tax-title'>Expense Report</h1>
+            <h1 className='text-lg font-semibold dark:text-white-light'>Expense Report</h1>
           </div>
           <div>
             <Space>
@@ -121,7 +121,7 @@ const ExpenseReport = () => {
             </Space>
           </div>
         </div>
-        <div>
+        <div  className='table-responsive'>
           <Table dataSource={filterData} columns={columns} pagination={false} />
         </div>
       </div>

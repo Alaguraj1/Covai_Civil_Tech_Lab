@@ -320,14 +320,14 @@ const Employee = () => {
             <div  className='panel '>
                 <div className='tax-heading-main'>
                     <div>
-                        <h1 className='tax-title'>Employee Details</h1>
+                        <h1 className='text-lg font-semibold dark:text-white-light'>Employee Details</h1>
                     </div>
                     <div>
                         <Search placeholder="Input search text" onChange={inputChange} enterButton className='search-bar' />
                         <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Employee </button>
                     </div>
                 </div>
-                <div>
+                <div  className='table-responsive'>
                     <Table dataSource={filterData} columns={columns} />
                 </div>
 

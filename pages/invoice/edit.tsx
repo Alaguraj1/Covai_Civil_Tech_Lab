@@ -636,7 +636,7 @@ const Edit = () => {
                         {/* <div className="flex shrink-0 items-center text-black dark:text-white">
                             <img src="/assets/images/civil-techno-logo.png" alt="img" style={{ width: "30%" }} />
                         </div> */}
-                        <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
+                        {/* <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
                             <div className="mt-4 flex items-center">
                                 <label htmlFor="place_of_testing" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
                                     Place of testing
@@ -644,7 +644,7 @@ const Edit = () => {
                                 <input id="place_of_testing" type="text" className="form-input w-2/3 lg:w-[250px]" name="place_of_testing" value={formData.place_of_testing} onChange={inputChange} />
                             </div>
 
-                        </div>
+                        </div> */}
                     </div>
                     <div className="w-full lg:w-1/2 lg:max-w-fit">
                         <div className="flex items-center">
@@ -658,6 +658,12 @@ const Edit = () => {
                                 Invoice Date
                             </label>
                             <input id="startDate" type="date" className="form-input w-2/3 lg:w-[250px]" name="date" value={formData.date} onChange={inputChange} />
+                        </div>
+                        <div className="mt-4 flex items-center">
+                            <label htmlFor="place_of_testing" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
+                                Place of testing
+                            </label>
+                            <input id="place_of_testing" type="text" className="form-input w-2/3 lg:w-[250px]" name="place_of_testing" value={formData.place_of_testing} onChange={inputChange} />
                         </div>
 
                     </div>
@@ -741,7 +747,7 @@ const Edit = () => {
                                     <th >Price</th>
                                     <th>Total</th>
                                     <th >Action</th>
-                                    <th>Complited</th>
+                                    <th>Completed</th>
                                     <th >Report</th>
                                 </tr>
                             </thead>
@@ -768,7 +774,7 @@ const Edit = () => {
                                             </td>
                                             <td>{item?.completed}</td>
                                             <td>
-                                            <EditOutlined rev={undefined} className='edit-icon' onClick={() => handlePrint(item)}/>
+                                                <EditOutlined rev={undefined} className='edit-icon' onClick={() => handlePrint(item)} />
                                             </td>
                                         </tr>
                                     );
@@ -778,7 +784,7 @@ const Edit = () => {
                     </div>
                     <div className="mt-6 flex flex-col justify-between px-4 sm:flex-row">
                         <div className="mb-6 sm:mb-0">
-                            <button type="button" className="btn btn-primary" onClick={showModal}>
+                            <button type="button" className="btn btn-civil" onClick={showModal}>
                                 Add Test
                             </button>
                         </div>
@@ -849,12 +855,12 @@ const Edit = () => {
 
                             <div style={{ marginTop: "50px" }}>
                                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1" style={{ display: "flex" }}>
-                                    <button type="button" className="btn btn-success w-full gap-2" onClick={invoiceFormSubmit}>
+                                    <button type="button" className="btn btn-civil w-full gap-2" onClick={invoiceFormSubmit}>
                                         <IconSave className="ltr:mr-2 rtl:ml-2 shrink-0" />
                                         Update
                                     </button>
 
-                                    <button className="btn btn-primary w-full gap-2" onClick={() => handlePreviewClick(id)}>
+                                    <button className="btn btn-gray w-full gap-2" onClick={() => handlePreviewClick(id)}>
                                         <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
                                         Preview
                                     </button>

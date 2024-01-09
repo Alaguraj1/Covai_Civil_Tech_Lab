@@ -745,6 +745,29 @@ border-right: 1px solid black;
     justify-content: space-between;
 }
 
+
+
+.btn-civil{
+    background-color: #972e25;
+    border: none;
+    color: white;
+}
+
+.btn-gray{
+    background-color: rgb(219, 216, 216);
+    border: none;
+    color: black;
+    box-shadow: none;
+}
+
+
+.sale_report_inputs{
+    display: flex;
+    justify-content: space-between;
+}
+
+
+
 table tbody tr {
     border-bottom-width: 0px;
     border-color:none;
@@ -783,7 +806,11 @@ table tbody tr {
 }
 
 
-
+@media(max-width:500px) {
+    .sale_report_inputs{
+        display: block;
+    }
+}
 
 
 
@@ -854,6 +881,12 @@ color: white;
 
 /* input */
 
+:where(.css-dev-only-do-not-override-6j9yrn).ant-input:hover {
+    border-color: #972e25;
+    box-shadow: 0 0 0 2px rgba(166, 67, 67, 0.1);
+    outline: 0;
+}
+
 :where(.css-dev-only-do-not-override-6j9yrn).ant-input:focus, :where(.css-dev-only-do-not-override-6j9yrn).ant-input:focus-within {
     border-color: #972e25;
     box-shadow: 0 0 0 2px rgba(166, 67, 67, 0.1);
@@ -862,4 +895,36 @@ color: white;
 
 :where(.css-dev-only-do-not-override-6j9yrn).ant-btn-primary:not(:disabled):not(.ant-btn-disabled):hover {
     background:#972e25;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-table-wrapper .ant-table-thead >tr>th:not(:last-child):not(.ant-table-selection-column):not(.ant-table-row-expand-icon-cell):not([colspan])::before{
+    height: 0;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-table-wrapper .ant-table-container table>thead>tr:first-child >*:first-child {
+    border-start-start-radius: 0px;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-table-wrapper .ant-table-container table>thead>tr:first-child >*:last-child {
+    border-start-end-radius: 0px;
+}
+
+
+/* pagination */
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-pagination .ant-pagination-item-active a {
+    color: #972e25;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-pagination .ant-pagination-item-active {
+    border-color: #972e25;
+}
+
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-pagination .ant-pagination-item-active:hover a {
+    color: #972e25;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-pagination .ant-pagination-item-active:hover {
+    border-color: #972e25;
 }

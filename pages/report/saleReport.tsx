@@ -184,7 +184,7 @@ const SaleReport = () => {
                         autoComplete="off"
 
                     >
-                        <div style={{ display: "flex", justifyContent: "space-between" }}>
+                        <div className='sale_report_inputs'>
 
                             <Form.Item<FieldType>
                                 label="Project Name"
@@ -229,14 +229,14 @@ const SaleReport = () => {
                 </div>
                 <div className='tax-heading-main'>
                     <div>
-                        <h1 className='tax-title'>Sales Report</h1>
+                        <h1 className='text-lg font-semibold dark:text-white-light'>Sales Report</h1>
                     </div>
                     <div>
                         <button type='button'  onClick={exportToExcel} className='create-button'>Export to Excel </button>
                     </div>
                 </div>
                
-                <div>
+                <div  className='table-responsive'>
                     <Table dataSource={dataSource} columns={columns} />
                 </div>
             </div>

@@ -104,10 +104,10 @@ const Invoice = () => {
             render: (text: any, record: any) => (
 
                 <Space size="middle">
-                    <Link href='/invoice/preview'>
+                    {/* <Link href='/invoice/preview/'>
                         <EyeOutlined style={{ cursor: "pointer" }}
                             className='view-icon' rev={undefined} />
-                    </Link>
+                    </Link> */}
                     <span
                         onClick={() => handleEditClick(record)}
                         style={{ cursor: "pointer" }}
@@ -232,14 +232,14 @@ const Invoice = () => {
             <div  className='panel'>
                 <div className='tax-heading-main'>
                     <div>
-                        <h1 className='tax-title'>Manage Invoices</h1>
+                        <h1 className='text-lg font-semibold dark:text-white-light'>Manage Invoices</h1>
                     </div>
                     <div>
                         <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
                         <button type='button' className='create-button' onClick={() => showDrawer()}>+ Create Invoice</button>
                     </div>
                 </div>
-                <div>
+                <div  className='table-responsive'>
                     <Table dataSource={filterData} columns={columns} pagination={false} />
                 </div>
 
