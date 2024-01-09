@@ -84,9 +84,19 @@ const Invoice = () => {
             key: 'project_name',
         },
         {
-            title: 'Advance',
-            dataIndex: 'advance',
-            key: 'advance',
+            title: 'Total Amount',
+            dataIndex: 'total_amount',
+            key: 'total_amount',
+        },
+        {
+            title: 'Balance',
+            dataIndex: 'balance',
+            key: 'balance',
+        },
+        {
+            title: 'Incompleted Test',
+            dataIndex: 'incompleted_test',
+            key: 'incompleted_test',
         },
         {
             title: "Actions",
@@ -181,7 +191,8 @@ const Invoice = () => {
             }
         }).then((res) => {
             getInvoice();
-            console.log(res?.data);
+            console.log("response",res?.data);
+            window.location.href = `/invoice/edit?id=${res?.data?.id}`;
             setOpen(false);
         }).catch((error) => {
             console.log(error);
@@ -274,7 +285,7 @@ const Invoice = () => {
                         </Form.Item>
 
 
-                        <Form.Item label="Sales Mode" name='sales_mode'>
+                        {/* <Form.Item label="Sales Mode" name='sales_mode'>
                             <Select>
                                 {formFields?.sales_mode?.map((val: any) => (
                                     <Select.Option key={val.id} value={val.id}>
@@ -282,7 +293,7 @@ const Invoice = () => {
                                     </Select.Option>
                                 ))}
                             </Select>
-                        </Form.Item>
+                        </Form.Item> */}
 
                         {/* <Form.Item label="Material ID" name='materialId'>
                                 <Select>

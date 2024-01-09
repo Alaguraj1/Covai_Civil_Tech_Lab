@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router';
 
-const Print = () => {
+const Print1 = () => {
     const router = useRouter();
     const { id } = router.query;
 
@@ -34,10 +34,10 @@ const Print = () => {
     return (
         <>
             <div style={{padding:"50px 100px"}}>
-                <div dangerouslySetInnerHTML={{__html : invoiceReport?.invoice_test?.report_template}}></div>
+                <div dangerouslySetInnerHTML={{__html : invoiceReport?.invoice_test?.final_html}}></div>
             </div>
         </>
     )
 }
 
-export default Print
+export default Print1

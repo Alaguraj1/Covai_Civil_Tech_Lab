@@ -13,6 +13,7 @@ const Employee = () => {
     const { Search } = Input;
     const [form] = Form.useForm();
     const [editRecord, setEditRecord] = useState(null);
+    console.log('✌️editRecord --->', editRecord);
     const [drawerTitle, setDrawerTitle] = useState("Create Employee");
     const [viewRecord, setViewRecord] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,8 +32,6 @@ const Employee = () => {
                 "Authorization": `Token ${Token}`
             }
         }).then((res) => {
-            console.log("--------------------------")
-            console.log(res.data);
             setDataSource(res.data)
             setFilterData(res.data)
         }).catch((error: any) => {
@@ -40,7 +39,7 @@ const Employee = () => {
         })
     })
 
-    console.log("dataSource", dataSource)
+    console.log("datasource", dataSource)
 
     const showModal = (record: any) => {
         setIsModalOpen(true);
@@ -67,13 +66,11 @@ const Employee = () => {
 
     // drawer
     const showDrawer = (record: any) => {
-        console.log(record);
-        console.log("--------------------------");
         if (record) {
-           
-            setEditRecord(record);
-            form.setFieldsValue(record);
-           
+            const bodyData = { ...record,  dob:moment(record.dob) , modified_date:moment(record.modified_date), joining_date:moment(record.joining_date)}
+            setEditRecord(bodyData)
+            form.setFieldsValue(bodyData);
+
         } else {
             setEditRecord(null);
             form.resetFields();
@@ -205,10 +202,9 @@ const Employee = () => {
         };
 
 
-
         // Check if editing or creating
         if (editRecord) {
-            axios.put(`http://files.covaiciviltechlab.com/edit_customer/${editRecord.id}/`, formattedData, {
+            axios.put(`http://files.covaiciviltechlab.com/edit_employee/${editRecord.id}/`, formattedData, {
                 headers: {
                     "Authorization": `Token ${localStorage.getItem("token")}`
                 }
@@ -270,9 +266,8 @@ const Employee = () => {
 
     // modal data
     const modalData = () => {
-      
 
-        console.log("viewRecord", viewRecord)
+
 
         const data = [
             {
@@ -293,11 +288,11 @@ const Employee = () => {
                 value: viewRecord?.phone_number || "N/A",
             },
 
-             {
+            {
                 label: "DOJ:",
-              value: viewRecord?.joining_date || "N/A",
-             },
-          
+                value: viewRecord?.joining_date || "N/A",
+            },
+
             {
                 label: "Created By:",
                 value: viewRecord?.created_by || "N/A",
@@ -333,7 +328,7 @@ const Employee = () => {
                     </div>
                 </div>
                 <div>
-                    <Table dataSource={filterData} columns={columns}  />
+                    <Table dataSource={filterData} columns={columns} />
                 </div>
 
                 <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>
@@ -377,8 +372,8 @@ const Employee = () => {
                         <Form.Item<FieldType>
                             label="Password"
                             name="password"
-                            required={true}
-                            rules={[{ required: true, message: 'Please input your Password!' }]}
+                            required={false}
+                            rules={[{ required: false, message: 'Please input your Password!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -424,7 +419,7 @@ const Employee = () => {
                             required={true}
                             rules={[{ required: true, message: 'Please Select your DOB!' }]}
                         >
-                            <DatePicker style={{ width: "100%" }} />
+                            <DatePicker style={{ width: "100%" }}  />
                         </Form.Item>
 
                         <Form.Item label="Gender" name="gender"
@@ -446,7 +441,7 @@ const Employee = () => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item label="Joining Date" name="joining_date"  required={true}
+                        <Form.Item label="Joining Date" name="joining_date" required={true}
                             rules={[{ required: true, message: 'Please input DOJ!' }]} >
                             <DatePicker style={{ width: "100%" }} />
                         </Form.Item>
