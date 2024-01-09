@@ -160,8 +160,8 @@ const Edit = () => {
             setBeforeTotalTax(beforetax)
             // -------------------------------------------------------------------------------------------
             // Tax total prrcentage
-            const matchedTaxs = data?.taxs.filter((item:any) => data?.invoice?.tax.includes(item.id));
-            const sumPercentage = matchedTaxs.reduce((sum:any, item:any) => {
+            const matchedTaxs = data?.taxs.filter((item: any) => data?.invoice?.tax.includes(item.id));
+            const sumPercentage = matchedTaxs.reduce((sum: any, item: any) => {
                 return sum + parseFloat(item.tax_percentage);
             }, 0);
 
@@ -545,7 +545,7 @@ const Edit = () => {
     const handlePreviewClick = (id: any) => {
         // Navigate to the /invoice/edit page with the record data as a query parameter
         window.location.href = `/invoice/preview?id=${id}`;
-        
+
     };
 
 
@@ -641,7 +641,7 @@ const Edit = () => {
     };
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
-             {contextHolder}
+            {contextHolder}
             <div className="panel flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
                 <div className="flex flex-wrap justify-between px-4">
                     <div className="mb-6 w-full lg:w-1/2">
@@ -752,8 +752,8 @@ const Edit = () => {
                                     <th>Quantity</th>
                                     <th >Price</th>
                                     <th>Total</th>
-                                    <th>Complited</th>
                                     <th >Action</th>
+                                    <th>Complited</th>
                                     <th >Report</th>
                                 </tr>
                             </thead>
@@ -772,13 +772,13 @@ const Edit = () => {
                                             <td>{Number(item?.quantity)}</td>
                                             <td>  {Number(item?.price_per_sample)} </td>
                                             <td>{item.quantity * item.price_per_sample}</td>
-                                            <td>{item?.completed}</td>
                                             <td>
                                                 <Space>
                                                     <EditOutlined rev={undefined} className='edit-icon' onClick={() => showDrawer(item)} />
                                                     <DeleteOutlined rev={undefined} style={{ color: "red", cursor: "pointer" }} className='delete-icon' onClick={() => handleDelete(item?.id)} />
                                                 </Space>
                                             </td>
+                                            <td>{item?.completed}</td>
                                             <td>
                                                 <PrinterOutlined rev={undefined} className='edit-icon' onClick={() => handlePrint(item)} />
                                             </td>
@@ -859,22 +859,22 @@ const Edit = () => {
                                 <input id="swift-code" type="text" className="form-input flex-1" name="balance" value={balance} onChange={inputChange} placeholder="Enter SWIFT Number" disabled />
                             </div>
 
-                            <div style={{marginTop:"50px"}}>
-                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1" style={{display:"flex"}}>
-                                <button type="button" className="btn btn-success w-full gap-2" onClick={invoiceFormSubmit}>
-                                    <IconSave className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                    Update
-                                </button>
+                            <div style={{ marginTop: "50px" }}>
+                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1" style={{ display: "flex" }}>
+                                    <button type="button" className="btn btn-success w-full gap-2" onClick={invoiceFormSubmit}>
+                                        <IconSave className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                        Update
+                                    </button>
 
-                                <button className="btn btn-primary w-full gap-2" onClick={() => handlePreviewClick(id)}>
-                                    <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                    Preview
-                                </button>
+                                    <button className="btn btn-primary w-full gap-2" onClick={() => handlePreviewClick(id)}>
+                                        <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                        Preview
+                                    </button>
 
+                                </div>
                             </div>
                         </div>
-                        </div>
-                        
+
                     </div>
                 </div>
 
