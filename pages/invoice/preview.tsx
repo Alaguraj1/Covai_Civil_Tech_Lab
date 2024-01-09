@@ -115,7 +115,7 @@ const Preview = () => {
               <div className="flex justify-between sm:flex-row flex-col gap-6 lg:w-2/3">
                 <div className="xl:1/3 lg:w-2/5 sm:w-1/2">
                   <div className="flex items-center w-full justify-between mb-2">
-                    <div className="text-white-dark">Bill No :</div>
+                    <div className="text-white-dark">Invoice No :</div>
                     <div> {printData?.invoice?.invoice_no}</div>
                   </div>
                   <div className="flex items-center w-full justify-between mb-2">
