@@ -768,7 +768,7 @@ const Edit = () => {
                                             </td>
                                             <td>{item?.completed}</td>
                                             <td>
-                                                <PrinterOutlined rev={undefined} className='edit-icon' onClick={() => handlePrint(item)} />
+                                            <EditOutlined rev={undefined} className='edit-icon' onClick={() => handlePrint(item)}/>
                                             </td>
                                         </tr>
                                     );

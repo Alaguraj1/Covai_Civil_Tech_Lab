@@ -247,7 +247,7 @@ const Preview = () => {
                       />
                     </td>
                   </tr>
-                  <tr>
+                  {/* <tr>
 
                     <td id="words_amt" colSpan={"5"} style={{ textAlign: "right" }}>
                       {TotalData}{" "}
@@ -259,7 +259,7 @@ const Preview = () => {
                       />
                     </td>
                     <td style={{ textAlign: "right" }}>E &amp; OE</td>
-                  </tr>
+                  </tr> */}
                 </tbody>
               </table>
 
