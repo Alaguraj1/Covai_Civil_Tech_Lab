@@ -910,6 +910,21 @@ color: white;
 }
 
 
+/* Select Option */
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer):hover .ant-select-selector {
+    border-color: #972e25;
+    box-shadow: 0 0 0 2px rgba(166, 67, 67, 0.1);
+    outline: 0;
+}
+.ant-select-focused:where(.css-dev-only-do-not-override-6j9yrn).ant-select:not(.ant-select-disabled):not(.ant-select-customize-input):not(.ant-pagination-size-changer) .ant-select-selector {
+    border-color: #972e25;
+    box-shadow: 0 0 0 2px rgba(166, 67, 67, 0.1);
+    outline: 0;
+}
+
+
+
 /* pagination */
 
 :where(.css-dev-only-do-not-override-6j9yrn).ant-pagination .ant-pagination-item-active a {
