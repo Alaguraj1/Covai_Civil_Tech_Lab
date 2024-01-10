@@ -140,7 +140,26 @@ console.log('✌️record --->', record);
                 <Space size="middle">
                     <EyeOutlined style={{ cursor: "pointer" }}
                         onClick={() => showModal(record)} className='view-icon' rev={undefined} />
-                    <EditOutlined
+
+{
+                        localStorage.getItem('admin') === 'true' ? (
+                            <EditOutlined
+                                style={{ cursor: "pointer" }}
+                                onClick={() => showDrawer(record)}
+                                className='edit-icon'
+                                rev={undefined}
+                            />
+                        ) : (
+                            <EditOutlined
+                                style={{ cursor: "pointer", display:"none" }}
+                                onClick={() => showDrawer(record)}
+                                className='edit-icon'
+                                rev={undefined}
+                            />
+                        )
+                    }
+
+                    {/* <EditOutlined
                         style={{ cursor: "pointer" }}
                         onClick={() => showDrawer(record)}
                         className='edit-icon' rev={undefined} />
@@ -160,7 +179,7 @@ console.log('✌️record --->', record);
                                 rev={undefined}
                             />
                         )
-                    }
+                    } */}
 
 
                 </Space>

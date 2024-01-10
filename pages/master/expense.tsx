@@ -112,7 +112,26 @@ const Expense = () => {
         <Space size="middle">
           <EyeOutlined style={{ cursor: "pointer" }}
             onClick={() => showModal(record)} className='view-icon' rev={undefined} />
-          <EditOutlined
+
+          {
+            localStorage.getItem('admin') === 'true' ? (
+              <EditOutlined
+                style={{ cursor: "pointer" }}
+                onClick={() => showDrawer(record)}
+                className='edit-icon'
+                rev={undefined}
+              />
+            ) : (
+              <EditOutlined
+                style={{ cursor: "pointer", display: "none" }}
+                onClick={() => showDrawer(record)}
+                className='edit-icon'
+                rev={undefined}
+              />
+            )
+          }
+
+          {/* <EditOutlined
             style={{ cursor: "pointer" }}
             onClick={() => showDrawer(record)}
             className='edit-icon' rev={undefined} />
@@ -134,7 +153,7 @@ const Expense = () => {
             )
           }
 
-
+ */}
 
         </Space>
       ),
@@ -273,7 +292,7 @@ const Expense = () => {
   console.log("viewRecord", viewRecord)
   return (
     <>
-      <div  className='panel'>
+      <div className='panel'>
         <div className='tax-heading-main'>
           <div>
             <h1 className='text-lg font-semibold dark:text-white-light'>Manage Expense</h1>
@@ -283,7 +302,7 @@ const Expense = () => {
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Expense</button>
           </div>
         </div>
-        <div  className='table-responsive'>
+        <div className='table-responsive'>
           <Table dataSource={filterData} columns={columns} pagination={false} />
         </div>
 

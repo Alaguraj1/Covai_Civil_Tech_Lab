@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Space, Table, Modal,Select, } from 'antd';
+import { Space, Table, Modal, Select, } from 'antd';
 import { Button, Drawer } from 'antd';
 import { Form, Input } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
@@ -86,7 +86,7 @@ const Material = () => {
     }
   }, [editRecord])
 
-  
+
   // editor
   const handleEditorChange = (value: any) => {
     setEditor(value);
@@ -147,12 +147,31 @@ const Material = () => {
         <Space size="middle">
           <EyeOutlined style={{ cursor: "pointer" }}
             onClick={() => showModal(record)} className='view-icon' rev={undefined} />
-          <EditOutlined
+
+          {
+            localStorage.getItem('admin') === 'true' ? (
+              <EditOutlined
+                style={{ cursor: "pointer" }}
+                onClick={() => showDrawer(record)}
+                className='edit-icon'
+                rev={undefined}
+              />
+            ) : (
+              <EditOutlined
+                style={{ cursor: "pointer", display: "none" }}
+                onClick={() => showDrawer(record)}
+                className='edit-icon'
+                rev={undefined}
+              />
+            )
+          }
+
+          {/* <EditOutlined
             style={{ cursor: "pointer" }}
             onClick={() => showDrawer(record)}
             className='edit-icon' rev={undefined} />
 
-{
+          {
             localStorage.getItem('admin') === 'true' ? (
               <DeleteOutlined
                 style={{ color: "red", cursor: "pointer" }}
@@ -168,9 +187,9 @@ const Material = () => {
                 rev={undefined}
               />
             )
-          }
+          } */}
 
-        
+
         </Space>
       ),
     }
@@ -205,11 +224,11 @@ const Material = () => {
     });
   };
 
-  const [filterData, setFilterData] = useState(dataSource )
+  const [filterData, setFilterData] = useState(dataSource)
 
-  const inputChange = (e:any) => {
+  const inputChange = (e: any) => {
     const searchValue = e.target.value.toLowerCase();
-    const filteredData = dataSource.filter((item:any) =>
+    const filteredData = dataSource.filter((item: any) =>
       item?.material_name?.toLowerCase().includes(searchValue)
     );
     setFilterData(searchValue ? filteredData : dataSource);
@@ -316,17 +335,17 @@ const Material = () => {
 
   return (
     <>
-      <div  className='panel'>
+      <div className='panel'>
         <div className='tax-heading-main'>
           <div>
             <h1 className='text-lg font-semibold dark:text-white-light'>Manage Material</h1>
           </div>
           <div>
-          <Search placeholder="Input search text" onChange={inputChange} enterButton className='search-bar' />
+            <Search placeholder="Input search text" onChange={inputChange} enterButton className='search-bar' />
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Material</button>
           </div>
         </div>
-        <div  className='table-responsive'>
+        <div className='table-responsive'>
           <Table dataSource={filterData} columns={columns} />
         </div>
 
@@ -360,7 +379,7 @@ const Material = () => {
                 onChange={handleEditorChange}
                 modules={{
                   toolbar: [
-                    [{ header: [1, 2,3,4,5,6, false] }],
+                    [{ header: [1, 2, 3, 4, 5, 6, false] }],
                     ["bold", "italic", "underline", "strike"],
                     ["blockquote", "code-block"],
                     [{ list: "ordered" }, { list: "bullet" }],
@@ -375,8 +394,8 @@ const Material = () => {
 
 
             <Form.Item label="Print Format" name='print_format'
-             required={true}
-             rules={[{ required: true, message: 'This field is required.' }]}
+              required={true}
+              rules={[{ required: true, message: 'This field is required.' }]}
             >
               <Select>
                 {
@@ -391,8 +410,8 @@ const Material = () => {
             </Form.Item>
 
             <Form.Item label="Letter Pad Logo" name='letter_pad_logo'
-             required={true}
-             rules={[{ required: true, message: 'This field is required.' }]}
+              required={true}
+              rules={[{ required: true, message: 'This field is required.' }]}
             >
               <Select>
                 {

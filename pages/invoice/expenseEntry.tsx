@@ -92,7 +92,7 @@ const ExpenseEntry = () => {
     console.log('✌️record --->', record);
 
     if (record) {
-      const updateData:any = {
+      const updateData: any = {
         amount: record.amount,
         date: moment(record.date),
         expense_category: record.expense_category,
@@ -152,13 +152,33 @@ const ExpenseEntry = () => {
         <Space size="middle">
           <EyeOutlined style={{ cursor: "pointer" }}
             onClick={() => showModal(record)} className='view-icon' rev={undefined} />
-          <EditOutlined
+
+          {
+            localStorage.getItem('admin') === 'true' ? (
+              <EditOutlined
+                style={{ cursor: "pointer" }}
+                onClick={() => showDrawer(record)}
+                className='edit-icon'
+                rev={undefined}
+              />
+            ) : (
+              <EditOutlined
+                style={{ cursor: "pointer", display: "none" }}
+                onClick={() => showDrawer(record)}
+                className='edit-icon'
+                rev={undefined}
+              />
+            )
+          }
+
+
+          {/* <EditOutlined
             style={{ cursor: "pointer" }}
             onClick={() => showDrawer(record)}
             className='edit-icon' rev={undefined} />
           <DeleteOutlined
             style={{ color: "red", cursor: "pointer" }}
-            onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} />
+            onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} /> */}
         </Space>
       ),
     }
@@ -194,18 +214,18 @@ const ExpenseEntry = () => {
 
 
   // input search
-const [filterData, setFilterData] = useState(dataSource)
+  const [filterData, setFilterData] = useState(dataSource)
 
-const inputChange = ((e:any) => {
-  const SearchValue = e.target.value
+  const inputChange = ((e: any) => {
+    const SearchValue = e.target.value
 
-  const filteredData = dataSource.filter((item:any) => {
-    return(
-      item?.narration?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.expense_category_name?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.expense_user?.toLowerCase().includes(SearchValue.toLowerCase())
-    )
+    const filteredData = dataSource.filter((item: any) => {
+      return (
+        item?.narration?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.expense_category_name?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.expense_user?.toLowerCase().includes(SearchValue.toLowerCase())
+      )
+    })
+    setFilterData(filteredData)
   })
-  setFilterData(filteredData)
-})
 
 
   // form submit
@@ -345,7 +365,7 @@ const inputChange = ((e:any) => {
 
   return (
     <>
-      <div  className='panel'>
+      <div className='panel'>
         <div className='tax-heading-main'>
           <div>
             <h1 className='text-lg font-semibold dark:text-white-light'>Manage Expense Entry</h1>
@@ -355,7 +375,7 @@ const inputChange = ((e:any) => {
             <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Expense Entry</button>
           </div>
         </div>
-        <div  className='table-responsive'>
+        <div className='table-responsive'>
           <Table dataSource={filterData} columns={columns} pagination={false} />
         </div>
 

@@ -115,11 +115,30 @@ const Employee = () => {
                 <Space size="middle">
                     <EyeOutlined style={{ cursor: "pointer" }}
                         onClick={() => showModal(record)} className='view-icon' rev={undefined} />
-                    <EditOutlined
+
+{
+                        localStorage.getItem('admin') === 'true' ? (
+                            <EditOutlined
+                                style={{ cursor: "pointer" }}
+                                onClick={() => showDrawer(record)}
+                                className='edit-icon'
+                                rev={undefined}
+                            />
+                        ) : (
+                            <EditOutlined
+                                style={{ cursor: "pointer", display:"none" }}
+                                onClick={() => showDrawer(record)}
+                                className='edit-icon'
+                                rev={undefined}
+                            />
+                        )
+                    }
+
+                    {/* <EditOutlined
                         style={{ cursor: "pointer" }}
                         onClick={() => showDrawer(record)}
-                        className='edit-icon' rev={undefined} />
-                    {
+                        className='edit-icon' rev={undefined} /> */}
+                    {/* {
                         localStorage.getItem('admin') === 'true' ? (
                             <DeleteOutlined
                                 style={{ color: "red", cursor: "pointer" }}
@@ -135,7 +154,7 @@ const Employee = () => {
                                 rev={undefined}
                             />
                         )
-                    }
+                    } */}
 
                 </Space>
             ),

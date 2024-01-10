@@ -108,16 +108,39 @@ const Invoice = () => {
                         <EyeOutlined style={{ cursor: "pointer" }}
                             className='view-icon' rev={undefined} />
                     </Link> */}
-                    <span
+
+
+
+                    {
+                        localStorage.getItem('admin') === 'true' ? (
+                            <span
+                                onClick={() => handleEditClick(record)}
+                                style={{ cursor: "pointer" }}
+                                className='edit-icon'
+                            >
+                                <EditOutlined rev={undefined} />
+                            </span>
+                        ) : (
+                            <span
+                                onClick={() => handleEditClick(record)}
+                                style={{ cursor: "pointer", display:"none" }}
+                                className='edit-icon'
+                            >
+                                <EditOutlined rev={undefined} />
+                            </span>
+                        )
+                    }
+
+                    {/* <span
                         onClick={() => handleEditClick(record)}
                         style={{ cursor: "pointer" }}
                         className='edit-icon'
                     >
                         <EditOutlined rev={undefined} />
-                    </span>
-                    <DeleteOutlined
+                    </span> */}
+                    {/* <DeleteOutlined
                         style={{ color: "red", cursor: "pointer" }}
-                        onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} />
+                        onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} /> */}
                 </Space>
             ),
         }
@@ -191,7 +214,7 @@ const Invoice = () => {
             }
         }).then((res) => {
             getInvoice();
-            console.log("response",res?.data);
+            console.log("response", res?.data);
             window.location.href = `/invoice/edit?id=${res?.data?.id}`;
             setOpen(false);
         }).catch((error) => {
@@ -229,7 +252,7 @@ const Invoice = () => {
 
     return (
         <>
-            <div  className='panel'>
+            <div className='panel'>
                 <div className='tax-heading-main'>
                     <div>
                         <h1 className='text-lg font-semibold dark:text-white-light'>Manage Invoices</h1>
@@ -239,7 +262,7 @@ const Invoice = () => {
                         <button type='button' className='create-button' onClick={() => showDrawer()}>+ Create Invoice</button>
                     </div>
                 </div>
-                <div  className='table-responsive'>
+                <div className='table-responsive'>
                     <Table dataSource={filterData} columns={columns} pagination={false} />
                 </div>
 
