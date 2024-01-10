@@ -48,13 +48,13 @@ const InvoiceReport = () => {
 
 
   // form submit
-  const onFinish = (value:any) => {
+  const onFinish = (value: any) => {
     console.log("editoreditor", editor)
 
     const body = {
       report_template: editor,
       completed: value.completed,
-      signature : value.signature
+      signature: value.signature
     }
     const Token = localStorage.getItem("token");
 
@@ -68,13 +68,13 @@ const InvoiceReport = () => {
       messageApi.open({
         type: 'success',
         content: 'Invoice Report Successfully Updated',
-    });
+      });
     }).catch((error) => {
       console.error("Error updating report template:", error);
       messageApi.open({
         type: 'error',
         content: 'Invoice Report Updated Failed',
-    });
+      });
     });
   };
 
@@ -110,7 +110,7 @@ const InvoiceReport = () => {
     var id: any = invoiceReport.invoice_test.id;
     var url = `/invoice/print1?id=${id}`;
 
-    window.open(url, '_blank');  
+    window.open(url, '_blank');
   };
 
 
@@ -120,8 +120,9 @@ const InvoiceReport = () => {
   };
   return (
     <>
-      <div style={{ padding: "50px" }}>
-      {contextHolder}
+    <div className='panel' style={{margin:"30px"}}>
+      <div>
+        {contextHolder}
         <Form
           name="basic"
           layout="vertical"
@@ -204,6 +205,7 @@ const InvoiceReport = () => {
 
           </Form.Item>
         </Form>
+      </div>
       </div>
     </>
   )
