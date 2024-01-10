@@ -23,9 +23,12 @@ import dynamic from 'next/dynamic';
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
     ssr: false,
 });
+import { useRouter } from 'next/router';
 
 
 const Expense = () => {
+
+    const router = useRouter();
 
     const [open, setOpen] = useState(false);
     const { Search } = Input;
@@ -47,7 +50,6 @@ const Expense = () => {
 
     const [paymentsData, setPayments] = useState([])
     const [invoiceMonthData, setInvoiceMonthData] = useState([])
-    console.log(invoiceMonthData, "---------------------mDDDDDDDDDDDD----------------")
     const [invoices, setinvoices] = useState([])
     const [expenses, setexpenses] = useState([])
 
@@ -257,7 +259,7 @@ const Expense = () => {
         },
     }]
 
-
+    const [payments_sum, setpayments_sum] = useState(0)
 
 
     const [revenueChart, setRevenueChart] = useState({
@@ -314,15 +316,7 @@ const Expense = () => {
                                     return val;
                                 },
                             },
-                            total: {
-                                show: true,
-                                label: 'Total Amount',
-                                color: '#888ea8',
-                                fontSize: '29px',
-                                formatter: (w: any) => {
-                                    return pa
-                                },
-                            },
+                       
                         },
                     },
                 },
@@ -355,7 +349,7 @@ const Expense = () => {
     const [pending_payment_this_month, setpending_payment_this_month] = useState('')
     const [expenseMonthWise, setexpenseMonthWise] = useState([])
 
-    const [payments_sum, setpayments_sum] = useState(0)
+    
 
     const [isMounted, setIsMounted] = useState(false);
     // useEffect(() => {
@@ -371,15 +365,13 @@ const Expense = () => {
     useEffect(() => {
         setIsMounted(true);
         getExpense()
-
-
-    }, [])
+    }, [payments_sum])
 
     useEffect(() => {
 
         updateChart()
 
-    }, [expenseMonthWise, invoiceMonthData])
+    }, [payments_sum,expenseMonthWise, invoiceMonthData])
 
     const headers = {
         'Content-Type': 'application/json',
@@ -402,7 +394,6 @@ const Expense = () => {
                 "Authorization": `Token ${Token}`
             }
         }).then((res) => {
-            console.log("expenses_name", res.data)
             setDataSource(res.data)
             setFilterData(res.data)
             setCustomerCount(res.data.customer_count)
@@ -427,18 +418,97 @@ const Expense = () => {
             setpayments_sum(res.data.payments_sum)
 
 
-            console.log(res.data.expense_amount_list)
-            console.log(expenseMonthWise, 'check by raj')
+    setsalesByCategory((prevData) => ({
+            
+            series: invoiceMonthData,
+            options: {
+                chart: {
+                    type: 'donut',
+                    height: 460,
+                    fontFamily: 'Nunito, sans-serif',
+                },
+                dataLabels: {
+                    enabled: false,
+                },
+                stroke: {
+                    show: true,
+                    width: 25,
+                    colors: isDark ? '#0e1726' : '#fff',
+                },
+                colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
+                legend: {
+                    position: 'bottom',
+                    horizontalAlign: 'center',
+                    fontSize: '14px',
+                    markers: {
+                        width: 10,
+                        height: 10,
+                        offsetX: -2,
+                    },
+                    height: 50,
+                    offsetY: 20,
+                },
+                plotOptions: {
+                    pie: {
+                        donut: {
+                            size: '65%',
+                            background: 'transparent',
+                            labels: {
+                                show: true,
+                                name: {
+                                    show: true,
+                                    fontSize: '29px',
+                                    offsetY: -10,
+                                },
+                                value: {
+                                    show: true,
+                                    fontSize: '26px',
+                                    color: isDark ? '#bfc9d4' : undefined,
+                                    offsetY: 16,
+                                    formatter: (val: any) => {
+                                        return val;
+                                    },
+                                },
+                                total: {
+                                    show: true,
+                                    label: 'Total Amount',
+                                    color: '#888ea8',
+                                    fontSize: '29px',
+                                    formatter: (w: any) => {
+                                        return res.data.payments_sum
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+                labels: ['Total Amount', 'Paid Amount', 'Unpaid Amount'],
+                states: {
+                    hover: {
+                        filter: {
+                            type: 'none',
+                            value: 0.15,
+                        },
+                    },
+                    active: {
+                        filter: {
+                            type: 'none',
+                            value: 0.15,
+                        },
+                    },
+                },
+            }
+
+        }));
+
 
         }).catch((error: any) => {
+            localStorage.removeItem("token")
+            router.push('/');
             console.log(error)
         })
 
-        console.log(expenseMonthWise, 'expensemonthwise')
         updateChart()
-
-
-
     })
 
 
@@ -463,8 +533,6 @@ const Expense = () => {
         }));
 
 
-
-        console.log(expenseMonthWise)
 
         setExpenseChart({
             series: [
@@ -603,92 +671,6 @@ const Expense = () => {
                 },
             },
         });
-        console.log(payments_sum, "---------------------mk----------------")
-
-        setsalesByCategory((prevData) => ({
-            ...prevData,
-            series: invoiceMonthData,
-            options: {
-                chart: {
-                    type: 'donut',
-                    height: 460,
-                    fontFamily: 'Nunito, sans-serif',
-                },
-                dataLabels: {
-                    enabled: false,
-                },
-                stroke: {
-                    show: true,
-                    width: 25,
-                    colors: isDark ? '#0e1726' : '#fff',
-                },
-                colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
-                legend: {
-                    position: 'bottom',
-                    horizontalAlign: 'center',
-                    fontSize: '14px',
-                    markers: {
-                        width: 10,
-                        height: 10,
-                        offsetX: -2,
-                    },
-                    height: 50,
-                    offsetY: 20,
-                },
-                plotOptions: {
-                    pie: {
-                        donut: {
-                            size: '65%',
-                            background: 'transparent',
-                            labels: {
-                                show: true,
-                                name: {
-                                    show: true,
-                                    fontSize: '29px',
-                                    offsetY: -10,
-                                },
-                                value: {
-                                    show: true,
-                                    fontSize: '26px',
-                                    color: isDark ? '#bfc9d4' : undefined,
-                                    offsetY: 16,
-                                    formatter: (val: any) => {
-                                        return val;
-                                    },
-                                },
-                                total: {
-                                    show: true,
-                                    label: 'Total Amount',
-                                    color: '#888ea8',
-                                    fontSize: '29px',
-                                    formatter: (w: any) => {
-                                        return payments_sum
-                                    },
-                                },
-                            },
-                        },
-                    },
-                },
-                labels: ['Total Amount', 'Paid Amount', 'Unpaid Amount'],
-                states: {
-                    hover: {
-                        filter: {
-                            type: 'none',
-                            value: 0.15,
-                        },
-                    },
-                    active: {
-                        filter: {
-                            type: 'none',
-                            value: 0.15,
-                        },
-                    },
-                },
-            }
-
-        }));
-
-
 
     })
 
@@ -886,7 +868,7 @@ const Expense = () => {
                             </div>
                             <div className="mt-5 flex items-center font-semibold">
                                 <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                This month added : {thisMonthcustomerCount}
+                                {thisMonthName} month added : {thisMonthcustomerCount}
                             </div>
                         </div>
 
@@ -904,7 +886,7 @@ const Expense = () => {
                             </div>
                             <div className="mt-5 flex items-center font-semibold">
                                 <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                This Month Created : {invoiceThisMonthTotal}
+                                {thisMonthName} Month Created : {invoiceThisMonthTotal}
                             </div>
                         </div>
 
@@ -919,7 +901,7 @@ const Expense = () => {
                             </div>
                             <div className="mt-5 flex items-center font-semibold">
                                 <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                This Month added :  {expenseThisMonthTotal}
+                                {thisMonthName} Month added :  {expenseThisMonthTotal}
                             </div>
                         </div>
 
@@ -937,7 +919,7 @@ const Expense = () => {
                             </div>
                             <div className="mt-5 flex items-center font-semibold">
                                 <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                This Month : {pending_payment_this_month}
+                                {thisMonthName} Month : {pending_payment_this_month}
                             </div>
                         </div>
                     </div>
@@ -1003,7 +985,7 @@ const Expense = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {invoices.map((item, rowIndex) => (
+                                        {invoices.map((item:any, rowIndex:any) => (
                                             <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
                                                 <td>{item.customer}</td>
                                                 <td>{item.invoice_no}</td>
@@ -1062,7 +1044,7 @@ const Expense = () => {
                                                 </tr>
                                             </thead>
                                             <tbody>
-                                                {expenses.map((item, rowIndex) => (
+                                                {expenses.map((item:any, rowIndex:any) => (
                                                     <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
                                                         <td>{item.expense_user}</td>
                                                         <td>{item.date}</td>
