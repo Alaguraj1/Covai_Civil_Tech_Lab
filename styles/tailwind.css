@@ -980,3 +980,7 @@ color: white;
 :where(.css-dev-only-do-not-override-6j9yrn).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
     border: 1px solid #972e25;
 }
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-picker-dropdown .ant-picker-cell .ant-picker-cell-inner {
+    padding-left: 5px;
+}
