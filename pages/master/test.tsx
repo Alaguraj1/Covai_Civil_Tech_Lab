@@ -10,12 +10,12 @@ const Test = () => {
     const [open, setOpen] = useState(false);
     const { Search } = Input;
     const [form] = Form.useForm();
-    const [editRecord, setEditRecord] = useState(null)
+    const [editRecord, setEditRecord] = useState<any>(null)
     const [drawertitle, setDrawerTitle] = useState("Create Test")
     const [viewRecord, setViewRecord] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataSource, setDataSource] = useState([])
-    const [formFields, setFormFields] = useState([])
+    const [formFields, setFormFields] = useState<any>([])
 
     // get test 
     useEffect(() => {
