@@ -9,7 +9,7 @@ const SaleReport = () => {
 
     const [form] = Form.useForm();
     const [dataSource, setDataSource] = useState([])
-    const [slaeFormData, setSaleFormData] = useState([])
+    const [saleFormData, setSaleFormData] = useState([])
 
 
     useEffect(() => {
@@ -24,7 +24,7 @@ const SaleReport = () => {
         })
     }, [])
 
-    console.log("slaeFormData", slaeFormData)
+    console.log("slaeFormData", saleFormData)
 
 
     // Table Datas
@@ -208,7 +208,7 @@ const SaleReport = () => {
                                 style={{ width: "300px" }}
                             >
                                 <Select >
-                                    {slaeFormData?.map((value: any) => (
+                                    {saleFormData?.map((value: any) => (
                                         <Select.Option key={value.id} value={value.id}>
                                             {value.customer_name}
                                         </Select.Option>
