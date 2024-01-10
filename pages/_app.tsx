@@ -37,9 +37,11 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
     const shouldUseLayout = !pagesWithoutLayout.includes(currentPageName.toLowerCase());
     const hideHeaderFooter = pagesWithoutLayout.includes(currentPageName.toLowerCase());
   
+
     return (
       <Provider store={store}>
         <Head>
+        <link rel="icon" href="/assets/images/favicon.png" />
           <title>Covai Civil Tech Lab</title>
           <meta charSet="UTF-8" />
           <meta httpEquiv="X-UA-Compatible" content="IE=edge" />

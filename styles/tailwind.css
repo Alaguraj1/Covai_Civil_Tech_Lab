@@ -943,3 +943,40 @@ color: white;
 :where(.css-dev-only-do-not-override-6j9yrn).ant-pagination .ant-pagination-item-active:hover {
     border-color: #972e25;
 }
+
+/* datepicker */
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-picker:hover {
+    border-color: #972e25;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-picker-focused.ant-picker {
+    border-color: #972e25;
+    box-shadow: 0 0 0 2px  rgba(166, 67, 67, 0.1);
+    outline: 0;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn) a {
+    color: #972e25;
+  
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-picker-dropdown .ant-picker-today-btn {
+    color: #972e25;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-selected .ant-picker-cell-inner, :where(.css-dev-only-do-not-override-6j9yrn).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-start .ant-picker-cell-inner, :where(.css-dev-only-do-not-override-6j9yrn).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-range-end .ant-picker-cell-inner {
+    background: #972e25;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-picker-dropdown .ant-picker-today-btn:active {
+    color: #972e25;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-picker-dropdown .ant-picker-today-btn:hover {
+    color: #ab6761;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-picker-dropdown .ant-picker-cell-in-view.ant-picker-cell-today .ant-picker-cell-inner::before {
+    border: 1px solid #972e25;
+}
