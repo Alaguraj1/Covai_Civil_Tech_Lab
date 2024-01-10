@@ -94,7 +94,7 @@ console.log('✌️record --->', record);
     const showDrawer = (record: any) => {
         if (record) {
             const testRecord:any = {
-                material_name: record.id, 
+                material_name: record.material_id.toString(), 
                 test_name: record.test_name,
                 price_per_piece: record.price_per_piece,
                 id: record.id,
@@ -229,16 +229,16 @@ console.log('✌️record --->', record);
     // form submit
     const onFinish = (values: any) => {
         const Token = localStorage.getItem("token")
+console.log("editrecord", editRecord)
+
 
         if (editRecord) {
-
-
             axios.put(`http://files.covaiciviltechlab.com/edit_test/${editRecord.id}/`, values, {
                 headers: {
                     "Authorization": `Token ${Token}`
                 }
             }).then((res: any) => {
-                console.log(res)
+                console.log("response",res)
                 getTest()
                 setOpen(false);
             }).catch((err: any) => {
@@ -264,12 +264,6 @@ console.log('✌️record --->', record);
 
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
-    };
-
-    type FieldType = {
-        material_name?: string;
-        test_name?: string;
-        price_per_piece?: Number;
     };
 
 
@@ -355,7 +349,7 @@ console.log('✌️record --->', record);
                         onFinishFailed={onFinishFailed}
                         autoComplete="off"
                     >
-                        <Form.Item<FieldType>
+                        <Form.Item
                             label="Material Name"
                             name="material_name"
                             required={true}
@@ -363,14 +357,14 @@ console.log('✌️record --->', record);
                         >
                             <Select>
                                 {formFields?.materials?.map((val: any) => (
-                                    <Select.Option key={val.id} value={val.id} >
+                                    <Select.Option key={val.id} value={val.material_id} >
                                         {val.material_name}
                                     </Select.Option>
                                 ))}
                             </Select>
                         </Form.Item>
 
-                        <Form.Item<FieldType>
+                        <Form.Item
                             label="Test Name"
                             name="test_name"
                             required={true}
@@ -379,7 +373,7 @@ console.log('✌️record --->', record);
                             <Input />
                         </Form.Item>
 
-                        <Form.Item<FieldType>
+                        <Form.Item
                             label="Price"
                             name="price_per_piece"
                             required={true}

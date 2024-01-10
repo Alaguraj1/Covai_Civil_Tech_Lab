@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
-import { Space, Table, Modal } from 'antd';
+import { Space, Table, Modal, message, InputNumber } from 'antd';
 import { Button, Drawer } from 'antd';
-import {  Form, Input, Radio, DatePicker, } from 'antd';
+import { Form, Input, Radio, DatePicker, } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
 import moment from 'moment';
@@ -16,6 +16,7 @@ const Employee = () => {
     const [viewRecord, setViewRecord] = useState<any>(null)
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataSource, setDataSource] = useState([])
+    const [messageApi, contextHolder] = message.useMessage();
 
 
     useEffect(() => {
@@ -65,7 +66,7 @@ const Employee = () => {
     // drawer
     const showDrawer = (record: any) => {
         if (record) {
-            const bodyData = { ...record,  dob:moment(record.dob) , modified_date:moment(record.modified_date), joining_date:moment(record.joining_date)}
+            const bodyData = { ...record, dob: moment(record.dob), modified_date: moment(record.modified_date), joining_date: moment(record.joining_date) }
             setEditRecord(bodyData)
             form.setFieldsValue(bodyData);
 
@@ -116,7 +117,7 @@ const Employee = () => {
                     <EyeOutlined style={{ cursor: "pointer" }}
                         onClick={() => showModal(record)} className='view-icon' rev={undefined} />
 
-{
+                    {
                         localStorage.getItem('admin') === 'true' ? (
                             <EditOutlined
                                 style={{ cursor: "pointer" }}
@@ -126,7 +127,7 @@ const Employee = () => {
                             />
                         ) : (
                             <EditOutlined
-                                style={{ cursor: "pointer", display:"none" }}
+                                style={{ cursor: "pointer", display: "none" }}
                                 onClick={() => showDrawer(record)}
                                 className='edit-icon'
                                 rev={undefined}
@@ -241,17 +242,22 @@ const Employee = () => {
                     "Authorization": `Token ${Token}`
                 }
             }).then((res) => {
-                console.log(res.data)
+                console.log("response", res?.data)
                 getEmployee()
+                // Clear form fields
+                form.resetFields();
+                // Close the drawer
+                onClose();
             }).catch((error: any) => {
-                console.log(error)
+                console.log("error", error.response)
+                // alert( error.response.data.user.username)
+                messageApi.open({
+                    type: 'error',
+                    content: `${error.response.data.user.username}`,
+                });
             })
-
-            // Clear form fields
-            form.resetFields();
         }
-        // Close the drawer
-        onClose();
+
     }
     const onFinishFailed = (errorInfo: any) => {
         console.log('Failed:', errorInfo);
@@ -334,7 +340,8 @@ const Employee = () => {
 
     return (
         <>
-            <div  className='panel '>
+            <div className='panel '>
+                {contextHolder}
                 <div className='tax-heading-main'>
                     <div>
                         <h1 className='text-lg font-semibold dark:text-white-light'>Employee Details</h1>
@@ -344,7 +351,7 @@ const Employee = () => {
                         <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Employee </button>
                     </div>
                 </div>
-                <div  className='table-responsive'>
+                <div className='table-responsive'>
                     <Table dataSource={filterData} columns={columns} />
                 </div>
 
@@ -410,16 +417,16 @@ const Employee = () => {
                             required={true}
                             rules={[{ required: true, message: 'Please input your Mobile Number!' }]}
                         >
-                            <Input maxLength={10} />
+                            <InputNumber style={{ width: "100%" }} maxLength={10} />
                         </Form.Item>
 
                         <Form.Item<FieldType>
                             label="Phone Number"
                             name="phone_number"
-                            required={false}
-                            rules={[{ required: false, message: 'Please input your Phone Number!' }]}
+                            required={true}
+                            rules={[{ required: true, message: 'Please input your Phone Number!' }]}
                         >
-                            <Input maxLength={10} />
+                            <InputNumber style={{ width: "100%" }} maxLength={10} />
                         </Form.Item>
 
 
@@ -436,7 +443,7 @@ const Employee = () => {
                             required={true}
                             rules={[{ required: true, message: 'Please Select your DOB!' }]}
                         >
-                            <DatePicker style={{ width: "100%" }}  />
+                            <DatePicker style={{ width: "100%" }} />
                         </Form.Item>
 
                         <Form.Item label="Gender" name="gender"
@@ -467,9 +474,9 @@ const Employee = () => {
                             label="Salary"
                             name="salary"
                             required={true}
-                            rules={[{ required: true, message: 'Please input your Salary!' }]}
+                            rules={[{ required: true, message: 'Please input your Salary (Allowed Numbers Only 0-9)!' }]}
                         >
-                            <Input />
+                            <InputNumber style={{ width: "100%" }} />
                         </Form.Item>
 
                         <Form.Item >

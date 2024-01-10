@@ -69,6 +69,7 @@ const Tax = () => {
 
   // drawer
   const showDrawer = (record: any) => {
+console.log('✌️record --->', record);
     if (record) {
       setEditRecord(record);
       form.setFieldsValue(record); // Set form values for editing
@@ -213,6 +214,7 @@ const Tax = () => {
           "Authorization": `Token ${Token}`
         }
       }).then((res: any) => {
+console.log('✌️res --->', res);
         GetTaxData()
         console.log(res);
         setOpen(false);
@@ -345,19 +347,13 @@ const Tax = () => {
               required={true}
               rules={[
                 { required: true, message: 'This field is required.' },
-                {
-                  type: 'number',
-                  min: 0,
-                  max: 100,
-                  message: 'Please enter a valid percentage between 0 and 100.',
-                },
               ]}
             >
               <InputNumber
                 style={{ width: '100%' }}
-                formatter={value => `${value}%`}
-                parser={value => value?.replace('%', '') || ''}
-                precision={2}
+                // formatter={value => `${value}%`}
+                // parser={value => value?.replace('%', '') || ''}
+                // precision={2}
               />
             </Form.Item>
 
