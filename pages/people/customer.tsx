@@ -157,7 +157,7 @@ const Customer = () => {
                             />
                         ) : (
                             <EditOutlined
-                                style={{ cursor: "pointer", display:"none" }}
+                                style={{ cursor: "pointer", display: "none" }}
                                 onClick={() => showDrawer(record)}
                                 className='edit-icon'
                                 rev={undefined}
@@ -576,6 +576,15 @@ const Customer = () => {
                         </Form.Item>
 
                         <Form.Item<FieldType>
+                            label="Code"
+                            name="code"
+                            required={true}
+                            rules={[{ required: true, message: 'Please input code..!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item<FieldType>
                             label="Contact Person 1"
                             name="contact_person1"
                             required={false}
@@ -602,14 +611,7 @@ const Customer = () => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item<FieldType>
-                            label="Code"
-                            name="code"
-                            required={true}
-                            rules={[{ required: true, message: 'Please input code..!' }]}
-                        >
-                            <Input />
-                        </Form.Item>
+
 
 
                         <Form.Item<FieldType>
