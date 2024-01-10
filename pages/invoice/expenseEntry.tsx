@@ -1,8 +1,7 @@
-import { size } from 'lodash'
 import React, { useState, useEffect } from 'react'
 import { Space, Table, Modal } from 'antd';
 import { Button, Drawer } from 'antd';
-import { Checkbox, Form, Input, Radio, Select, DatePicker } from 'antd';
+import {  Form, Input, Select, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
 import moment from 'moment';
@@ -14,12 +13,12 @@ const ExpenseEntry = () => {
   const [open, setOpen] = useState(false);
   const { Search } = Input;
   const [form] = Form.useForm();
-  const [editRecord, setEditRecord] = useState(null);
+  const [editRecord, setEditRecord] = useState<any>(null);
   const [drawerTitle, setDrawerTitle] = useState("Create Expense")
-  const [viewRecord, setViewRecord] = useState(null)
+  const [viewRecord, setViewRecord] = useState<any>(null)
   const [dataSource, setDataSource] = useState([])
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [formFields, setFormFields] = useState([])
+  const [formFields, setFormFields] = useState<any>([])
 
   // Model 
   const showModal = (record: any) => {

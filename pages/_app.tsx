@@ -25,7 +25,7 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
   
     const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
   
-    const pagesWithoutLayout = ['preview', 'invoicereport', 'print', 'print1'];
+    const pagesWithoutLayout = ['preview', 'print', 'print1'];
   
     const currentPageName = Component.displayName || Component.name;
   

@@ -13,7 +13,7 @@ const Report = () => {
   const [open, setOpen] = useState(false);
   const { Search } = Input;
   const [form] = Form.useForm();
-  const [editRecord, setEditRecord] = useState(null)
+  const [editRecord, setEditRecord] = useState<any>(null)
   const [drawerTitle, setDrawerTitle] = useState("Create Report Templates")
   const [viewRecord, setViewRecord] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -295,7 +295,7 @@ const Report = () => {
 
   return (
     <>
-      <div>
+      <div >
         <div className='tax-heading-main'>
           <div>
             <h1 className='text-lg font-semibold dark:text-white-light'>Manage Report Templates</h1>

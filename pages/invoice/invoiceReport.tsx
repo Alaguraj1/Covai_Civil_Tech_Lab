@@ -120,92 +120,94 @@ const InvoiceReport = () => {
   };
   return (
     <>
-    <div className='panel' style={{margin:"30px"}}>
-      <div>
-        {contextHolder}
-        <Form
-          name="basic"
-          layout="vertical"
-          form={form}
-          initialValues={{ remember: true }}
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
-          autoComplete="off"
-        >
-          <Form.Item
-            label="Edit Report Template"
-            name="report_template"
-            required={false}
-          // rules={[{ required: true, message: 'Please input your Report Templates!' }]}
+      <div className='panel' style={{ margin: "30px" }}>
+        <div style={{textAlign:"end"}}>
+          <Button type="primary" onClick={() => goBack()}> Go Back </Button>
+        </div>
+
+        <div>
+          {contextHolder}
+          <Form
+            name="basic"
+            layout="vertical"
+            form={form}
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
           >
-            <div dangerouslySetInnerHTML={{ __html: editor }} style={{ display: "none" }} />
-            <Editor
-              apiKey='4nwikn94zwvps0hbggwtumfo1vauvnz2sjsw50m8ji615iqw'
-              onChange={handleEditorChange}
-              onInit={(evt, editor) => editorRef.current = editor}
-              initialValue={editor}
-              init={{
-                height: 500,
-                menubar: false,
-                plugins: [
-                  'advlist autolink lists link image charmap print preview anchor',
-                  'searchreplace visualblocks code fullscreen image',
-                  'insertdatetime media table paste code help wordcount',
-                ],
-                toolbar: 'table undo redo | formatselect | ' +
-                  'bold italic backcolor | alignleft aligncenter ' +
-                  'alignright alignjustify | bullist numlist outdent indent | ' +
-                  'removeformat | help',
-                content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-              }}
-            />
-          </Form.Item>
-          <Form.Item label="Completed" name="completed"
-            required={true}
-            rules={[{ required: true, message: 'Please Select your Gender!' }]}
-          >
-            <Radio.Group>
-              <Radio value="Yes"> Yes </Radio>
-              <Radio value="No"> No </Radio>
-            </Radio.Group>
-          </Form.Item>
+            <Form.Item
+              label="Edit Report Template"
+              name="report_template"
+              required={false}
+            // rules={[{ required: true, message: 'Please input your Report Templates!' }]}
+            >
+              <div dangerouslySetInnerHTML={{ __html: editor }} style={{ display: "none" }} />
+              <Editor
+                apiKey='4nwikn94zwvps0hbggwtumfo1vauvnz2sjsw50m8ji615iqw'
+                onChange={handleEditorChange}
+                onInit={(evt, editor) => editorRef.current = editor}
+                initialValue={editor}
+                init={{
+                  height: 500,
+                  menubar: false,
+                  plugins: [
+                    'advlist autolink lists link image charmap print preview anchor',
+                    'searchreplace visualblocks code fullscreen image',
+                    'insertdatetime media table paste code help wordcount',
+                  ],
+                  toolbar: 'table undo redo | formatselect | ' +
+                    'bold italic backcolor | alignleft aligncenter ' +
+                    'alignright alignjustify | bullist numlist outdent indent | ' +
+                    'removeformat | help',
+                  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
+                }}
+              />
+            </Form.Item>
+            <Form.Item label="Completed" name="completed"
+              required={true}
+              rules={[{ required: true, message: 'Please Select your Gender!' }]}
+            >
+              <Radio.Group>
+                <Radio value="Yes"> Yes </Radio>
+                <Radio value="No"> No </Radio>
+              </Radio.Group>
+            </Form.Item>
 
-          <Form.Item
-            label="Employee Name"
-            name="signature"
-            required={false}
-            rules={[{ required: true, message: 'Please select a Material ID!' }]}
-          >
-            <Select >
-              {invoiceReport?.signatures?.map((value: any) => (
-                <Select.Option key={value.id} value={value.id}>
-                  {value.employee_name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item >
-            <div className='form-btn-main'>
-              <Space>
-                <Button type="primary" onClick={() => goBack()}>  Go Back
+            <Form.Item
+              label="Employee Name"
+              name="signature"
+              required={false}
+              rules={[{ required: true, message: 'Please select a Material ID!' }]}
+            >
+              <Select >
+                {invoiceReport?.signatures?.map((value: any) => (
+                  <Select.Option key={value.id} value={value.id}>
+                    {value.employee_name}
+                  </Select.Option>
+                ))}
+              </Select>
+            </Form.Item>
+            <Form.Item >
+              <div className='form-btn-main'>
+                <Space>
 
-                </Button>
-                <Button type="primary" onClick={() => handlePrint()} >
-                  Print
-                </Button>
-                <Button type="primary" onClick={() => handlePrint1()} >
-                  Print Without Header
-                </Button>
-                <Button type="primary" htmlType="submit">
-                  Update
-                </Button>
-              </Space>
+                  <Button type="primary" onClick={() => handlePrint()} >
+                    Print
+                  </Button>
+                  <Button type="primary" onClick={() => handlePrint1()} >
+                    Print Without Header
+                  </Button>
+                  <Button type="primary" htmlType="submit">
+                    Update
+                  </Button>
+                </Space>
 
-            </div>
+              </div>
 
-          </Form.Item>
-        </Form>
-      </div>
+            </Form.Item>
+          </Form>
+        </div>
       </div>
     </>
   )

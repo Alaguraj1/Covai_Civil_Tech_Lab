@@ -106,17 +106,16 @@
     }
 
     .horizontal-menu .nav-link.active {
-        @apply bg-[#000]/[0.08] text-white dark:bg-[#181f32] dark:text-white-dark; background-color:#972e25 !important;
+        @apply bg-[#000]/[0.08] text-black dark:bg-[#181f32] dark:text-white-dark;
     }
 
-    .horizontal-menu .nav-link:hover{background-color:#972e25 !important; color: #fff;}
     .horizontal-menu ul.sub-menu {
         @apply absolute top-full z-[10] hidden min-w-[180px] rounded bg-white p-0 py-2 text-dark shadow dark:bg-[#1b2e4b] dark:text-white-dark;
     }
 
     .horizontal-menu ul.sub-menu a,
     .horizontal-menu ul.sub-menu button {
-        @apply flex w-full items-center justify-between px-4 py-2 hover:bg-red-100 hover:text-primary dark:hover:bg-primary/10;
+        @apply flex w-full items-center justify-between px-4 py-2 hover:bg-gray-100 hover:text-primary dark:hover:bg-primary/10;
     }
 
     .horizontal-menu ul.sub-menu a.active,
@@ -126,7 +125,7 @@
 
     .horizontal-menu > li.nav-item:hover > ul.sub-menu,
     .horizontal-menu > li.nav-item > ul.sub-menu > li:hover > ul {
-        @apply block;  
+        @apply block;
     }
 
     /* Vertical layouts */
