@@ -146,7 +146,7 @@ const InvoiceReport = () => {
               <Editor
                 apiKey='4nwikn94zwvps0hbggwtumfo1vauvnz2sjsw50m8ji615iqw'
                 onChange={handleEditorChange}
-                onInit={(evt, editor) => editorRef.current = editor}
+                onInit={(evt, editor:any) => editorRef.current = editor}
                 initialValue={editor}
                 init={{
                   height: 500,
