@@ -349,7 +349,96 @@ const Expense = () => {
     const [pending_payment_this_month, setpending_payment_this_month] = useState('')
     const [expenseMonthWise, setexpenseMonthWise] = useState([])
 
-    
+    const [categoryinitdata] = [
+        {
+            chart: {
+                height: 360,
+                type: 'bar',
+                fontFamily: 'Nunito, sans-serif',
+                toolbar: {
+                    show: false,
+                },
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                width: 2,
+                colors: ['transparent'],
+            },
+            colors: ['#5c1ac3', '#ffbb44'],
+            dropShadow: {
+                enabled: true,
+                blur: 3,
+                color: '#515365',
+                opacity: 0.4,
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    borderRadius: 8,
+                    borderRadiusApplication: 'end',
+                },
+            },
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center',
+                fontSize: '14px',
+                itemMargin: {
+                    horizontal: 8,
+                    vertical: 8,
+                },
+            },
+            grid: {
+                borderColor: isDark ? '#191e3a' : '#e0e6ed',
+                padding: {
+                    left: 20,
+                    right: 20,
+                },
+            },
+            xaxis: {
+                categories: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                axisBorder: {
+                    show: true,
+                    color: isDark ? '#3b3f5c' : '#e0e6ed',
+                },
+            },
+            yaxis: {
+                tickAmount: 6,
+                opposite: isRtl ? true : false,
+                labels: {
+                    offsetX: isRtl ? -10 : 0,
+                },
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shade: isDark ? 'dark' : 'light',
+                    type: 'vertical',
+                    shadeIntensity: 0.3,
+                    inverseColors: false,
+                    opacityFrom: 1,
+                    opacityTo: 0.8,
+                    stops: [0, 100],
+                },
+            },
+            tooltip: {
+                marker: {
+                    show: true,
+                },
+            },
+        }
+    ]
+
+
+
+    const [categoryChart, setcategoryChart] = useState({
+        series: [],
+        options: initialOptions,
+    });
+
+  
 
     const [isMounted, setIsMounted] = useState(false);
     // useEffect(() => {
@@ -416,6 +505,7 @@ const Expense = () => {
             setexpenseMonthWise(res.data.expense_amount_list)
             setexpense_amount_sum(res.data.expense_amount_sum)
             setpayments_sum(res.data.payments_sum)
+           
 
 
     setsalesByCategory((prevData) => ({
@@ -500,6 +590,101 @@ const Expense = () => {
             }
 
         }));
+
+       
+
+        setcategoryChart((prevData) => ({
+            
+            series: [
+                {
+                    name: 'Amount',
+                    data: res.data.expenses_data,
+                },
+             
+            ],
+
+            options: {
+            chart: {
+                height: 360,
+                type: 'bar',
+                fontFamily: 'Nunito, sans-serif',
+                toolbar: {
+                    show: false,
+                },
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                width: 2,
+                colors: ['transparent'],
+            },
+            colors: ['#5c1ac3', '#ffbb44'],
+            dropShadow: {
+                enabled: true,
+                blur: 3,
+                color: '#515365',
+                opacity: 0.4,
+            },
+            plotOptions: {
+                bar: {
+                    horizontal: false,
+                    columnWidth: '55%',
+                    borderRadius: 8,
+                    borderRadiusApplication: 'end',
+                },
+            },
+            legend: {
+                position: 'bottom',
+                horizontalAlign: 'center',
+                fontSize: '14px',
+                itemMargin: {
+                    horizontal: 8,
+                    vertical: 8,
+                },
+            },
+            grid: {
+                borderColor: isDark ? '#191e3a' : '#e0e6ed',
+                padding: {
+                    left: 20,
+                    right: 20,
+                },
+            },
+            xaxis: {
+                categories: res.data.expenses_name,
+                axisBorder: {
+                    show: true,
+                    color: isDark ? '#3b3f5c' : '#e0e6ed',
+                },
+            },
+            yaxis: {
+                tickAmount: 6,
+                opposite: isRtl ? true : false,
+                labels: {
+                    offsetX: isRtl ? -10 : 0,
+                },
+            },
+            fill: {
+                type: 'gradient',
+                gradient: {
+                    shade: isDark ? 'dark' : 'light',
+                    type: 'vertical',
+                    shadeIntensity: 0.3,
+                    inverseColors: false,
+                    opacityFrom: 1,
+                    opacityTo: 0.8,
+                    stops: [0, 100],
+                },
+            },
+            tooltip: {
+                marker: {
+                    show: true,
+                },
+            },
+        }
+
+        }));
+
 
 
         }).catch((error: any) => {
@@ -671,6 +856,8 @@ const Expense = () => {
                 },
             },
         });
+
+       
 
     })
 
@@ -985,7 +1172,7 @@ const Expense = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {invoices.map((item:any, rowIndex:any) => (
+                                        {invoices.map((item, rowIndex) => (
                                             <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
                                                 <td>{item.customer}</td>
                                                 <td>{item.invoice_no}</td>
@@ -1027,36 +1214,21 @@ const Expense = () => {
 
                             <div className="panel h-full">
 
-                                <div >
-                                    <div className="mb-5 flex items-center justify-between">
-                                        <h5 className="text-lg font-semibold dark:text-white-light">Recent Expenses</h5>
-                                    </div>
-                                    <div className="table-responsive">
-                                        <table>
-                                            <thead>
-                                                <tr>
-                                                    <th className="ltr:rounded-l-md rtl:rounded-r-md">Expense User</th>
-                                                    <th>Date</th>
-                                                    <th>Category</th>
-                                                    <th>Amount</th>
-
-
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                {expenses.map((item:any, rowIndex:any) => (
-                                                    <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                                        <td>{item.expense_user}</td>
-                                                        <td>{item.date}</td>
-                                                        <td>{item.expense_category_name}</td>
-
-                                                        <td>{item.amount}</td>
-                                                    </tr>
-                                                ))}
-                                            </tbody>
-                                        </table>
+                            <div className="mb-5 flex items-center">
+                                    <h5 className="text-lg font-semibold dark:text-white-light">{thisMonthName} Expense</h5>
+                                </div>
+                                <div>
+                                    <div className="rounded-lg bg-white dark:bg-black">
+                                        {isMounted ? (
+                                            <ReactApexChart options={categoryChart.options} series={categoryChart.series} type="bar" height={360} width={'100%'} />
+                                        ) : (
+                                            <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
+                                                <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
+                                            </div>
+                                        )}
                                     </div>
                                 </div>
+
                                 {/*
                                 <div className="mb-5 flex items-center">
                                     <h5 className="text-lg font-semibold dark:text-white-light">{thisMonthName} Expense</h5>
@@ -1081,9 +1253,39 @@ const Expense = () => {
                         </div>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-12">
+                    <div className="grid grid-cols-1 gap-12 mb-6">
+                        <div className="panel h-full w-full">
+                            <div className="mb-5 flex items-center justify-between">
+                                <h5 className="text-lg font-semibold dark:text-white-light">Recent Expenses</h5>
+                            </div>
+                            <div className="table-responsive">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th className="ltr:rounded-l-md rtl:rounded-r-md">Expense User</th>
+                                        <th>Date</th>
+                                        <th>Category</th>
+                                        <th>Amount</th>
 
+
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {expenses.map((item, rowIndex) => (
+                                        <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
+                                            <td>{item.expense_user}</td>
+                                            <td>{item.date}</td>
+                                            <td>{item.expense_category_name}</td>
+
+                                            <td>{item.amount}</td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </>

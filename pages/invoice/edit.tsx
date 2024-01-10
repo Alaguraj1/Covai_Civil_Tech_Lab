@@ -231,14 +231,14 @@ const Edit = () => {
             setFormData((prevState: any) => ({
                 ...prevState,
                 discount: discount,
-                before_tax: beforeTotalTax || '0', // Set your desired initial value,
+                before_tax: parseInt(beforeTotalTax,10) || '0', // Set your desired initial value,
 
             }));
         } else {
             setFormData((prevState: any) => ({
                 ...prevState,
                 discount: discount,
-                before_tax: discountedBeforeTax.toString(),
+                before_tax: parseInt(discountedBeforeTax.toString(),10),
             }));
         }
 
