@@ -52,6 +52,7 @@ useEffect(() => {
             console.log(res.data)
             localStorage.setItem("token", res?.data?.token)
             localStorage.setItem("admin", res?.data?.is_admin)
+            localStorage.setItem("user", res?.data?.name)
             router.push('/dashboard');
             messageApi.open({
                 type: 'success',

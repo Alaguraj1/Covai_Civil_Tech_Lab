@@ -12,6 +12,7 @@ import axios from "axios"
 
 const Header = () => {
     const router = useRouter();
+    const [user, setUser] = useState("")
     // useEffect(() => {
     //     const token = localStorage.getItem('token');
     //     if (!token) {
@@ -19,6 +20,12 @@ const Header = () => {
     //         router.push('/');
     //     }
     // }, [])
+
+useEffect(() => {
+    const users:any = localStorage.getItem('user')
+    setUser(users)
+},[])
+console.log("users", user)
 
     useEffect(() => {
         const selector = document.querySelector('ul.horizontal-menu a[href="' + window.location.pathname + '"]');
@@ -196,7 +203,7 @@ const Header = () => {
                     </div>
 
                     <div style={{ display: "flex" }}>
-                        <div className="dropdown shrink-0" style={{ paddingRight: "20px" }}>
+                        {/* <div className="dropdown shrink-0" style={{ paddingRight: "20px" }}>
                             <Dropdown
                                 offset={[0, 8]}
                                 placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
@@ -294,26 +301,26 @@ const Header = () => {
                                     )}
                                 </ul>
                             </Dropdown>
-                        </div>
+                        </div> */}
                         <div className="dropdown flex shrink-0">
                             <Dropdown
                                 offset={[0, 8]}
                                 placement={`${isRtl ? 'bottom-start' : 'bottom-end'}`}
                                 btnClassName="relative group block"
-                                button={<img className="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src="/assets/images/user-profile.jpeg" alt="userProfile" />}
+                                button={<img className="h-9 w-9 rounded-full object-cover saturate-50 group-hover:saturate-100" src="/assets/images/favicon.png" alt="userProfile" />}
                             >
                                 <ul className="w-[230px] !py-0 font-semibold text-dark dark:text-white-dark dark:text-white-light/90">
                                     <li>
                                         <div className="flex items-center px-4 py-4">
-                                            <img className="h-10 w-10 rounded-md object-cover" src="/assets/images/user-profile.jpeg" alt="userProfile" />
-                                            <div className="ltr:pl-4 rtl:pr-4 truncate">
+                                            <img className="h-10 w-10 rounded-md object-cover" src="/assets/images/favicon.png" alt="userProfile" />
+                                            <div className="ltr:pl-2 rtl:pr-4 truncate">
                                                 <h4 className="text-base">
-                                                    John Doe
-                                                    <span className="rounded bg-success-light px-1 text-xs text-success ltr:ml-2 rtl:ml-2">Pro</span>
+                                                  {user}
+                                                    {/* <span className="rounded bg-success-light px-1 text-xs text-success ltr:ml-2 rtl:ml-2">Pro</span> */}
                                                 </h4>
-                                                <button type="button" className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white">
+                                                {/* <button type="button" className="text-black/60 hover:text-primary dark:text-dark-light/60 dark:hover:text-white">
                                                     johndoe@gmail.com
-                                                </button>
+                                                </button> */}
                                             </div>
                                         </div>
                                     </li>
