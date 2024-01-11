@@ -164,32 +164,32 @@ const Employee = () => {
 
 
 
-    const handleDelete = (record: any) => {
-        // Implement your delete logic here
-        const Token = localStorage.getItem("token")
+    // const handleDelete = (record: any) => {
+    //     // Implement your delete logic here
+    //     const Token = localStorage.getItem("token")
 
 
-        Modal.confirm({
-            title: "Are you sure, you want to delete this EMPLOYEE record?",
-            okText: "Yes",
-            okType: "danger",
-            onOk: () => {
-                console.log(record, "values")
-                axios.delete(`http://files.covaiciviltechlab.com/delete_employee/${record.id}/`, {
-                    headers:
-                    {
-                        "Authorization": `Token ${Token}`
-                    }
-                }).then((res) => {
-                    console.log(res)
-                    getEmployee()
-                }).catch((err) => {
-                    console.log(err)
-                })
+    //     Modal.confirm({
+    //         title: "Are you sure, you want to delete this EMPLOYEE record?",
+    //         okText: "Yes",
+    //         okType: "danger",
+    //         onOk: () => {
+    //             console.log(record, "values")
+    //             axios.delete(`http://files.covaiciviltechlab.com/delete_employee/${record.id}/`, {
+    //                 headers:
+    //                 {
+    //                     "Authorization": `Token ${Token}`
+    //                 }
+    //             }).then((res) => {
+    //                 console.log(res)
+    //                 getEmployee()
+    //             }).catch((err) => {
+    //                 console.log(err)
+    //             })
 
-            },
-        });
-    };
+    //         },
+    //     });
+    // };
 
     // input search
     const [filterData, setFilterData] = useState(dataSource)
@@ -230,6 +230,7 @@ const Employee = () => {
                 console.log(res)
                 form.resetFields();
                 getEmployee()
+                onClose();
             }).catch((error) => {
                 console.log(error)
             })

@@ -886,7 +886,15 @@ color: white;
     border-color: #972e25;
 }
 
+/* antd radio box  */
+:where(.css-dev-only-do-not-override-6j9yrn).ant-radio-wrapper .ant-radio-checked .ant-radio-inner {
+    border-color: #972e25;
+    background-color: #972e25;
+}
 
+.ant-radio-wrapper:hover :where(.css-dev-only-do-not-override-6j9yrn).ant-radio-wrapper, :where(.css-dev-only-do-not-override-6j9yrn).ant-radio-wrapper:hover .ant-radio-inner {
+    border-color: #972e25;
+}
 
 /* antd btn */
 :where(.css-dev-only-do-not-override-6j9yrn).ant-btn-primary:not(:disabled):not(.ant-btn-disabled) {
