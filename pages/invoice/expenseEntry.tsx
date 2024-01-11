@@ -43,7 +43,6 @@ const ExpenseEntry = () => {
 
   const getExpenceEntry = (() => {
     const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
 
     axios.get("http://files.covaiciviltechlab.com/expense_entry_list/", {
       headers: {
@@ -56,7 +55,6 @@ const ExpenseEntry = () => {
       console.log(error)
     })
   })
-  console.log("dataSourcedataSource", dataSource)
 
 
 
@@ -72,9 +70,6 @@ const ExpenseEntry = () => {
     })
   }, [])
 
-  console.log("formFields", formFields)
-
-
 
   useEffect(() => {
     if (editRecord) {
@@ -88,7 +83,6 @@ const ExpenseEntry = () => {
 
   // drawer
   const showDrawer = (record: any) => {
-    console.log('✌️record --->', record);
 
     if (record) {
       const updateData: any = {
@@ -185,30 +179,29 @@ const ExpenseEntry = () => {
 
 
 
-  const handleDelete = (record: any,) => {
+  // const handleDelete = (record: any,) => {
 
-    const Token = localStorage.getItem("token")
+  //   const Token = localStorage.getItem("token")
 
-    Modal.confirm({
-      title: "Are you sure, you want to delete this EXPENSE ENTRY record?",
-      okText: "Yes",
-      okType: "danger",
-      onOk: () => {
-        console.log(record, "values")
-        axios.delete(`http://files.covaiciviltechlab.com/delete_expense_entry/${record.id}`, {
-          headers: {
-            "Authorization": `Token ${Token}`
-          }
-        }).then((res) => {
-          console.log(res)
-          getExpenceEntry()
-        }).catch((err) => {
-          console.log(err)
-        })
+  //   Modal.confirm({
+  //     title: "Are you sure, you want to delete this EXPENSE ENTRY record?",
+  //     okText: "Yes",
+  //     okType: "danger",
+  //     onOk: () => {
+  //       axios.delete(`http://files.covaiciviltechlab.com/delete_expense_entry/${record.id}`, {
+  //         headers: {
+  //           "Authorization": `Token ${Token}`
+  //         }
+  //       }).then((res) => {
+  //         console.log(res)
+  //         getExpenceEntry()
+  //       }).catch((err) => {
+  //         console.log(err)
+  //       })
 
-      },
-    });
-  };
+  //     },
+  //   });
+  // };
 
 
 
@@ -229,11 +222,8 @@ const ExpenseEntry = () => {
 
   // form submit
   const onFinish = (values: any,) => {
-    console.log('Success:', values);
-
 
     const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
 
     const formattedData = {
       ...values,
@@ -243,8 +233,6 @@ const ExpenseEntry = () => {
       amount: values.amount,
       narration: values.narration,
     };
-
-    console.log("formattedData", formattedData)
 
     // Check if editing or creating
     if (editRecord) {
@@ -295,7 +283,6 @@ const ExpenseEntry = () => {
     narration?: string;
     date?: string;
   };
-  // console.log("viewRecordviewRecord", viewRecord)
 
 
   // Model Data

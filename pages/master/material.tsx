@@ -44,7 +44,6 @@ const Material = () => {
 
   const getMaterial = (() => {
     const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
 
     axios.get("http://files.covaiciviltechlab.com/material_list/",
       {
@@ -62,7 +61,6 @@ const Material = () => {
   const getDropDown = (() => {
 
     const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
 
     axios.get("http://files.covaiciviltechlab.com/create_report_template/", {
       headers: {
@@ -197,32 +195,32 @@ const Material = () => {
 
 
 
-  const handleDelete = (record: any) => {
-    // Implement your delete logic here
-    const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
+  // const handleDelete = (record: any) => {
+  //   // Implement your delete logic here
+  //   const Token = localStorage.getItem("token")
+  //   console.log("TokenTokenTokenToken", Token)
 
-    Modal.confirm({
-      title: "Are you sure, you want to delete this MATERIAL record?",
-      okText: "Yes",
-      okType: "danger",
-      onOk: () => {
-        console.log("values", record)
-        axios.delete(`http://files.covaiciviltechlab.com/delete_material/${record.id}`, {
-          headers: {
-            "Authorization": `Token ${Token}`
-          }
-        }).then((res) => {
-          console.log(res)
-          getMaterial()
-        }).catch((err) => {
-          console.log(err)
-        })
+  //   Modal.confirm({
+  //     title: "Are you sure, you want to delete this MATERIAL record?",
+  //     okText: "Yes",
+  //     okType: "danger",
+  //     onOk: () => {
+  //       console.log("values", record)
+  //       axios.delete(`http://files.covaiciviltechlab.com/delete_material/${record.id}`, {
+  //         headers: {
+  //           "Authorization": `Token ${Token}`
+  //         }
+  //       }).then((res) => {
+  //         console.log(res)
+  //         getMaterial()
+  //       }).catch((err) => {
+  //         console.log(err)
+  //       })
 
-      },
+  //     },
 
-    });
-  };
+  //   });
+  // };
 
   const [filterData, setFilterData] = useState(dataSource)
 
@@ -239,10 +237,8 @@ const Material = () => {
 
   // form submit
   const onFinish = (values: any) => {
-    console.log('Success:', values);
 
     const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
 
     if (editRecord) {
       axios.put(`http://files.covaiciviltechlab.com/edit_material/${editRecord.id}/`, values, {
@@ -283,7 +279,6 @@ const Material = () => {
     material_name?: string;
   };
 
-  console.log("dataSource", dataSource)
 
 
   // modal data

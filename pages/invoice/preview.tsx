@@ -38,17 +38,13 @@ const Preview = () => {
   }, [id])
 
 
-  console.log("printData", printData)
-
   const invoiceTests = printData.invoice_tests || [];
   const totalAmount = invoiceTests.reduce((acc: any, invoiceTest: any) => {
     return acc + parseFloat(invoiceTest.total);
   }, 0);
-  console.log('Total Amount:', totalAmount);
 
 
   const TaxData: any = totalAmount * 9 / 100
-  console.log('TaxData --->', TaxData);
 
 
   const invoiceTestsTotal = invoiceTests.reduce((acc: any, item: any) => acc + parseFloat(item.total), 0);
@@ -58,7 +54,6 @@ const Preview = () => {
 
   // Combine the totals and log the result
   const TotalData = invoiceTestsTotal + taxDataValue + taxDataValue;
-  console.log('✌️TotalData --->', TotalData);
 
   return (
     <>

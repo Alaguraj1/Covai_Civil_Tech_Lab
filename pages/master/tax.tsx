@@ -42,7 +42,6 @@ const Tax = () => {
 
   const GetTaxData = (() => {
     const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
 
     axios.get("http://files.covaiciviltechlab.com/tax_list/", {
       headers: {
@@ -55,7 +54,6 @@ const Tax = () => {
       console.log(error)
     })
   })
-  console.log("dataSourcedataSource", dataSource)
 
 
   useEffect(() => {
@@ -69,7 +67,6 @@ const Tax = () => {
 
   // drawer
   const showDrawer = (record: any) => {
-console.log('✌️record --->', record);
     if (record) {
       setEditRecord(record);
       form.setFieldsValue(record); // Set form values for editing
@@ -164,30 +161,29 @@ console.log('✌️record --->', record);
 
 
 
-  const handleDelete = (record: any,) => {
+  // const handleDelete = (record: any,) => {
 
-    const Token = localStorage.getItem("token")
+  //   const Token = localStorage.getItem("token")
 
-    Modal.confirm({
-      title: "Are you sure, you want to delete this TAX record?",
-      okText: "Yes",
-      okType: "danger",
-      onOk: () => {
-        console.log(record, "values")
-        axios.delete(`http://files.covaiciviltechlab.com/delete_tax/${record.id}`, {
-          headers: {
-            "Authorization": `Token ${Token}`
-          }
-        }).then((res) => {
-          console.log(res)
-          GetTaxData()
-        }).catch((err) => {
-          console.log(err)
-        })
+  //   Modal.confirm({
+  //     title: "Are you sure, you want to delete this TAX record?",
+  //     okText: "Yes",
+  //     okType: "danger",
+  //     onOk: () => {
+  //       axios.delete(`http://files.covaiciviltechlab.com/delete_tax/${record.id}`, {
+  //         headers: {
+  //           "Authorization": `Token ${Token}`
+  //         }
+  //       }).then((res) => {
+  //         console.log(res)
+  //         GetTaxData()
+  //       }).catch((err) => {
+  //         console.log(err)
+  //       })
 
-      },
-    });
-  };
+  //     },
+  //   });
+  // };
 
 
   // Search Bar
@@ -202,11 +198,9 @@ console.log('✌️record --->', record);
 
   // form submit
   const onFinish = (values: any,) => {
-    console.log('Success:', editRecord, values);
 
 
     const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
 
     if (editRecord) {
       axios.put(`http://files.covaiciviltechlab.com/edit_tax/${editRecord.id}/`, values, {
@@ -214,9 +208,7 @@ console.log('✌️record --->', record);
           "Authorization": `Token ${Token}`
         }
       }).then((res: any) => {
-console.log('✌️res --->', res);
         GetTaxData()
-        console.log(res);
         setOpen(false);
       }).catch((error: any) => {
         console.log(error);
@@ -304,7 +296,6 @@ console.log('✌️res --->', res);
     return data;
   };
 
-  console.log("ilterDatailterData", filterData)
   return (
     <>
       <div className='panel'>

@@ -30,7 +30,6 @@ const Print = () => {
     }, [id]);
 
 
-    console.log("invoiceReport", invoiceReport)
     return (
         <>
             <div style={{padding:"50px 100px"}}>

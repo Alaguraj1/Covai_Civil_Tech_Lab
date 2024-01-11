@@ -25,7 +25,6 @@ useEffect(() => {
     const users:any = localStorage.getItem('user')
     setUser(users)
 },[])
-console.log("users", user)
 
     useEffect(() => {
         const selector = document.querySelector('ul.horizontal-menu a[href="' + window.location.pathname + '"]');
@@ -147,7 +146,6 @@ console.log("users", user)
             content: 'Do you Want to Logout ?',
             onOk() {
                 const Token = localStorage.getItem("token")
-                console.log("TokenTokenTokenToken", Token)
 
                 if (!Token) {
                     // Handle the case where the token is missing, e.g., redirect to login

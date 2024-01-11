@@ -34,7 +34,6 @@ const Invoice = () => {
             console.log(error)
         })
     })
-    console.log("datasource", dataSource)
 
 
     useEffect(() => {
@@ -49,7 +48,6 @@ const Invoice = () => {
         })
     }, [])
 
-    console.log("formFields", formFields)
 
 
 
@@ -152,31 +150,30 @@ const Invoice = () => {
         window.location.href = `/invoice/edit?id=${record.id}`;
     };
 
-    const handleDelete = (record: any) => {
-        // Implement your delete logic here
-        console.log(`Delete record with key ${record}`);
+    // const handleDelete = (record: any) => {
+    //     // Implement your delete logic here
 
-        Modal.confirm({
-            title: "Are you sure, you want to delete this TAX record?",
-            okText: "Yes",
-            okType: "danger",
-            onOk: () => {
-                console.log(record, "values")
-                axios.delete(`http://files.covaiciviltechlab.com/delete_invoice/${record.id}`, {
-                    headers: {
-                        "Authorization": `Token ${localStorage.getItem("token")}`
-                    }
-                }).then((res) => {
-                    console.log(res)
-                    getInvoice()
-                }).catch((err: any) => {
-                    console.log(err)
-                })
+    //     Modal.confirm({
+    //         title: "Are you sure, you want to delete this TAX record?",
+    //         okText: "Yes",
+    //         okType: "danger",
+    //         onOk: () => {
+    //             console.log(record, "values")
+    //             axios.delete(`http://files.covaiciviltechlab.com/delete_invoice/${record.id}`, {
+    //                 headers: {
+    //                     "Authorization": `Token ${localStorage.getItem("token")}`
+    //                 }
+    //             }).then((res) => {
+    //                 console.log(res)
+    //                 getInvoice()
+    //             }).catch((err: any) => {
+    //                 console.log(err)
+    //             })
 
-            },
+    //         },
 
-        });
-    };
+    //     });
+    // };
 
     // input search
     const [filterData, setFilterData] = useState(dataSource)
@@ -195,7 +192,6 @@ const Invoice = () => {
     // form submit
     const onFinish = (values: any) => {
         const Token = localStorage.getItem("token");
-        console.log("valuesvaluesvaluesvaluesvalues", values)
 
         const body = {
             customer: values.customer,
@@ -247,7 +243,6 @@ const Invoice = () => {
         // Update the state with the selected customer's address
         setSelectedCustomerId(customerId);
         setCustomerAddress(selectedCustomer?.address1 || '');
-        console.log("customerAddress", customerAddress)
     };
 
     return (

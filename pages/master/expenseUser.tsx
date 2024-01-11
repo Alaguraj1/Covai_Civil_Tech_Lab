@@ -34,7 +34,6 @@ const ExpenseUser = () => {
             console.log(error)
         })
     })
-    console.log("dataSource", dataSource)
 
     const showModal = (record: any) => {
         setIsModalOpen(true);
@@ -188,9 +187,6 @@ const ExpenseUser = () => {
             })
         }
 
-
-
-        console.log('Success:', values);
         form.resetFields();
 
     };

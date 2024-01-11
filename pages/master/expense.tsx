@@ -31,7 +31,6 @@ const Expense = () => {
         "Authorization": `Token ${Token}`
       }
     }).then((res) => {
-      console.log(res.data)
       setDataSource(res.data)
       setFilterData(res.data)
     }).catch((error: any) => {
@@ -171,7 +170,6 @@ const Expense = () => {
       okText: "Yes",
       okType: "danger",
       onOk: () => {
-        console.log(record, "values")
         axios.delete(`http://files.covaiciviltechlab.com/delete_expense/${record.id}/`, {
           headers: {
             "Authorization": `Token ${Token}`
@@ -227,11 +225,7 @@ const Expense = () => {
         console.log(err)
       })
     }
-
-
-    console.log('Success:', values);
     form.resetFields();
-
   };
 
   const onFinishFailed = (errorInfo: any) => {
@@ -289,7 +283,6 @@ const Expense = () => {
     return data;
   };
 
-  console.log("viewRecord", viewRecord)
   return (
     <>
       <div className='panel'>

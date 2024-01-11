@@ -56,7 +56,6 @@ const Test = () => {
 
 
     const showModal = (record: any) => {
-console.log('✌️record --->', record);
         const testRecord = {
             material_name: record?.material_name,
             test_name: record.test_name,
@@ -229,7 +228,6 @@ console.log('✌️record --->', record);
     // form submit
     const onFinish = (values: any) => {
         const Token = localStorage.getItem("token")
-console.log("editrecord", editRecord)
 
 
         if (editRecord) {
@@ -258,8 +256,6 @@ console.log("editrecord", editRecord)
                 console.log(err)
             })
         }
-
-        console.log('Success:', values);
     };
 
     const onFinishFailed = (errorInfo: any) => {

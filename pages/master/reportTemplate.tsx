@@ -25,7 +25,6 @@ const Report = () => {
   // get Method 
   useEffect(() => {
     const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
 
     axios.get("http://files.covaiciviltechlab.com/create_report_template/", {
       headers: {
@@ -38,7 +37,6 @@ const Report = () => {
     })
   }, [])
 
-  console.log("formFields", formFields)
 
 
   // Get Method
@@ -48,7 +46,6 @@ const Report = () => {
 
   const getTemplate = (() => {
     const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
 
     axios.get("http://files.covaiciviltechlab.com/report_template_list/", {
       headers: {
@@ -61,7 +58,6 @@ const Report = () => {
       console.log(error)
     })
   })
-  console.log("dataSource", dataSource)
 
 
   // editor
@@ -160,7 +156,6 @@ const Report = () => {
       okText: "Yes",
       okType: "danger",
       onOk: () => {
-        console.log(record, "values")
         axios.delete(`http://files.covaiciviltechlab.com/delete_report_template/${record?.id}/`,
           {
             headers: {
@@ -191,7 +186,6 @@ const Report = () => {
 
   // form submit
   const onFinish = (values: any) => {
-    console.log('✌️values --->', values);
     const templateText = values?.template;
 
     const body = {
@@ -291,7 +285,6 @@ const Report = () => {
     return data;
   };
 
-  console.log("editoreditoreditor", editor)
 
   return (
     <>

@@ -38,8 +38,6 @@ const Employee = () => {
         })
     })
 
-    console.log("datasource", dataSource)
-
     const showModal = (record: any) => {
         setIsModalOpen(true);
         setViewRecord(record)
@@ -208,10 +206,8 @@ const Employee = () => {
 
     // form submit
     const onFinish = (values: any) => {
-        console.log('Success:', values);
 
         const Token = localStorage.getItem("token")
-
 
         const formattedData = {
             ...values,
@@ -243,7 +239,6 @@ const Employee = () => {
                     "Authorization": `Token ${Token}`
                 }
             }).then((res) => {
-                console.log("response", res?.data)
                 getEmployee()
                 // Clear form fields
                 form.resetFields();

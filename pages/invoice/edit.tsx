@@ -103,7 +103,6 @@ const Edit = () => {
             }
         }).then((res) => {
             let response = res.data;
-            console.log('✌️response --->', response);
             let mergeArray: any = [response.customer, ...response.customers];
             const uniqueArray = mergeArray.reduce((acc: any, obj: any) => {
                 const existingObj = acc.find((item: any) => item.id === obj.id);
@@ -139,7 +138,6 @@ const Edit = () => {
             const beforetax: any = response?.invoice_tests.reduce((total: any, test: any) => total + parseFloat(test.total), 0)
             const discountedAmount = (beforetax * response.invoice.discount) / 100;
             const discountedBeforeTax = response.invoice.discount !== 0 ? beforetax - discountedAmount : beforetax;
-            console.log('✌️discountedBeforeTax --->', discountedBeforeTax);
             setUpdateBeforeTax(discountedBeforeTax)
             setBeforeTotalTax(beforetax)
             // -------------------------------------------------------------------------------------------
@@ -258,7 +256,7 @@ const Edit = () => {
 
         let sum = 0;
 
-        invoiceFormData.taxs.forEach((item:any) => {
+        invoiceFormData.taxs.forEach((item: any) => {
             if (checkedItem[item.id]) {
                 sum += parseFloat(item.tax_percentage);
             }
@@ -266,7 +264,7 @@ const Edit = () => {
 
         setUpdatedSum(sum)
 
-        const finals:any = (beforeTax * sum) / 100
+        const finals: any = (beforeTax * sum) / 100
 
 
         setCheckedItems(checkedItem);
@@ -284,7 +282,7 @@ const Edit = () => {
         const totalPer = sum * beforeTax / 100
 
         //After tax
-        const After_tax:any = updateBeforeTax + totalPer;
+        const After_tax: any = updateBeforeTax + totalPer;
         setAfterTax(parseInt(After_tax, 10))
         // -------------------------------------------------------------------------------------------------------
 
@@ -316,7 +314,6 @@ const Edit = () => {
             console.log(error)
         })
     }, [])
-    // console.log("testFormData", testFormData)
 
     // modal
     const showModal = () => {
@@ -356,28 +353,12 @@ const Edit = () => {
                 price: test.price_per_piece
             })) ?? [];
         setFilterMaterial(filteredMaterial);
-        // console.log("filteredMaterial", filteredMaterial);
     };
 
 
-    // console.log("FilterMaterial", filterMaterial)
-
-
-
-    // const removeItem = (item: any = null) => {
-    //     setItems(items.filter((d: any) => d.id !== item.id));
-    // };
-
-
-    // console.log("invoiceFormData", invoiceFormData)
     const onFinish = (values: any) => {
-        // console.log('✌️values --->', values);
-        // Assuming 'id' and 'filterTest' are properties you want to include in the request
+     
         values.invoice = Number(id);
-
-        // const requestData = { ...values };
-
-        // console.log("filterTest", filterTest)
         const body: any = {
             ...values,
             tests: filterTest.map((item: any) => ({
@@ -388,8 +369,6 @@ const Edit = () => {
                 total: Number(item.total.toFixed(2))
             }))
         }
-
-        // console.log('✌️body --->', body);
 
         axios.post('http://files.covaiciviltechlab.com/create_invoice_test/', body?.tests, {
             headers: {
@@ -416,12 +395,10 @@ const Edit = () => {
 
 
     const quantityChange = ((e: any, index: number) => {
-        // console.log('✌️e --->', e, index);
-        const updatedFilterTest: any = [...filterTest]; // Create a copy of the array
+        const updatedFilterTest: any = [...filterTest]; 
         const filterItem: any = updatedFilterTest[index];
 
         if (filterItem) {
-            // Check if the item at the specified index exists
             const updatedItem = {
                 ...filterItem,
                 quantity: Number(e),
@@ -483,7 +460,6 @@ const Edit = () => {
             "date": formData.date,
             "place_of_testing": formData.place_of_testing
         }
-        console.log('✌️body --->', body);
         axios.put(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`, body, {
             headers: {
                 'Authorization': `Token ${Token}`,
@@ -515,10 +491,9 @@ const Edit = () => {
         const selectedCustomer = invoiceFormData?.customers?.find((customer: any) => customer.id == Number(e.target.value));
 
         setCustomerAddress(selectedCustomer?.address1 || '');
-        setFormData((prevState:any) => ({
+        setFormData((prevState: any) => ({
             ...prevState,
             customer: selectedCustomer.id
-
         }));
 
 
@@ -532,7 +507,6 @@ const Edit = () => {
 
         var id: any = id;
         var url = `/invoice/preview?id=${id}`;
-
         window.open(url, '_blank');
 
     };
@@ -568,6 +542,7 @@ const Edit = () => {
                         "Authorization": `Token ${Token}`
                     }
                 }).then((res) => {
+                    console.log('✌️res --->', res);
                     getInvoiceTestData()
                 }).catch((err) => {
                     console.log(err)
@@ -589,7 +564,6 @@ const Edit = () => {
                 "Authorization": `Token ${Token}`
             }
         }).then((res: any) => {
-            console.log('✌️res --->', res);
             getInvoiceTestData()
             setOpen(false);
         }).catch((error: any) => {
@@ -616,14 +590,6 @@ const Edit = () => {
             total: value * quantity,
         });
     };
-
-    // invoice test Edit
-    // const handleEditClick = (item: any) => {
-    //     // Handle the edit click for the specific ID (item.id)
-    //     console.log(`Edit clicked for ID: ${item}`);
-    //     // Add your logic here, for example, open a modal for editing
-    // };
-
 
     // Print
     const handlePrint = (item: any) => {

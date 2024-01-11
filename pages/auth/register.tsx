@@ -40,7 +40,6 @@ const Register = () => {
     const submitForm = (e: any) => {
         e.preventDefault();
         router.push('/');
-        console.log("formData", formData)
     };
 
     // const isRtl = useSelector((state: IRootState) => state.themeConfig.rtlClass) === 'rtl' ? true : false;

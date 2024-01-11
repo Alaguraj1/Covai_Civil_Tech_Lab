@@ -42,7 +42,6 @@ const PendingPayment = () => {
 
   const GetTaxData = (() => {
     const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
 
     axios.get("http://files.covaiciviltechlab.com/pending_payment", {
       headers: {
@@ -55,7 +54,6 @@ const PendingPayment = () => {
       console.log(error)
     })
   })
-  console.log("dataSourcedataSource", dataSource)
 
   //   useEffect(() => {
   //     axios.get("http://files.covaiciviltechlab.com/pending_payment", {

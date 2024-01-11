@@ -54,8 +54,6 @@ const Customer = () => {
         })
     })
 
-    console.log("dataSource", dataSource)
-
     const showModal = (record: any) => {
         setIsModalOpen(true);
         setViewRecord(record)
@@ -231,7 +229,6 @@ const Customer = () => {
 
     // form submit
     const onFinish = (values: any) => {
-        console.log('Success:', values);
 
         // Check if editing or creating
         if (editRecord) {

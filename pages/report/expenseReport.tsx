@@ -21,7 +21,6 @@ const ExpenseReport = () => {
 
   const GetExpenseReport = (() => {
     const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
 
     axios.get("http://files.covaiciviltechlab.com/expense_report/", {
       headers: {
@@ -34,7 +33,6 @@ const ExpenseReport = () => {
       console.log(error)
     })
   })
-  console.log("dataSourcedataSource", dataSource)
 
 
   // Table Headers

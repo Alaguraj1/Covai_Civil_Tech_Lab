@@ -24,7 +24,6 @@ const SaleReport = () => {
         })
     }, [])
 
-    console.log("slaeFormData", saleFormData)
 
 
     // Table Datas
@@ -117,7 +116,6 @@ const SaleReport = () => {
             "to_date": values?.to_date ? moment(values?.to_date).format('YYYY-MM-DD') : "",
             "customer": values.customer ? values.customer : "",
         };
-        console.log('✌️body --->', body);
 
         axios.post("http://files.covaiciviltechlab.com/sale_report/", body, {
             headers: {

@@ -43,13 +43,11 @@ const InvoiceReport = () => {
     getTestReport()
   }, [id])
 
-  console.log("invoiceReport", invoiceReport)
 
 
 
   // form submit
   const onFinish = (value: any) => {
-    console.log("editoreditor", editor)
 
     const body = {
       report_template: editor,
@@ -64,7 +62,6 @@ const InvoiceReport = () => {
       },
     }).then((res) => {
       getTestReport()
-      console.log("Report template updated successfully:", res.data);
       messageApi.open({
         type: 'success',
         content: 'Invoice Report Successfully Updated',
@@ -85,13 +82,10 @@ const InvoiceReport = () => {
 
 
   const handleEditorChange = (value: any) => {
-    // console.log('✌️value --->', value);
     setEditor(value.level.content);
   };
 
-  console.log("editor", editor)
 
-  console.log("invoiceReport", invoiceReport)
   // Print
   const handlePrint = () => {
 
@@ -101,7 +95,6 @@ const InvoiceReport = () => {
     window.open(url, '_blank');
   };
 
-  console.log("invoiceReport", invoiceReport)
 
 
   // Print

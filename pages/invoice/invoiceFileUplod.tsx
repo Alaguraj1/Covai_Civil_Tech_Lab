@@ -43,7 +43,6 @@ const InvoiceFileUpload = () => {
 
   const getFileUpload = (() => {
     const Token = localStorage.getItem("token")
-    console.log("TokenTokenTokenToken", Token)
 
     axios.get("http://files.covaiciviltechlab.com/invoice_file_upload_list/", {
       headers: {
@@ -56,7 +55,6 @@ const InvoiceFileUpload = () => {
       console.log(error)
     })
   })
-  console.log("dataSourcedataSource", dataSource)
 
 
 
@@ -87,7 +85,6 @@ const InvoiceFileUpload = () => {
 
   // drawer
   const showDrawer = (record: any) => {
-console.log('✌️record --->', record);
     if (record) {
       setEditRecord(record);
       form.setFieldsValue({
@@ -192,7 +189,6 @@ console.log('✌️record --->', record);
       okText: "Yes",
       okType: "danger",
       onOk: () => {
-        console.log(record, "values")
         axios.delete(`http://files.covaiciviltechlab.com/delete_invoice_file_upload/${record.id}`, {
           headers: {
             "Authorization": `Token ${Token}`
@@ -224,12 +220,8 @@ const [filterData, setFilterData] = useState(dataSource)
 
   // form submit
   const onFinish = (values: any) => {
-    console.log('✌️values --->', values);
-    // console.log('Success:', editRecord, values);
 
     const Token = localStorage.getItem("token");
-    console.log("TokenTokenTokenToken", Token);
-
 
     // Create a FormData object to send files
     const formData = new FormData();
@@ -293,7 +285,6 @@ const [filterData, setFilterData] = useState(dataSource)
     file?: string;
     category?: string;
   };
-  // console.log("viewRecordviewRecord", viewRecord)
 
 
   // Model Data
@@ -316,7 +307,6 @@ const [filterData, setFilterData] = useState(dataSource)
       }).format(date);
     };
 
-    console.log("viewRecord", viewRecord)
 
     const data = [
       {

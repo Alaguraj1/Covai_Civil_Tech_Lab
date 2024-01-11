@@ -29,8 +29,6 @@ const Print1 = () => {
         getTestReport();
     }, [id]);
 
-
-    console.log("invoiceReport", invoiceReport)
     return (
         <>
             <div style={{padding:"50px 100px"}}>
