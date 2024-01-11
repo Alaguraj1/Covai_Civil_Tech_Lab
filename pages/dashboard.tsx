@@ -9,6 +9,8 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), {
     ssr: false,
 });
 import { useRouter } from 'next/router';
+import moment from 'moment';
+import dayjs from 'dayjs';
 
 
 const Expense = () => {
@@ -1013,7 +1015,7 @@ const Expense = () => {
                                         {expenses.map((item: any, rowIndex) => (
                                             <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
                                                 <td>{item.expense_user}</td>
-                                                <td>{item.date}</td>
+                                                <td>{dayjs(item.date).format('MMMM DD, YYYY')}</td>
                                                 <td>{item.expense_category_name}</td>
 
                                                 <td>{item.amount}</td>

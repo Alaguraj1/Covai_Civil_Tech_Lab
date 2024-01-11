@@ -268,20 +268,21 @@ const Preview = () => {
                 <img src={printData?.invoice?.qr} style={{ textAlign: "center", width: "25%" }} alt='image' />
               </div></div>
               <div className="text-right grid-cols-9 space-y-1 mt-0 text-white-dark text-right text-sm">
-              <img src="/assets/images/signature.png" alt="img" style={{ marginLeft: "auto" }} />
-              <b style={{ textAlign: "right" }}>THIRUMALAI.</b>
-                  <br />
-                  TECHNICAL DIRECTOR
+                <img src="/assets/images/signature.png" alt="img" style={{ marginLeft: "auto" }} />
+                <b style={{ textAlign: "right" }}>THIRUMALAI.</b>
+                <br />
+                TECHNICAL DIRECTOR
                 <img src="/assets/images/logo_3.jpg" alt="img" style={{ marginLeft: "auto" }} />
                 <div className="space-y-1 mt-0 text-white-dark text-right text-sm">
 
 
-                  <br />  <b>Phone</b> :  9840014193 <br></br>
-                  <br /> <i><b>Email :</b> cbe@covaiciviltechlab.com </i> | <i><b>Website : </b>www.covaiciviltechlab.com</i>
+                  <br />  <b>Phone</b> :  9840014193 |<br />
+                  <i><b>Email :</b> cbe@covaiciviltechlab.com </i> |<br />
+                  <i><b>Website : </b>www.covaiciviltechlab.com</i>
                   <br></br>
 
 
-                 
+
 
 
                 </div>

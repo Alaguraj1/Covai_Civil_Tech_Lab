@@ -5,7 +5,7 @@ import { Form, Input, Select, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
 import moment from 'moment';
-
+import dayjs from 'dayjs';
 
 
 const ExpenseEntry = () => {
@@ -83,11 +83,12 @@ const ExpenseEntry = () => {
 
   // drawer
   const showDrawer = (record: any) => {
+console.log('✌️record --->', record);
 
     if (record) {
       const updateData: any = {
         amount: record.amount,
-        date: moment(record.date, 'YYYY-MM-DDTHH:mm:ssZ'),        
+        date:dayjs(record?.date),        
         expense_category: record.expense_category,
         expense_user: record.expense_user,
         id: record.id,
@@ -228,7 +229,7 @@ const ExpenseEntry = () => {
     const formattedData = {
       ...values,
       expense_user: values.expense_user,
-      date: moment(values.date).format('YYYY-MM-DDTHH:mm:ss[Z]'), // Updated date formatting
+      date: dayjs(values.date), // Updated date formatting
       expense_category: values.expense_category,
       amount: values.amount,
       narration: values.narration,
@@ -348,6 +349,11 @@ const ExpenseEntry = () => {
   };
 
 
+  const HandleDateChange = (date:any , dateString:any) => {
+console.log('✌️date --->', date);
+    console.log(date, dateString);
+  };
+
   return (
     <>
       <div className='panel'>
@@ -421,7 +427,7 @@ const ExpenseEntry = () => {
             <Form.Item label="Date" name="date"
               required={true}
               rules={[{ required: true, message: 'Please input your Date!' }]}>
-              <DatePicker style={{ width: "100%" }} />
+              <DatePicker style={{ width: "100%" }} onChange={HandleDateChange}/>
             </Form.Item>
 
             <Form.Item >
