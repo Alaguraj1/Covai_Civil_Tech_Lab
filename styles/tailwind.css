@@ -932,6 +932,21 @@ color: white;
     border-start-end-radius: 0px;
 }
 
+/* input number */
+:where(.css-dev-only-do-not-override-6j9yrn).ant-input-number:hover {
+    border-color: #972e25;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-input-number:focus, :where(.css-dev-only-do-not-override-6j9yrn).ant-input-number:focus-within {
+    border-color: #972e25;
+    box-shadow: 0 0 0 2px rgba(166, 67, 67, 0.1);
+    outline: 0;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-input-number .ant-input-number-handler:hover .ant-input-number-handler-up-inner, :where(.css-dev-only-do-not-override-6j9yrn).ant-input-number .ant-input-number-handler:hover .ant-input-number-handler-down-inner {
+    color: #972e25;
+}
+
 
 /* Select Option */
 
