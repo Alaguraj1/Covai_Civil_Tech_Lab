@@ -1,24 +1,9 @@
-import { size } from 'lodash'
 import React, { useEffect, useState } from 'react'
-import { Space, Table, Modal } from 'antd';
-import { Button, Drawer } from 'antd';
-import { Checkbox, Form, Input } from 'antd';
-import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
-import Dropdown from 'components/Dropdown';
-import { useDispatch, useSelector } from 'react-redux';
-import IconHorizontalDots from '@/components/Icon/IconHorizontalDots';
+import { useSelector } from 'react-redux';
 import IconEye from '@/components/Icon/IconEye';
-import IconBitcoin from '@/components/Icon/IconBitcoin';
-import IconEthereum from '@/components/Icon/IconEthereum';
-import IconLitecoin from '@/components/Icon/IconLitecoin';
-import IconBinance from '@/components/Icon/IconBinance';
-import IconTether from '@/components/Icon/IconTether';
-import IconSolana from '@/components/Icon/IconSolana';
-import IconCircleCheck from '@/components/Icon/IconCircleCheck';
-import IconInfoCircle from '@/components/Icon/IconInfoCircle';
 import Link from 'next/link';
-import IconMultipleForwardRight from '@/components/Icon/IconMultipleForwardRight';
+import { IRootState } from '../store';
 import dynamic from 'next/dynamic';
 const ReactApexChart = dynamic(() => import('react-apexcharts'), {
     ssr: false,
@@ -29,30 +14,17 @@ import { useRouter } from 'next/router';
 const Expense = () => {
 
     const router = useRouter();
-
-    const [open, setOpen] = useState(false);
-    const { Search } = Input;
-    const [form] = Form.useForm();
-    const [editRecord, setEditRecord] = useState(null)
-    const [drawerTitle, setDrawerTitle] = useState("Create Expense")
-    const [viewRecord, setViewRecord] = useState<any>(null)
-    const [isModalOpen, setIsModalOpen] = useState(false);
-    const [dataSource, setDataSource] = useState([])
     const [customerCount, setCustomerCount] = useState('')
     const [thisMonthcustomerCount, setthisMonthcustomerCount] = useState('')
 
     const [invoiceTotal, setInvoiceTotal] = useState('')
     const [invoiceThisMonthTotal, setInvoiceThisMonthTotal] = useState('')
-
     const [expenseTotal, setExpenseTotal] = useState('')
     const [expenseThisMonthTotal, setExpenseThisMonthTotal] = useState('')
     const [thisMonthName, setthisMonthName] = useState('This')
-
-    const [paymentsData, setPayments] = useState([])
     const [invoiceMonthData, setInvoiceMonthData] = useState([])
     const [invoices, setinvoices] = useState([])
     const [expenses, setexpenses] = useState([])
-
     const [expense_amount_sum, setexpense_amount_sum] = useState(0)
 
 
@@ -316,7 +288,7 @@ const Expense = () => {
                                     return val;
                                 },
                             },
-                       
+
                         },
                     },
                 },
@@ -433,24 +405,15 @@ const Expense = () => {
 
 
 
-    const [categoryChart, setcategoryChart] = useState({
+    const [categoryChart, setcategoryChart] = useState<any>({
         series: [],
         options: initialOptions,
     });
 
-  
+
 
     const [isMounted, setIsMounted] = useState(false);
-    // useEffect(() => {
-    //     setIsMounted(true);
 
-    // });
-
-    // useEffect(() => {
-    //     getExpense()
-
-
-    // }, [])
     useEffect(() => {
         setIsMounted(true);
         getExpense()
@@ -460,19 +423,7 @@ const Expense = () => {
 
         updateChart()
 
-    }, [payments_sum,expenseMonthWise, invoiceMonthData])
-
-    const headers = {
-        'Content-Type': 'application/json',
-        'Accept': '*/*',
-        'Referrer-Policy': 'same-origin',
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Origin, X-Requested-With, Content-Type, Accept',
-        // Adjust the content type based on your API's requirements
-        // Add any additional headers here
-        // 'Authorization': 'Bearer YourAccessToken',
-        // ...
-    };
+    }, [payments_sum, expenseMonthWise, invoiceMonthData])
 
 
     const getExpense = (() => {
@@ -483,8 +434,6 @@ const Expense = () => {
                 "Authorization": `Token ${Token}`
             }
         }).then((res) => {
-            setDataSource(res.data)
-            setFilterData(res.data)
             setCustomerCount(res.data.customer_count)
             setthisMonthcustomerCount(res.data.this_month_customer_count)
             setInvoiceTotal(res.data.this_month_generated_invoice)
@@ -497,7 +446,6 @@ const Expense = () => {
             setTotal(res.data.total_amount)
             setPaid(res.data.paid_amount)
             setUnPaid(res.data.banlance_amount)
-            setPayments(res.data.paymments)
             setInvoiceMonthData(res.data.payments)
             setthisMonthName(res.data.this_month_name)
             setinvoices(res.data.invoices)
@@ -505,187 +453,183 @@ const Expense = () => {
             setexpenseMonthWise(res.data.expense_amount_list)
             setexpense_amount_sum(res.data.expense_amount_sum)
             setpayments_sum(res.data.payments_sum)
-           
 
 
-    setsalesByCategory((prevData) => ({
-            
-            series: invoiceMonthData,
-            options: {
-                chart: {
-                    type: 'donut',
-                    height: 460,
-                    fontFamily: 'Nunito, sans-serif',
-                },
-                dataLabels: {
-                    enabled: false,
-                },
-                stroke: {
-                    show: true,
-                    width: 25,
-                    colors: isDark ? '#0e1726' : '#fff',
-                },
-                colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
-                legend: {
-                    position: 'bottom',
-                    horizontalAlign: 'center',
-                    fontSize: '14px',
-                    markers: {
-                        width: 10,
-                        height: 10,
-                        offsetX: -2,
+
+            setsalesByCategory((prevData) => ({
+
+                series: invoiceMonthData,
+                options: {
+                    chart: {
+                        type: 'donut',
+                        height: 460,
+                        fontFamily: 'Nunito, sans-serif',
                     },
-                    height: 50,
-                    offsetY: 20,
-                },
-                plotOptions: {
-                    pie: {
-                        donut: {
-                            size: '65%',
-                            background: 'transparent',
-                            labels: {
-                                show: true,
-                                name: {
+                    dataLabels: {
+                        enabled: false,
+                    },
+                    stroke: {
+                        show: true,
+                        width: 25,
+                        colors: isDark ? '#0e1726' : '#fff',
+                    },
+                    colors: isDark ? ['#5c1ac3', '#e2a03f', '#e7515a', '#e2a03f'] : ['#e2a03f', '#5c1ac3', '#e7515a'],
+                    legend: {
+                        position: 'bottom',
+                        horizontalAlign: 'center',
+                        fontSize: '14px',
+                        markers: {
+                            width: 10,
+                            height: 10,
+                            offsetX: -2,
+                        },
+                        height: 50,
+                        offsetY: 20,
+                    },
+                    plotOptions: {
+                        pie: {
+                            donut: {
+                                size: '65%',
+                                background: 'transparent',
+                                labels: {
                                     show: true,
-                                    fontSize: '29px',
-                                    offsetY: -10,
-                                },
-                                value: {
-                                    show: true,
-                                    fontSize: '26px',
-                                    color: isDark ? '#bfc9d4' : undefined,
-                                    offsetY: 16,
-                                    formatter: (val: any) => {
-                                        return val;
+                                    name: {
+                                        show: true,
+                                        fontSize: '29px',
+                                        offsetY: -10,
                                     },
-                                },
-                                total: {
-                                    show: true,
-                                    label: 'Total Amount',
-                                    color: '#888ea8',
-                                    fontSize: '29px',
-                                    formatter: (w: any) => {
-                                        return res.data.payments_sum
+                                    value: {
+                                        show: true,
+                                        fontSize: '26px',
+                                        color: isDark ? '#bfc9d4' : undefined,
+                                        offsetY: 16,
+                                        formatter: (val: any) => {
+                                            return val;
+                                        },
+                                    },
+                                    total: {
+                                        show: true,
+                                        label: 'Total Amount',
+                                        color: '#888ea8',
+                                        fontSize: '29px',
+                                        formatter: (w: any) => {
+                                            return res.data.payments_sum
+                                        },
                                     },
                                 },
                             },
                         },
                     },
-                },
-                labels: ['Total Amount', 'Paid Amount', 'Unpaid Amount'],
-                states: {
-                    hover: {
-                        filter: {
-                            type: 'none',
-                            value: 0.15,
+                    labels: ['Total Amount', 'Paid Amount', 'Unpaid Amount'],
+                    states: {
+                        hover: {
+                            filter: {
+                                type: 'none',
+                                value: 0.15,
+                            },
+                        },
+                        active: {
+                            filter: {
+                                type: 'none',
+                                value: 0.15,
+                            },
                         },
                     },
-                    active: {
-                        filter: {
-                            type: 'none',
-                            value: 0.15,
+                }
+            }));
+
+
+            setcategoryChart(() => ({
+
+                series: [
+                    {
+                        name: 'Amount',
+                        data: res.data.expenses_data,
+                    },
+
+                ],
+
+                options: {
+                    chart: {
+                        height: 360,
+                        type: 'bar',
+                        fontFamily: 'Nunito, sans-serif',
+                        toolbar: {
+                            show: false,
                         },
                     },
-                },
-            }
+                    dataLabels: {
+                        enabled: false,
+                    },
+                    stroke: {
+                        width: 2,
+                        colors: ['transparent'],
+                    },
+                    colors: ['#5c1ac3', '#ffbb44'],
+                    dropShadow: {
+                        enabled: true,
+                        blur: 3,
+                        color: '#515365',
+                        opacity: 0.4,
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: false,
+                            columnWidth: '55%',
+                            borderRadius: 8,
+                            borderRadiusApplication: 'end',
+                        },
+                    },
+                    legend: {
+                        position: 'bottom',
+                        horizontalAlign: 'center',
+                        fontSize: '14px',
+                        itemMargin: {
+                            horizontal: 8,
+                            vertical: 8,
+                        },
+                    },
+                    grid: {
+                        borderColor: isDark ? '#191e3a' : '#e0e6ed',
+                        padding: {
+                            left: 20,
+                            right: 20,
+                        },
+                    },
+                    xaxis: {
+                        categories: res.data.expenses_name,
+                        axisBorder: {
+                            show: true,
+                            color: isDark ? '#3b3f5c' : '#e0e6ed',
+                        },
+                    },
+                    yaxis: {
+                        tickAmount: 6,
+                        opposite: isRtl ? true : false,
+                        labels: {
+                            offsetX: isRtl ? -10 : 0,
+                        },
+                    },
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            shade: isDark ? 'dark' : 'light',
+                            type: 'vertical',
+                            shadeIntensity: 0.3,
+                            inverseColors: false,
+                            opacityFrom: 1,
+                            opacityTo: 0.8,
+                            stops: [0, 100],
+                        },
+                    },
+                    tooltip: {
+                        marker: {
+                            show: true,
+                        },
+                    },
+                }
 
-        }));
-
-       
-
-        setcategoryChart((prevData) => ({
-            
-            series: [
-                {
-                    name: 'Amount',
-                    data: res.data.expenses_data,
-                },
-             
-            ],
-
-            options: {
-            chart: {
-                height: 360,
-                type: 'bar',
-                fontFamily: 'Nunito, sans-serif',
-                toolbar: {
-                    show: false,
-                },
-            },
-            dataLabels: {
-                enabled: false,
-            },
-            stroke: {
-                width: 2,
-                colors: ['transparent'],
-            },
-            colors: ['#5c1ac3', '#ffbb44'],
-            dropShadow: {
-                enabled: true,
-                blur: 3,
-                color: '#515365',
-                opacity: 0.4,
-            },
-            plotOptions: {
-                bar: {
-                    horizontal: false,
-                    columnWidth: '55%',
-                    borderRadius: 8,
-                    borderRadiusApplication: 'end',
-                },
-            },
-            legend: {
-                position: 'bottom',
-                horizontalAlign: 'center',
-                fontSize: '14px',
-                itemMargin: {
-                    horizontal: 8,
-                    vertical: 8,
-                },
-            },
-            grid: {
-                borderColor: isDark ? '#191e3a' : '#e0e6ed',
-                padding: {
-                    left: 20,
-                    right: 20,
-                },
-            },
-            xaxis: {
-                categories: res.data.expenses_name,
-                axisBorder: {
-                    show: true,
-                    color: isDark ? '#3b3f5c' : '#e0e6ed',
-                },
-            },
-            yaxis: {
-                tickAmount: 6,
-                opposite: isRtl ? true : false,
-                labels: {
-                    offsetX: isRtl ? -10 : 0,
-                },
-            },
-            fill: {
-                type: 'gradient',
-                gradient: {
-                    shade: isDark ? 'dark' : 'light',
-                    type: 'vertical',
-                    shadeIntensity: 0.3,
-                    inverseColors: false,
-                    opacityFrom: 1,
-                    opacityTo: 0.8,
-                    stops: [0, 100],
-                },
-            },
-            tooltip: {
-                marker: {
-                    show: true,
-                },
-            },
-        }
-
-        }));
-
-
+            }));
 
         }).catch((error: any) => {
             localStorage.removeItem("token")
@@ -716,8 +660,6 @@ const Expense = () => {
                 },
             ],
         }));
-
-
 
         setExpenseChart({
             series: [
@@ -856,181 +798,7 @@ const Expense = () => {
                 },
             },
         });
-
-       
-
     })
-
-
-    const showModal = (record: any) => {
-        setIsModalOpen(true);
-        setViewRecord(record)
-        modalData()
-    };
-
-    const handleOk = () => {
-        setIsModalOpen(false);
-    };
-
-    const handleCancel = () => {
-        setIsModalOpen(false);
-    };
-
-
-
-    //Revenue Chart
-
-
-
-
-
-    // useEffect(() => {
-    //   if (editRecord) {
-    //     setDrawerTitle("Edit Expense")
-    //   } else {
-    //     setDrawerTitle("Create Expense")
-    //   }
-    // }, [])
-
-    // drawer
-    const showDrawer = (record: any) => {
-        if (record) {
-            setEditRecord(record)
-            form.setFieldsValue(record)
-            setDrawerTitle("Edit Expense")
-        } else {
-            setEditRecord(null)
-            form.resetFields()
-            setDrawerTitle("Create Expense")
-        }
-        setOpen(true);
-    };
-
-    const onClose = () => {
-        setOpen(false);
-        form.resetFields()
-    };
-
-    const columns = [
-        {
-            title: 'Expense Name',
-            dataIndex: 'expense_name',
-            key: 'expense_name',
-        },
-        {
-            title: 'CreatedAt',
-            dataIndex: 'created_date',
-            key: 'created_date',
-            render: (text: any, record: any) => {
-                // Assuming created_date is in the format: 2023-12-12T08:41:09.567980Z
-                const date = new Date(text);
-                const formattedDate = new Intl.DateTimeFormat('en-US', {
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric',
-                }).format(date);
-
-                return <span>{formattedDate}</span>;
-            },
-        },
-        {
-            title: "Actions",
-            key: "actions",
-            render: (text: any, record: any) => (
-
-                <Space size="middle">
-                    <EyeOutlined style={{ cursor: "pointer" }}
-                        onClick={() => showModal(record)} className='view-icon' rev={undefined} />
-                    <EditOutlined
-                        style={{ cursor: "pointer" }}
-                        onClick={() => showDrawer(record)}
-                        className='edit-icon' rev={undefined} />
-                    {
-                        localStorage.getItem('admin') === 'true' ? (
-                            <DeleteOutlined
-                                style={{ color: "red", cursor: "pointer" }}
-                                onClick={() => handleDelete(record)}
-                                className='delete-icon'
-                                rev={undefined}
-                            />
-                        ) : (
-                            <DeleteOutlined
-                                style={{ display: "none" }}
-                                onClick={() => handleDelete(record)}
-                                className='delete-icon'
-                                rev={undefined}
-                            />
-                        )
-                    }
-
-
-
-                </Space>
-            ),
-        }
-    ];
-
-
-
-
-    const [filterData, setFilterData] = useState(dataSource)
-
-
-    const onFinishFailed = (errorInfo: any) => {
-        console.log('Failed:', errorInfo);
-    };
-
-    type FieldType = {
-        expense_name?: string;
-    };
-
-
-
-    // modal data
-    const modalData = () => {
-        const formatDate = (dateString: any) => {
-            if (!dateString) {
-                return "N/A"; // or handle it according to your requirements
-            }
-
-            const date = new Date(dateString);
-
-            if (isNaN(date.getTime())) {
-                return "Invalid Date"; // or handle it according to your requirements
-            }
-
-            return new Intl.DateTimeFormat('en-US', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-            }).format(date);
-        };
-
-        const data = [
-            {
-                label: "Expense Name:",
-                value: viewRecord?.expense_name || "N/A",
-            },
-            {
-                label: "Created By:",
-                value: viewRecord?.created_by || "N/A",
-            },
-            {
-                label: "Created Date:",
-                value: formatDate(viewRecord?.created_date),
-            },
-            {
-                label: "Modified By:",
-                value: viewRecord?.modified_by || "N/A",
-            },
-            {
-                label: "Modified Date:",
-                value: formatDate(viewRecord?.modified_date),
-            },
-        ];
-
-        return data;
-    };
 
 
     return (
@@ -1040,85 +808,84 @@ const Expense = () => {
                     <li>
                         <span className="text-lg">Dashboard</span>
                     </li>
-
                 </ul>
                 <div className="pt-5">
                     <div className="mb-6 grid grid-cols-1 gap-6 text-white sm:grid-cols-2 xl:grid-cols-4">
-                        <div className="panel bg-gradient-to-r from-cyan-500 to-cyan-400">
-                            <div className="flex justify-between">
-                                <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Customer</div>
 
-                            </div>
-                            <div className="mt-5 flex items-center">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">Total : {customerCount} </div>
-
-                            </div>
-                            <div className="mt-5 flex items-center font-semibold">
-                                <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                {thisMonthName} month added : {thisMonthcustomerCount}
-                            </div>
-                        </div>
-
-                        {/* Sessions */}
-                        <div className="panel bg-gradient-to-r from-violet-500 to-violet-400">
-                            <div className="flex justify-between">
-                                <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Invoices</div>
-                                <div className="dropdown">
-
+                        <Link href='/people/customer' >
+                            <div className="panel bg-gradient-to-r from-cyan-500 to-cyan-400">
+                                <div className="flex justify-between">
+                                    <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Customer</div>
+                                </div>
+                                <div className="mt-5 flex items-center">
+                                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">Total : {customerCount} </div>
+                                </div>
+                                <div className="mt-5 flex items-center font-semibold">
+                                    <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                    {thisMonthName} month added : {thisMonthcustomerCount}
                                 </div>
                             </div>
-                            <div className="mt-5 flex items-center">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">Total : {invoiceTotal} </div>
+                        </Link>
 
-                            </div>
-                            <div className="mt-5 flex items-center font-semibold">
-                                <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                {thisMonthName} Month Created : {invoiceThisMonthTotal}
-                            </div>
-                        </div>
+                        <Link href="/invoice/invoice">
+                            <div className="panel bg-gradient-to-r from-violet-500 to-violet-400">
+                                <div className="flex justify-between">
+                                    <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Invoices</div>
+                                    <div className="dropdown">
 
-                        {/*  Time On-Site */}
-                        <div className="panel bg-gradient-to-r from-blue-500 to-blue-400">
-                            <div className="flex justify-between">
-                                <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Expense</div>
-                            </div>
-                            <div className="mt-5 flex items-center">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> Total : {expenseTotal} </div>
-
-                            </div>
-                            <div className="mt-5 flex items-center font-semibold">
-                                <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                {thisMonthName} Month added :  {expenseThisMonthTotal}
-                            </div>
-                        </div>
-
-                        {/* Bounce Rate */}
-                        <div className="panel bg-gradient-to-r from-fuchsia-500 to-fuchsia-400">
-                            <div className="flex justify-between">
-                                <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Pending Payment</div>
-                                <div className="dropdown">
+                                    </div>
+                                </div>
+                                <div className="mt-5 flex items-center">
+                                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">Total : {invoiceTotal} </div>
 
                                 </div>
+                                <div className="mt-5 flex items-center font-semibold">
+                                    <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                    {thisMonthName} Month Created : {invoiceThisMonthTotal}
+                                </div>
                             </div>
-                            <div className="mt-5 flex items-center">
-                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">Amount : {pending_payment} </div>
+                        </Link>
 
+                        <Link href="/report/expenseReport">
+                            <div className="panel bg-gradient-to-r from-blue-500 to-blue-400">
+                                <div className="flex justify-between">
+                                    <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Expense</div>
+                                </div>
+                                <div className="mt-5 flex items-center">
+                                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> Total : {expenseTotal} </div>
+
+                                </div>
+                                <div className="mt-5 flex items-center font-semibold">
+                                    <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                    {thisMonthName} Month added :  {expenseThisMonthTotal}
+                                </div>
                             </div>
-                            <div className="mt-5 flex items-center font-semibold">
-                                <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                {thisMonthName} Month : {pending_payment_this_month}
+                        </Link>
+
+                        <Link href="/invoice/pendingPayment" >
+                            <div className="panel bg-gradient-to-r from-fuchsia-500 to-fuchsia-400">
+                                <div className="flex justify-between">
+                                    <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Pending Payment</div>
+                                    <div className="dropdown">
+                                    </div>
+                                </div>
+                                <div className="mt-5 flex items-center">
+                                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">Amount : {pending_payment} </div>
+                                </div>
+                                <div className="mt-5 flex items-center font-semibold">
+                                    <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                    {thisMonthName} Month : {pending_payment_this_month}
+                                </div>
                             </div>
-                        </div>
+                        </Link>
                     </div>
 
                     <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mb-6">
-                        {/*  Favorites  */}
                         <div className="panel h-full">
                             <div className="mb-5 flex items-center font-bold">
                                 <span className="text-lg">Payment</span>
                             </div>
                             <div className=" h-full xl:col-span-2">
-
                                 <div className="relative">
                                     <div className="rounded-lg bg-white dark:bg-black">
                                         {isMounted ? (
@@ -1132,9 +899,8 @@ const Expense = () => {
                                 </div>
                             </div>
                         </div>
-                        {/*  Prices  */}
-                        <div>
 
+                        <div>
                             <div className="panel h-full">
                                 <div className="mb-5 flex items-center">
                                     <h5 className="text-lg font-semibold dark:text-white-light">{thisMonthName} Payment</h5>
@@ -1151,7 +917,6 @@ const Expense = () => {
                                     </div>
                                 </div>
                             </div>
-
                         </div>
                     </div>
 
@@ -1172,7 +937,7 @@ const Expense = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {invoices.map((item, rowIndex) => (
+                                        {invoices.map((item: any, rowIndex: any) => (
                                             <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
                                                 <td>{item.customer}</td>
                                                 <td>{item.invoice_no}</td>
@@ -1189,13 +954,11 @@ const Expense = () => {
 
 
                     <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mb-6">
-                        {/*  Favorites  */}
                         <div className='panel h-full '>
                             <div className="mb-5 flex items-center font-bold">
                                 <span className="text-lg">Expense - ({expense_amount_sum})</span>
                             </div>
                             <div className="xl:col-span-2">
-
                                 <div className="relative">
                                     <div className="rounded-lg bg-white dark:bg-black">
                                         {isMounted ? (
@@ -1209,12 +972,10 @@ const Expense = () => {
                                 </div>
                             </div>
                         </div>
-                        {/*  Prices  */}
+
                         <div>
-
                             <div className="panel h-full">
-
-                            <div className="mb-5 flex items-center">
+                                <div className="mb-5 flex items-center">
                                     <h5 className="text-lg font-semibold dark:text-white-light">{thisMonthName} Expense</h5>
                                 </div>
                                 <div>
@@ -1228,30 +989,10 @@ const Expense = () => {
                                         )}
                                     </div>
                                 </div>
-
-                                {/*
-                                <div className="mb-5 flex items-center">
-                                    <h5 className="text-lg font-semibold dark:text-white-light">{thisMonthName} Expense</h5>
-                                </div>
-                                <div>
-                                    <div className="rounded-lg bg-white dark:bg-black">
-                                        {isMounted ? (
-                                            <ReactApexChart series={salesByCategory.series} options={salesByCategory.options} type="donut" height={460} width={'100%'} />
-                                        ) : (
-                                            <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
-                                                <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-
-                                */}
-
-
                             </div>
-
                         </div>
                     </div>
+
 
                     <div className="grid grid-cols-1 gap-12 mb-6">
                         <div className="panel h-full w-full">
@@ -1259,29 +1000,27 @@ const Expense = () => {
                                 <h5 className="text-lg font-semibold dark:text-white-light">Recent Expenses</h5>
                             </div>
                             <div className="table-responsive">
-                            <table>
-                                <thead>
-                                    <tr>
-                                        <th className="ltr:rounded-l-md rtl:rounded-r-md">Expense User</th>
-                                        <th>Date</th>
-                                        <th>Category</th>
-                                        <th>Amount</th>
-
-
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {expenses.map((item, rowIndex) => (
-                                        <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                            <td>{item.expense_user}</td>
-                                            <td>{item.date}</td>
-                                            <td>{item.expense_category_name}</td>
-
-                                            <td>{item.amount}</td>
+                                <table>
+                                    <thead>
+                                        <tr>
+                                            <th className="ltr:rounded-l-md rtl:rounded-r-md">Expense User</th>
+                                            <th>Date</th>
+                                            <th>Category</th>
+                                            <th>Amount</th>
                                         </tr>
-                                    ))}
-                                </tbody>
-                            </table>
+                                    </thead>
+                                    <tbody>
+                                        {expenses.map((item: any, rowIndex) => (
+                                            <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
+                                                <td>{item.expense_user}</td>
+                                                <td>{item.date}</td>
+                                                <td>{item.expense_category_name}</td>
+
+                                                <td>{item.amount}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                     </div>

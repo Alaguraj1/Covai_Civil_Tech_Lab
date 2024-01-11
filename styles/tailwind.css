@@ -766,7 +766,17 @@ border-right: 1px solid black;
     justify-content: space-between;
 }
 
+.getInfoBtn{
+    color: #972e25;
+    border-color: #972e25;
+    margin-top: 20px;  
+}
 
+.getInfoBtn:hover{
+    color: #8a504a;
+    border-color: #8a504a;
+    margin-top: 20px;  
+}
 
 table tbody tr {
     border-bottom-width: 0px;
@@ -835,7 +845,12 @@ table tbody tr {
 
 
 
+/* antd button */
 
+:where(.css-dev-only-do-not-override-6j9yrn).ant-btn-default:not(:disabled):not(.ant-btn-disabled):hover {
+    color: #972e25;
+    border-color: #972e25;
+}
 
 
 /* antd design table */

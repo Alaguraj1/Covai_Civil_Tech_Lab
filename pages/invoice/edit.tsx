@@ -33,7 +33,7 @@ const Edit = () => {
     const [afterTax, setAfterTax] = useState<any>('')
     const [beforeTotalTax, setBeforeTotalTax] = useState<any>(0)
     const [advance, setAdvance] = useState(0)
-    const [checkedItems, setCheckedItems] = useState({});
+    const [checkedItems, setCheckedItems] = useState<any>({});
     const [selectedIDs, setSelectedIDs] = useState([]);
     const [totalTaxPercentage, setTotalTaxPercentage] = useState(0);
     const [updateBeforeTax, setUpdateBeforeTax] = useState(0);
@@ -41,7 +41,7 @@ const Edit = () => {
     const [messageApi, contextHolder] = message.useMessage();
 
 
-    const [formData, setFormData] = useState({
+    const [formData, setFormData] = useState<any>({
         customer: "",
         cheque_number: "",
         project_name: "",
@@ -49,7 +49,6 @@ const Edit = () => {
         advance: "",
         date: "",
         payment_mode: "",
-        cheque_number: "",
         bank: "",
         amount_paid_date: "",
         before_tax: "",
@@ -259,7 +258,7 @@ const Edit = () => {
 
         let sum = 0;
 
-        invoiceFormData.taxs.forEach(item => {
+        invoiceFormData.taxs.forEach((item:any) => {
             if (checkedItem[item.id]) {
                 sum += parseFloat(item.tax_percentage);
             }
@@ -267,7 +266,7 @@ const Edit = () => {
 
         setUpdatedSum(sum)
 
-        const finals = (beforeTax * sum) / 100
+        const finals:any = (beforeTax * sum) / 100
 
 
         setCheckedItems(checkedItem);
@@ -285,7 +284,7 @@ const Edit = () => {
         const totalPer = sum * beforeTax / 100
 
         //After tax
-        const After_tax = updateBeforeTax + totalPer;
+        const After_tax:any = updateBeforeTax + totalPer;
         setAfterTax(parseInt(After_tax, 10))
         // -------------------------------------------------------------------------------------------------------
 
@@ -398,6 +397,7 @@ const Edit = () => {
             }
         })
             .then((res) => {
+                console.log('✌️res --->', res);
                 setIsModalOpen(false);
                 getInvoiceTestData()
             })
@@ -409,6 +409,7 @@ const Edit = () => {
 
 
     const onFinishFailed = (errorInfo: any) => {
+        console.log('✌️errorInfo --->', errorInfo);
     };
 
 
@@ -514,7 +515,7 @@ const Edit = () => {
         const selectedCustomer = invoiceFormData?.customers?.find((customer: any) => customer.id == Number(e.target.value));
 
         setCustomerAddress(selectedCustomer?.address1 || '');
-        setFormData(prevState => ({
+        setFormData((prevState:any) => ({
             ...prevState,
             customer: selectedCustomer.id
 
@@ -919,7 +920,7 @@ const Edit = () => {
                     </Form.Item>
 
                     <Form.Item>
-                        <Button style={{ color: "blue", borderColor: "blue", marginTop: "20px" }} onClick={tableTogle}>
+                        <Button className='getInfoBtn' onClick={tableTogle}>
                             {tableVisible ? "Hide Info" : "Get Info"}
                         </Button>
 

@@ -21,6 +21,7 @@
     "@tabler/icons-react": "^2.44.0",
     "@tinymce/tinymce-react": "^4.3.2",
     "@tippyjs/react": "^4.2.6",
+    "@types/file-saver": "^2.0.7",
     "@types/node": "18.11.18",
     "@types/react-dom": "18.0.10",
     "alloyeditor": "^2.14.10",
