@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Space, Table, Modal } from 'antd';
 import { Button, Drawer } from 'antd';
-import {  Form, Input, Select, DatePicker } from 'antd';
+import { Form, Input, Select, DatePicker } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
 import moment from 'moment';
@@ -93,7 +93,7 @@ const ExpenseEntry = () => {
     if (record) {
       const updateData: any = {
         amount: record.amount,
-        date: moment(record.date),
+        date: moment(record.date, 'YYYY-MM-DDTHH:mm:ssZ'),        
         expense_category: record.expense_category,
         expense_user: record.expense_user,
         id: record.id,
@@ -238,11 +238,10 @@ const ExpenseEntry = () => {
     const formattedData = {
       ...values,
       expense_user: values.expense_user,
-      date: moment(values.dob).format("YYYY-MM-DD"),
+      date: moment(values.date).format('YYYY-MM-DDTHH:mm:ss[Z]'), // Updated date formatting
       expense_category: values.expense_category,
       amount: values.amount,
       narration: values.narration,
-
     };
 
     console.log("formattedData", formattedData)
@@ -437,6 +436,7 @@ const ExpenseEntry = () => {
               rules={[{ required: true, message: 'Please input your Date!' }]}>
               <DatePicker style={{ width: "100%" }} />
             </Form.Item>
+
             <Form.Item >
               <div className='form-btn-main'>
                 <Space>
