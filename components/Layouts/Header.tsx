@@ -770,7 +770,7 @@ console.log("users", user)
                         </button>
                         <ul className="sub-menu">
                             <li onClick={() => showConfirm()} style={{ paddingLeft: "10px" }}>
-                                {t('logout')}
+                                {t('Logout')}
                             </li>
                             {/* <li className="relative">
                                 <button type="button">

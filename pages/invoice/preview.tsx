@@ -88,7 +88,7 @@ const Preview = () => {
                     411/4, Ballu Naidu Thottam,Vijayalakshmi Nagar,<br></br>
                     Neelikonampalayam Po, Coimbatore - 6410333.<br></br>
 
-                    <b>GSTIN : 22AAAAA0000A1Z5</b>
+                    <b>GSTIN : 33AAICN1420AIZA</b>
 
 
                   </div>
@@ -144,20 +144,20 @@ const Preview = () => {
 
                 <div className="xl:1/3 lg:w-2/5 sm:w-1/2">
                   <div className="flex items-center w-full justify-between mb-2">
-                    <div className="text-white-dark">Bank Name:</div>
-                    <div className="whitespace-nowrap">State Bank Of India</div>
+                    <div className="text-white-dark">Name:</div>
+                    <div className="whitespace-nowrap">Covai Civil Tech Lab</div>
                   </div>
                   <div className="flex items-center w-full justify-between mb-2">
                     <div className="text-white-dark">Account Number:</div>
-                    <div>62371331494</div>
+                    <div>584705000004</div>
                   </div>
                   <div className="flex items-center w-full justify-between mb-2">
                     <div className="text-white-dark">Branch:</div>
-                    <div>KALAPATTI</div>
+                    <div>TVSami Road, RSPuram</div>
                   </div>
                   <div className="flex items-center w-full justify-between mb-2">
                     <div className="text-white-dark">IFSC Code:</div>
-                    <div>SBIN0021798</div>
+                    <div>ICIC0005847</div>
                   </div>
 
                 </div>

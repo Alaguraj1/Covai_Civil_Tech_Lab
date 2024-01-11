@@ -19,7 +19,7 @@ const Edit = () => {
         dispatch(setPageTitle('Invoice Edit'));
     });
 
-    const [editRecord, setEditRecord] = useState(null);
+    const [editRecord, setEditRecord] = useState<any>(null);
     const [open, setOpen] = useState(false);
     const [form] = Form.useForm()
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -160,7 +160,7 @@ const Edit = () => {
             setAfterTax(parseInt(After_tax, 10))
             // -------------------------------------------------------------------------------------------
 
-            setFormData((prevState:any) => ({
+            setFormData((prevState: any) => ({
                 ...prevState,
                 customer: uniqueArray[0].id,
                 project_name: response.invoice.project_name,
@@ -231,14 +231,14 @@ const Edit = () => {
             setFormData((prevState: any) => ({
                 ...prevState,
                 discount: discount,
-                before_tax: parseInt(beforeTotalTax,10) || '0', // Set your desired initial value,
+                before_tax: parseInt(beforeTotalTax, 10) || '0', // Set your desired initial value,
 
             }));
         } else {
             setFormData((prevState: any) => ({
                 ...prevState,
                 discount: discount,
-                before_tax: parseInt(discountedBeforeTax.toString(),10),
+                before_tax: parseInt(discountedBeforeTax.toString(), 10),
             }));
         }
 
@@ -578,6 +578,7 @@ const Edit = () => {
 
     // invoice edit form onfinish
     const onFinish2 = (values: any,) => {
+        console.log('✌️values --->', values);
 
 
         const Token = localStorage.getItem("token")
@@ -587,6 +588,7 @@ const Edit = () => {
                 "Authorization": `Token ${Token}`
             }
         }).then((res: any) => {
+            console.log('✌️res --->', res);
             getInvoiceTestData()
             setOpen(false);
         }).catch((error: any) => {
@@ -627,6 +629,8 @@ const Edit = () => {
         // Navigate to the /invoice/edit page with the record data as a query parameter
         window.location.href = `/invoice/invoiceReport?id=${item.id}`;
     };
+
+
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
             {contextHolder}
