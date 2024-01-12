@@ -5,6 +5,7 @@ import { Form, Input, Radio, DatePicker, } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
 import moment from 'moment';
+import dayjs from 'dayjs';
 
 const Employee = () => {
 
@@ -31,6 +32,7 @@ const Employee = () => {
                 "Authorization": `Token ${Token}`
             }
         }).then((res) => {
+console.log('✌️res --->', res.data);
             setDataSource(res.data)
             setFilterData(res.data)
         }).catch((error: any) => {
@@ -63,8 +65,13 @@ const Employee = () => {
 
     // drawer
     const showDrawer = (record: any) => {
+        console.log('✌️record --->', record);
         if (record) {
-            const bodyData = { ...record, dob: moment(record.dob), modified_date: moment(record.modified_date), joining_date: moment(record.joining_date) }
+            const bodyData = {
+                ...record,
+                dob: dayjs(record.dob),
+                joining_date: dayjs(record.joining_date)
+            }
             setEditRecord(bodyData)
             form.setFieldsValue(bodyData);
 
@@ -211,8 +218,8 @@ const Employee = () => {
 
         const formattedData = {
             ...values,
-            dob: moment(values.dob).format("YYYY-MM-DD"),
-            joining_date: moment(values.joining_date).format("YYYY-MM-DD"),
+            dob: dayjs(values.dob),
+            joining_date:dayjs(values.joining_date),
         };
 
 
@@ -249,7 +256,7 @@ const Employee = () => {
                 // alert( error.response.data.user.username)
                 messageApi.open({
                     type: 'error',
-                    content: `${error.response.data.user.username}`,
+                    content: `${error?.response?.data?.user?.username}`,
                 });
             })
         }
