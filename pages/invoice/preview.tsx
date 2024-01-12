@@ -198,7 +198,7 @@ const Preview = () => {
 
                   }
 
-                  <tr>
+                  {/* <tr>
                     <td> </td>
                     <td> </td>
                     <td> </td>
@@ -206,7 +206,7 @@ const Preview = () => {
 
                     <td style={{ textAlign: "right" }}><b> GST :18%</b></td>
                     <td> </td>
-                  </tr>
+                  </tr> */}
                   <tr>
                     <td> </td>
                     <td> </td>

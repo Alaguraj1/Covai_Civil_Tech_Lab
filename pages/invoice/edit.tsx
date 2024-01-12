@@ -379,6 +379,7 @@ const Edit = () => {
                 console.log('✌️res --->', res);
                 setIsModalOpen(false);
                 getInvoiceTestData()
+                form.resetFields()
             })
             .catch((error) => {
                 console.error('Error:', error);
