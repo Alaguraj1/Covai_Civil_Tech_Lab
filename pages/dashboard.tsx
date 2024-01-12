@@ -27,7 +27,11 @@ const Expense = () => {
     const [invoices, setinvoices] = useState([])
     const [expenses, setexpenses] = useState([])
     const [expense_amount_sum, setexpense_amount_sum] = useState(0)
-
+    const [admin, setAdmin] = useState<any>([])
+    useEffect(() => {
+        const Admin: any = localStorage.getItem('admin')
+        setAdmin(Admin)
+    }, [])
 
 
     const [monthName, setMonthName] = useState(["April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March",])
@@ -813,56 +817,62 @@ const Expense = () => {
                 </ul>
                 <div className="pt-5">
                     <div className="mb-6 grid grid-cols-1 gap-6 text-white sm:grid-cols-2 xl:grid-cols-4">
+                        {
+                            admin === "true" ?
 
-                        <Link href='/people/customer' >
-                            <div className="panel bg-gradient-to-r from-cyan-500 to-cyan-400">
-                                <div className="flex justify-between">
-                                    <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Customer</div>
-                                </div>
-                                <div className="mt-5 flex items-center">
-                                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">Total : {customerCount} </div>
-                                </div>
-                                <div className="mt-5 flex items-center font-semibold">
-                                    <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                    {thisMonthName} month added : {thisMonthcustomerCount}
-                                </div>
-                            </div>
-                        </Link>
+                                <>
+                                    <Link href='/people/customer' >
+                                        <div className="panel bg-gradient-to-r from-cyan-500 to-cyan-400">
+                                            <div className="flex justify-between">
+                                                <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Customer</div>
+                                            </div>
+                                            <div className="mt-5 flex items-center">
+                                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">Total : {customerCount} </div>
+                                            </div>
+                                            <div className="mt-5 flex items-center font-semibold">
+                                                <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                {thisMonthName} month added : {thisMonthcustomerCount}
+                                            </div>
+                                        </div>
+                                    </Link>
 
-                        <Link href="/invoice/invoice">
-                            <div className="panel bg-gradient-to-r from-violet-500 to-violet-400">
-                                <div className="flex justify-between">
-                                    <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Invoices</div>
-                                    <div className="dropdown">
+                                    <Link href="/invoice/invoice">
+                                        <div className="panel bg-gradient-to-r from-violet-500 to-violet-400">
+                                            <div className="flex justify-between">
+                                                <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Invoices</div>
+                                                <div className="dropdown">
 
-                                    </div>
-                                </div>
-                                <div className="mt-5 flex items-center">
-                                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">Total : {invoiceTotal} </div>
+                                                </div>
+                                            </div>
+                                            <div className="mt-5 flex items-center">
+                                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3">Total : {invoiceTotal} </div>
 
-                                </div>
-                                <div className="mt-5 flex items-center font-semibold">
-                                    <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                    {thisMonthName} Month Created : {invoiceThisMonthTotal}
-                                </div>
-                            </div>
-                        </Link>
+                                            </div>
+                                            <div className="mt-5 flex items-center font-semibold">
+                                                <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                {thisMonthName} Month Created : {invoiceThisMonthTotal}
+                                            </div>
+                                        </div>
+                                    </Link>
 
-                        <Link href="/report/expenseReport">
-                            <div className="panel bg-gradient-to-r from-blue-500 to-blue-400">
-                                <div className="flex justify-between">
-                                    <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Expense</div>
-                                </div>
-                                <div className="mt-5 flex items-center">
-                                    <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> Total : {expenseTotal} </div>
+                                    <Link href="/report/expenseReport">
+                                        <div className="panel bg-gradient-to-r from-blue-500 to-blue-400">
+                                            <div className="flex justify-between">
+                                                <div className="text-md font-semibold ltr:mr-1 rtl:ml-1">Expense</div>
+                                            </div>
+                                            <div className="mt-5 flex items-center">
+                                                <div className="text-3xl font-bold ltr:mr-3 rtl:ml-3"> Total : {expenseTotal} </div>
 
-                                </div>
-                                <div className="mt-5 flex items-center font-semibold">
-                                    <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                    {thisMonthName} Month added :  {expenseThisMonthTotal}
-                                </div>
-                            </div>
-                        </Link>
+                                            </div>
+                                            <div className="mt-5 flex items-center font-semibold">
+                                                <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                {thisMonthName} Month added :  {expenseThisMonthTotal}
+                                            </div>
+                                        </div>
+                                    </Link>
+                                </> : <></>
+                        }
+
 
                         <Link href="/invoice/pendingPayment" >
                             <div className="panel bg-gradient-to-r from-fuchsia-500 to-fuchsia-400">
@@ -882,45 +892,51 @@ const Expense = () => {
                         </Link>
                     </div>
 
-                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mb-6">
-                        <div className="panel h-full">
-                            <div className="mb-5 flex items-center font-bold">
-                                <span className="text-lg">Payment</span>
-                            </div>
-                            <div className=" h-full xl:col-span-2">
-                                <div className="relative">
-                                    <div className="rounded-lg bg-white dark:bg-black">
-                                        {isMounted ? (
-                                            <ReactApexChart series={revenueChart.series} options={revenueChart.options} type="area" height={325} width={'100%'} />
-                                        ) : (
-                                            <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
-                                                <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
-                                            </div>
-                                        )}
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                    {
+                        admin === "true" ?
 
-                        <div>
-                            <div className="panel h-full">
-                                <div className="mb-5 flex items-center">
-                                    <h5 className="text-lg font-semibold dark:text-white-light">{thisMonthName} Payment</h5>
-                                </div>
-                                <div>
-                                    <div className="rounded-lg bg-white dark:bg-black">
-                                        {isMounted ? (
-                                            <ReactApexChart series={salesByCategory.series} options={salesByCategory.options} type="donut" height={460} width={'100%'} />
-                                        ) : (
-                                            <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
-                                                <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
+                            <>
+                                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mb-6">
+                                    <div className="panel h-full">
+                                        <div className="mb-5 flex items-center font-bold">
+                                            <span className="text-lg">Payment</span>
+                                        </div>
+                                        <div className=" h-full xl:col-span-2">
+                                            <div className="relative">
+                                                <div className="rounded-lg bg-white dark:bg-black">
+                                                    {isMounted ? (
+                                                        <ReactApexChart series={revenueChart.series} options={revenueChart.options} type="area" height={325} width={'100%'} />
+                                                    ) : (
+                                                        <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
+                                                            <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
-                                        )}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div className="panel h-full">
+                                            <div className="mb-5 flex items-center">
+                                                <h5 className="text-lg font-semibold dark:text-white-light">{thisMonthName} Payment</h5>
+                                            </div>
+                                            <div>
+                                                <div className="rounded-lg bg-white dark:bg-black">
+                                                    {isMounted ? (
+                                                        <ReactApexChart series={salesByCategory.series} options={salesByCategory.options} type="donut" height={460} width={'100%'} />
+                                                    ) : (
+                                                        <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
+                                                            <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
+                            </> : <></>
+                    }
 
                     <div className="grid grid-cols-1 gap-12 mb-6">
                         <div className="panel h-full w-full">
@@ -954,78 +970,83 @@ const Expense = () => {
                         </div>
                     </div>
 
+                    {
+                        admin === "true" ?
 
-                    <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mb-6">
-                        <div className='panel h-full '>
-                            <div className="mb-5 flex items-center font-bold">
-                                <span className="text-lg">Expense - ({expense_amount_sum})</span>
-                            </div>
-                            <div className="xl:col-span-2">
-                                <div className="relative">
-                                    <div className="rounded-lg bg-white dark:bg-black">
-                                        {isMounted ? (
-                                            <ReactApexChart series={expenseChart.series} options={expenseChart.options} type="area" height={325} width={'100%'} />
-                                        ) : (
-                                            <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
-                                                <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
+                            <>
+                                <div className="grid grid-cols-1 gap-6 xl:grid-cols-2 mb-6">
+                                    <div className='panel h-full '>
+                                        <div className="mb-5 flex items-center font-bold">
+                                            <span className="text-lg">Expense - ({expense_amount_sum})</span>
+                                        </div>
+                                        <div className="xl:col-span-2">
+                                            <div className="relative">
+                                                <div className="rounded-lg bg-white dark:bg-black">
+                                                    {isMounted ? (
+                                                        <ReactApexChart series={expenseChart.series} options={expenseChart.options} type="area" height={325} width={'100%'} />
+                                                    ) : (
+                                                        <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
+                                                            <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
-                                        )}
+                                        </div>
+                                    </div>
+
+                                    <div>
+                                        <div className="panel h-full">
+                                            <div className="mb-5 flex items-center">
+                                                <h5 className="text-lg font-semibold dark:text-white-light">{thisMonthName} Expense</h5>
+                                            </div>
+                                            <div>
+                                                <div className="rounded-lg bg-white dark:bg-black">
+                                                    {isMounted ? (
+                                                        <ReactApexChart options={categoryChart.options} series={categoryChart.series} type="bar" height={360} width={'100%'} />
+                                                    ) : (
+                                                        <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
+                                                            <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
+                                                        </div>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
 
-                        <div>
-                            <div className="panel h-full">
-                                <div className="mb-5 flex items-center">
-                                    <h5 className="text-lg font-semibold dark:text-white-light">{thisMonthName} Expense</h5>
-                                </div>
-                                <div>
-                                    <div className="rounded-lg bg-white dark:bg-black">
-                                        {isMounted ? (
-                                            <ReactApexChart options={categoryChart.options} series={categoryChart.series} type="bar" height={360} width={'100%'} />
-                                        ) : (
-                                            <div className="grid min-h-[325px] place-content-center bg-white-light/30 dark:bg-dark dark:bg-opacity-[0.08] ">
-                                                <span className="inline-flex h-5 w-5 animate-spin rounded-full  border-2 border-black !border-l-transparent dark:border-white"></span>
-                                            </div>
-                                        )}
+
+                                <div className="grid grid-cols-1 gap-12 mb-6">
+                                    <div className="panel h-full w-full">
+                                        <div className="mb-5 flex items-center justify-between">
+                                            <h5 className="text-lg font-semibold dark:text-white-light">Recent Expenses</h5>
+                                        </div>
+                                        <div className="table-responsive">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th className="ltr:rounded-l-md rtl:rounded-r-md">Expense User</th>
+                                                        <th>Date</th>
+                                                        <th>Category</th>
+                                                        <th>Amount</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {expenses.map((item: any, rowIndex) => (
+                                                        <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
+                                                            <td>{item.expense_user}</td>
+                                                            <td>{dayjs(item.date).format('MMMM DD, YYYY')}</td>
+                                                            <td>{item.expense_category_name}</td>
+
+                                                            <td>{item.amount}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-
-
-                    <div className="grid grid-cols-1 gap-12 mb-6">
-                        <div className="panel h-full w-full">
-                            <div className="mb-5 flex items-center justify-between">
-                                <h5 className="text-lg font-semibold dark:text-white-light">Recent Expenses</h5>
-                            </div>
-                            <div className="table-responsive">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th className="ltr:rounded-l-md rtl:rounded-r-md">Expense User</th>
-                                            <th>Date</th>
-                                            <th>Category</th>
-                                            <th>Amount</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {expenses.map((item: any, rowIndex) => (
-                                            <tr key={rowIndex} className="group text-white-dark hover:text-black dark:hover:text-white-light/90">
-                                                <td>{item.expense_user}</td>
-                                                <td>{dayjs(item.date).format('MMMM DD, YYYY')}</td>
-                                                <td>{item.expense_category_name}</td>
-
-                                                <td>{item.amount}</td>
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
+                            </> : <></>
+                    }
 
                 </div>
             </div>
@@ -1034,3 +1055,4 @@ const Expense = () => {
 }
 
 export default Expense
+
