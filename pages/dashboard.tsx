@@ -9,7 +9,6 @@ const ReactApexChart = dynamic(() => import('react-apexcharts'), {
     ssr: false,
 });
 import { useRouter } from 'next/router';
-import moment from 'moment';
 import dayjs from 'dayjs';
 
 
@@ -31,7 +30,7 @@ const Expense = () => {
 
 
 
-    const [monthName, setMonthName] = useState(["January", "December", "November", "October", "September", "August", "July", "June", "May", "April", "March", "February"])
+    const [monthName, setMonthName] = useState(["April", "May", "June", "July", "August", "September", "October", "November", "December", "January", "February", "March",])
     const [total, setTotal] = useState([13080.0,
         0,
         0,
@@ -436,6 +435,7 @@ const Expense = () => {
                 "Authorization": `Token ${Token}`
             }
         }).then((res) => {
+            console.log('✌️response --->', res?.data);
             setCustomerCount(res.data.customer_count)
             setthisMonthcustomerCount(res.data.this_month_customer_count)
             setInvoiceTotal(res.data.this_month_generated_invoice)

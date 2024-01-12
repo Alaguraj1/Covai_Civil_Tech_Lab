@@ -918,6 +918,10 @@ color: white;
     border-color: #972e25;
 }
 
+:where(.css-dev-only-do-not-override-6j9yrn).ant-radio-wrapper .ant-radio-checked::after { 
+    border: 1px solid #972e25;
+}
+
 /* antd btn */
 :where(.css-dev-only-do-not-override-6j9yrn).ant-btn-primary:not(:disabled):not(.ant-btn-disabled) {
     background: #972e25;
