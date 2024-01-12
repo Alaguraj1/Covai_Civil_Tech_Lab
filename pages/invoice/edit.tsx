@@ -6,7 +6,7 @@ import IconEye from '@/components/Icon/IconEye';
 import { Button, Modal, Form, Input, Select, Space, Drawer, message } from 'antd';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { DeleteOutlined, EditOutlined, } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PrinterOutlined} from '@ant-design/icons';
 
 const Edit = () => {
 
@@ -746,7 +746,7 @@ const Edit = () => {
                                             </td>
                                             <td>{item?.completed}</td>
                                             <td>
-                                                <EditOutlined rev={undefined} className='edit-icon' onClick={() => handlePrint(item)} />
+                                                <PrinterOutlined rev={undefined} className='edit-icon' onClick={() => handlePrint(item)} />
                                             </td>
                                         </tr>
                                     );
