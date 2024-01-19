@@ -77,7 +77,7 @@ const InvoiceFileUpload = () => {
     if (editRecord) {
       setDrawerTitle("Edit File Upload");
     } else {
-      setDrawerTitle("+ File Upload");
+      setDrawerTitle("Create File Upload");
     }
   }, [editRecord, open]);
 
@@ -180,29 +180,29 @@ const InvoiceFileUpload = () => {
 
 
 
-  const handleDelete = (record: any,) => {
+  // const handleDelete = (record: any,) => {
 
-    const Token = localStorage.getItem("token")
+  //   const Token = localStorage.getItem("token")
 
-    Modal.confirm({
-      title: "Are you sure, you want to delete this INVOICE FILE UPLOAD record?",
-      okText: "Yes",
-      okType: "danger",
-      onOk: () => {
-        axios.delete(`http://files.covaiciviltechlab.com/delete_invoice_file_upload/${record.id}`, {
-          headers: {
-            "Authorization": `Token ${Token}`
-          }
-        }).then((res) => {
-          console.log(res.data)
-          getFileUpload()
-        }).catch((err) => {
-          console.log(err)
-        })
+  //   Modal.confirm({
+  //     title: "Are you sure, you want to delete this INVOICE FILE UPLOAD record?",
+  //     okText: "Yes",
+  //     okType: "danger",
+  //     onOk: () => {
+  //       axios.delete(`http://files.covaiciviltechlab.com/delete_invoice_file_upload/${record.id}`, {
+  //         headers: {
+  //           "Authorization": `Token ${Token}`
+  //         }
+  //       }).then((res) => {
+  //         console.log(res.data)
+  //         getFileUpload()
+  //       }).catch((err) => {
+  //         console.log(err)
+  //       })
 
-      },
-    });
-  };
+  //     },
+  //   });
+  // };
 
 
 
@@ -377,7 +377,7 @@ const [filterData, setFilterData] = useState(dataSource)
       <div  className='panel'>
         <div className='tax-heading-main'>
           <div>
-            <h1 className='text-lg font-semibold dark:text-white-light'>Manage Invoice/Expense File Upload</h1>
+            <h1 className='text-lg font-semibold dark:text-white-light'>Expense File Upload</h1>
           </div>
           <div>
             <Search placeholder="Input search text" onChange={inputChange} enterButton className='search-bar' />
