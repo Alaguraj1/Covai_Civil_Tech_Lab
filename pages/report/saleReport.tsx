@@ -10,8 +10,6 @@ const SaleReport = () => {
     const [form] = Form.useForm();
     const [dataSource, setDataSource] = useState([])
     const [saleFormData, setSaleFormData] = useState([])
-
-
     useEffect(() => {
         axios.get("http://files.covaiciviltechlab.com/sale_report/", {
             headers: {
@@ -103,6 +101,26 @@ const SaleReport = () => {
         },
     ];
 
+    useEffect(() => {
+        const Token = localStorage.getItem("token")
+
+        const body = {
+            "project_name": "",
+            "from_date":"",
+            "to_date": "",
+            "customer":"",
+        };
+
+        axios.post("http://files.covaiciviltechlab.com/sale_report/", body, {
+            headers: {
+                "Authorization": `Token ${Token}`
+            }
+        }).then((res: any) => {
+            setDataSource(res?.data?.reports);
+        }).catch((error: any) => {
+            console.log(error);
+        });
+    },[])
 
 
     // form submit

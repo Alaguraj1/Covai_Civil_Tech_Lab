@@ -67,11 +67,11 @@ const Expense = () => {
     if (record) {
       setEditRecord(record)
       form.setFieldsValue(record)
-      setDrawerTitle("Edit Expense")
+      setDrawerTitle("Edit Expense Category")
     } else {
       setEditRecord(null)
       form.resetFields()
-      setDrawerTitle("Create Expense")
+      setDrawerTitle("Create Expense Category")
     }
     setOpen(true);
   };
@@ -288,11 +288,11 @@ const Expense = () => {
       <div className='panel'>
         <div className='tax-heading-main'>
           <div>
-            <h1 className='text-lg font-semibold dark:text-white-light'>Manage Expense</h1>
+            <h1 className='text-lg font-semibold dark:text-white-light'>Manage Expense Category</h1>
           </div>
           <div>
             <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
-            <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Expense</button>
+            <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Expense Category</button>
           </div>
         </div>
         <div className='table-responsive'>

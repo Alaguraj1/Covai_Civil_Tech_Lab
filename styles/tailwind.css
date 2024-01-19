@@ -1240,4 +1240,35 @@ color: white;
     padding-left: 5px;
 }
 
+
+/* .tableContainer {
+    position: relative;
+    max-height: 350px;
+    overflow-x: auto;
+  }
+  
+  .ant-table {
+    max-height: 350px;
+  }
+  
+  .ant-table-thead {
+    position: sticky;
+    top: 0;
+    z-index: 1;
+  }
+  
+  .tableWrapper {
+    position: relative;
+  }
+  
+  .ant-pagination {
+    position: sticky;
+    bottom: 0;
+    z-index: 1;
+  } */
+  
 /* live server css end */
+
+
+.ck-content .table{width:100% !important;}
+.ck-content-tabhrader{ background:#972e25;}

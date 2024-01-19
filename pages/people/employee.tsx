@@ -268,7 +268,7 @@ console.log('✌️res --->', res.data);
 
 
 
-
+console.log("viewRecord", viewRecord)
 
     type FieldType = {
         employee_name?: string;
@@ -293,7 +293,23 @@ console.log('✌️res --->', res.data);
     // modal data
     const modalData = () => {
 
+        const formatDate = (dateString: any) => {
+            if (!dateString) {
+                return "N/A"; // or handle it according to your requirements
+            }
 
+            const date = new Date(dateString);
+
+            if (isNaN(date.getTime())) {
+                return "Invalid Date"; // or handle it according to your requirements
+            }
+
+            return new Intl.DateTimeFormat('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+            }).format(date);
+        };
 
         const data = [
             {
@@ -305,9 +321,35 @@ console.log('✌️res --->', res.data);
                 value: viewRecord?.login_name || "N/A",
             },
             {
-                label: "Address:",
-                value: viewRecord?.address || "N/A",
+                label: "User Name:",
+                value: viewRecord?.username || "N/A",
             },
+            {
+                label: "Email:",
+                value: viewRecord?.email || "N/A",
+            },
+            {
+                label: "DOB:",
+                value: formatDate(viewRecord?.dob) || "N/A",
+            },
+            {
+                label: "Gender:",
+                value: viewRecord?.gender || "N/A",
+            },
+            {
+                label: "Mobile Number:",
+                value: viewRecord?.mobile_number || "N/A",
+            },
+            {
+                label: "Qualification:",
+                value: viewRecord?.qualification || "N/A",
+            },
+            {
+                label: "Salary:",
+                value: viewRecord?.salary || "N/A",
+            },
+
+            
 
             {
                 label: "Phone Number:",
@@ -316,7 +358,11 @@ console.log('✌️res --->', res.data);
 
             {
                 label: "DOJ:",
-                value: viewRecord?.joining_date || "N/A",
+                value: formatDate(viewRecord?.joining_date) || "N/A",
+            },
+            {
+                label: "Address:",
+                value: viewRecord?.address || "N/A",
             },
 
             {
@@ -325,7 +371,7 @@ console.log('✌️res --->', res.data);
             },
             {
                 label: "Created Date:",
-                value: viewRecord?.created_date,
+                value: formatDate(viewRecord?.created_date),
             },
             {
                 label: "Modified By:",
@@ -333,7 +379,7 @@ console.log('✌️res --->', res.data);
             },
             {
                 label: "Modified Date:",
-                value: viewRecord?.modified_date,
+                value: formatDate(viewRecord?.modified_date),
             },
         ];
 
@@ -476,8 +522,8 @@ console.log('✌️res --->', res.data);
                         <Form.Item<FieldType>
                             label="Salary"
                             name="salary"
-                            required={true}
-                            rules={[{ required: true, message: 'Please input your Salary (Allowed Numbers Only 0-9)!' }]}
+                            required={false}
+                            rules={[{ required: false, message: 'Please input your Salary (Allowed Numbers Only 0-9)!' }]}
                         >
                             <InputNumber style={{ width: "100%" }} />
                         </Form.Item>

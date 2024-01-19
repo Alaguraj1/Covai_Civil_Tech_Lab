@@ -187,33 +187,33 @@ const Customer = () => {
 
     ];
 
-    const handleDelete = (record: any) => {
-        // Implement your delete logic here
-        Modal.confirm({
-            title: "Are you sure, you want to delete this CUSTOMER record?",
-            okText: "Yes",
-            okType: "danger",
-            onOk: () => {
+    // const handleDelete = (record: any) => {
+    //     // Implement your delete logic here
+    //     Modal.confirm({
+    //         title: "Are you sure, you want to delete this CUSTOMER record?",
+    //         okText: "Yes",
+    //         okType: "danger",
+    //         onOk: () => {
 
-                axios.delete(`http://files.covaiciviltechlab.com/delete_customer/${record.id}`, {
-                    headers: {
-                        "Authorization": `Token ${localStorage.getItem("token")}`
-                    }
-                }).then((res) => {
-                    messageApi.open({
-                        type: 'success',
-                        content: 'Deleted Successfully..!',
-                    });
+    //             axios.delete(`http://files.covaiciviltechlab.com/delete_customer/${record.id}`, {
+    //                 headers: {
+    //                     "Authorization": `Token ${localStorage.getItem("token")}`
+    //                 }
+    //             }).then((res) => {
+    //                 messageApi.open({
+    //                     type: 'success',
+    //                     content: 'Deleted Successfully..!',
+    //                 });
 
-                    console.log(res);
-                    getCustomer();
-                }).catch((err) => {
-                    console.log(err);
-                });
+    //                 console.log(res);
+    //                 getCustomer();
+    //             }).catch((err) => {
+    //                 console.log(err);
+    //             });
 
-            },
-        });
-    };
+    //         },
+    //     });
+    // };
 
 
     const [filterData, setFilterData] = useState(dataSource)
@@ -294,6 +294,7 @@ const Customer = () => {
     const { TextArea } = Input;
 
 
+    console.log("viewRecord", viewRecord)
 
     // modal data
     const modalData = () => {

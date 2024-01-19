@@ -113,10 +113,10 @@ const Preview = () => {
               </div>
               <div className="flex justify-between sm:flex-row flex-col gap-6 lg:w-2/3">
                 <div className="xl:1/3 lg:w-2/5 sm:w-1/2">
-                  <div className="flex items-center w-full justify-between mb-2">
+                  {/* <div className="flex items-center w-full justify-between mb-2">
                     <div className="text-white-dark">Invoice No :</div>
                     <div> {printData?.invoice?.invoice_no}</div>
-                  </div>
+                  </div> */}
                   <div className="flex items-center w-full justify-between mb-2">
                     <div className="text-white-dark">Issue Date :</div>
                     <div>{printData?.invoice?.date}</div>
@@ -148,11 +148,11 @@ const Preview = () => {
                   </div>
                   <div className="flex items-center w-full justify-between mb-2">
                     <div className="text-white-dark">Branch:</div>
-                    <div>TVSami Road, RSPuram</div>
+                    <div>Saibaba colony branch, coimbatore.</div>
                   </div>
                   <div className="flex items-center w-full justify-between mb-2">
                     <div className="text-white-dark">IFSC Code:</div>
-                    <div>ICIC0005847</div>
+                    <div>ICIC0001550</div>
                   </div>
 
                 </div>

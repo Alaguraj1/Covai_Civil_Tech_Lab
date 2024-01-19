@@ -81,7 +81,7 @@ const ExpenseReport = () => {
 
     const filteredData = dataSource.filter((item: any) => {
       return (
-        item?.narration?.toLowerCase().includes(SearchValue.toLowerCase())
+        item?.expense_user?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.expense_category?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.amount.includes(SearchValue) || item?.narration?.toLowerCase().includes(SearchValue.toLowerCase()) 
       )
     })
     setFilterData(filteredData)
