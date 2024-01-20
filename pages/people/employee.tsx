@@ -97,22 +97,22 @@ console.log("datasource", dataSource)
             dataIndex: 'employee_name',
             key: 'employee_name',
         },
-        // {
-        //     title: 'Login Name',
-        //     dataIndex: 'login_name',
-        //     key: 'login_name',
-        // },
+        {
+            title: 'User Name',
+            dataIndex: 'username',
+            key: 'username',
+        },
 
         {
             title: 'Mobile Number',
             dataIndex: 'mobile_number',
             key: 'mobile_number',
         },
-        {
-            title: 'Email',
-            dataIndex: 'email',
-            key: 'email',
-        },
+        // {
+        //     title: 'Email',
+        //     dataIndex: 'email',
+        //     key: 'email',
+        // },
         {
             title: "Actions",
             key: "actions",
@@ -278,7 +278,7 @@ console.log("viewRecord", viewRecord)
         address?: string;
         mobile_number?: string;
         // phone_number?: string;
-        email?: string;
+        // email?: string;
         dob?: string;
         gender?: string;
         qualification?: string;
@@ -325,10 +325,10 @@ console.log("viewRecord", viewRecord)
                 label: "User Name:",
                 value: viewRecord?.username || "N/A",
             },
-            {
-                label: "Email:",
-                value: viewRecord?.email || "N/A",
-            },
+            // {
+            //     label: "Email:",
+            //     value: viewRecord?.email || "N/A",
+            // },
             {
                 label: "Branch Email:",
                 value: viewRecord?.branch_email || "N/A",
@@ -432,7 +432,7 @@ console.log("viewRecord", viewRecord)
                             required={true}
                             rules={[{ required: true, message: 'Please input your User Name!' }]}
                         >
-                            <Input />
+                            <Input type='email'/>
                         </Form.Item>
 
 
@@ -448,8 +448,8 @@ console.log("viewRecord", viewRecord)
                         <Form.Item<FieldType>
                             label="Password"
                             name="password"
-                            required={true}
-                            rules={[{ required: true, message: 'Please input your Password!' }]}
+                            required={false}
+                            rules={[{ required: false, message: 'Please input your Password!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -482,14 +482,14 @@ console.log("viewRecord", viewRecord)
                         </Form.Item> */}
 
 
-                        <Form.Item<FieldType>
+                        {/* <Form.Item<FieldType>
                             label="Email"
                             name="email"
                             required={true}
                             rules={[{ required: true, message: 'Please input your EMail!' }]}
                         >
                             <Input />
-                        </Form.Item>
+                        </Form.Item> */}
 
                         <Form.Item<FieldType>
                             label="Branch Email"

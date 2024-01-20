@@ -27,14 +27,29 @@ const SaleReport = () => {
     // Table Datas
     const columns = [
         {
+            title: 'Date',
+            dataIndex: 'date',
+            key: 'date',
+        },
+        {
             title: 'Customer Name',
             dataIndex: 'customer_name',
             key: 'customer_name',
         },
         {
+            title: 'Customer GST No',
+            dataIndex: 'customer_gst_no',
+            key: 'customer_gst_no',
+        },
+        {
             title: 'Project Name',
             dataIndex: 'project_name',
             key: 'project_name',
+        },   
+        {
+            title: 'Invoice No',
+            dataIndex: 'invoice_no',
+            key: 'invoice_no',
         },
         {
             title: 'Advance',
@@ -58,32 +73,15 @@ const SaleReport = () => {
             key: 'cash',
         },
         {
-            title: 'CGST Tax',
-            dataIndex: 'cgst_tax',
-            key: 'cgst_tax',
-        },
-        {
             title: 'Cheque Neft',
             dataIndex: 'cheque_neft',
             key: 'cheque_neft',
         },
-
         {
-            title: 'Customer GST No',
-            dataIndex: 'customer_gst_no',
-            key: 'customer_gst_no',
+            title: 'CGST Tax',
+            dataIndex: 'cgst_tax',
+            key: 'cgst_tax',
         },
-        {
-            title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
-        },
-        {
-            title: 'Invoice No',
-            dataIndex: 'invoice_no',
-            key: 'invoice_no',
-        },
-
         {
             title: 'SGST Tax',
             dataIndex: 'sgst_tax',

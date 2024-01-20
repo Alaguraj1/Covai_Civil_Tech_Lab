@@ -1273,9 +1273,9 @@ color: white;
 .ck-content .table{width:100% !important;}
 .ck-content-tabhrader{ background:#972e25;}
 
-.ck.ck-editor__editable {
+/* .ck.ck-editor__editable {
     border-color: #972e25 !important;
-  }
+  } */
   
 
 .ck-focused{

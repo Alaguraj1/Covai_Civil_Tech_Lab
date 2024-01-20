@@ -463,7 +463,7 @@ const Header = () => {
                                 <Link href="/master/test">{t('Test')}</Link>
                             </li>
                             <li>
-                                <Link href="/master/expense">{t('Expense')}</Link>
+                                <Link href="/master/expense">{t('Expense Category')}</Link>
                             </li>
                         </ul>
                     </li>
@@ -511,7 +511,7 @@ const Header = () => {
                                 <Link href="/invoice/expenseEntry">{t('Expense Entry')}</Link>
                             </li>
                             <li>
-                                <Link href="/invoice/invoiceFileUplod">{t('Invoice File Upload')}</Link>
+                                <Link href="/invoice/invoiceFileUplod">{t('File Upload')}</Link>
                             </li>
                         </ul>
                     </li>

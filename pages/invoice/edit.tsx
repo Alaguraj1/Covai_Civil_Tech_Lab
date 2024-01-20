@@ -602,7 +602,7 @@ const Edit = () => {
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
             {contextHolder}
-            <div className="panel flex-1 px-0 py-6 ltr:xl:mr-6 rtl:xl:ml-6">
+            <div className="panel flex-1 px-0 py-6 rtl:xl:ml-6">
                 <div className="flex flex-wrap justify-between px-4">
                     <div className="mb-6 w-full lg:w-1/2">
                         {/* <div className="flex shrink-0 items-center text-black dark:text-white">
@@ -847,7 +847,7 @@ const Edit = () => {
             </div>
 
             {/* Modal */}
-            <Modal title="Create Invoice" open={isModalOpen} width={900} onOk={handleOk} onCancel={handleCancel} footer={false}>
+            <Modal title="Create Test" open={isModalOpen} width={900} onOk={handleOk} onCancel={handleCancel} footer={false}>
                 <Form
                     name="basic"
                     onFinish={onFinish}
@@ -856,10 +856,10 @@ const Edit = () => {
                     form={form}
                 >
                     <Form.Item
-                        label="Material ID"
+                        label="Material Name"
                         name="material_id"
                         required={false}
-                        rules={[{ required: true, message: 'Please select a Material ID!' }]}
+                        rules={[{ required: true, message: 'Please select a Material Name!' }]}
                     >
                         <Select onChange={materialChange}>
                             {testFormData?.materials?.map((value: any) => (
@@ -974,7 +974,7 @@ const Edit = () => {
 
 
             {/* INvoice Edit Drawer */}
-            <Drawer title="Edit Invoice" placement="right" width={600} onClose={onClose} open={open}>
+            <Drawer title="Edit Test" placement="right" width={600} onClose={onClose} open={open}>
                 <Form
                     name="basic"
                     layout="vertical"
