@@ -258,7 +258,7 @@ const InvoiceFileUpload = () => {
   const inputChange = (e: any) => {
     setFilterData(
       dataSource.filter((item: any) => {
-        return item.file_url.toLowerCase().includes(e.target.value.toLowerCase())
+        return item.category_name.toLowerCase().includes(e.target.value.toLowerCase())
       })
     )
   }
