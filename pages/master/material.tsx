@@ -1,15 +1,17 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Space, Table, Modal, Select, } from 'antd';
 import { Button, Drawer } from 'antd';
 import { Form, Input } from 'antd';
-import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
+import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
-
 import "react-quill/dist/quill.snow.css";
 import dynamic from 'next/dynamic';
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+
 const Material = () => {
 
+  const editorRef: any = useRef();
+  const [editorLoaded, setEditorLoaded] = useState(false)
+  const { CKEditor, ClassicEditor } = editorRef.current || {}
   const [open, setOpen] = useState(false);
   const { Search } = Input;
   const [form] = Form.useForm();
@@ -18,8 +20,9 @@ const Material = () => {
   const [dataSource, setDataSource] = useState([])
   const [viewRecord, setViewRecord] = useState<any>(null)
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [editor, setEditor] = useState("")
+  const [editor, setEditor] = useState<any>("")
   const [formFields, setFormFields] = useState<any>([])
+
   // Model 
   const showModal = (record: any) => {
     setIsModalOpen(true);
@@ -84,21 +87,31 @@ const Material = () => {
     }
   }, [editRecord])
 
+  useEffect(() => {
+    editorRef.current = {
+      CKEditor: require('@ckeditor/ckeditor5-react').CKEditor,
+      ClassicEditor: require('@ckeditor/ckeditor5-build-classic')
+    }
+    setEditorLoaded(true)
+  }, [])
 
-  // editor
-  const handleEditorChange = (value: any) => {
-    setEditor(value);
+  const handleEditorChange = (data: any) => {
+    setEditor(data);
   };
+  console.log("editor", editor)
+ 
 
   // drawer
   const showDrawer = (record: any) => {
     if (record) {
       setEditRecord(record)
       form.setFieldsValue(record)
+      setEditor(record.template)
     }
     else {
       setEditRecord(null)
       form.resetFields()
+      setEditor(null)
     }
     setOpen(true);
   };
@@ -237,11 +250,21 @@ const Material = () => {
 
   // form submit
   const onFinish = (values: any) => {
+console.log('✌️values --->', values);
 
     const Token = localStorage.getItem("token")
 
+    const body = {
+      template: editor,
+      material_name: values.material_name,
+      letter_pad_logo: values.letter_pad_logo,
+      print_format: values.print_format
+    }
+    console.log('✌️body --->', body);
+
+
     if (editRecord) {
-      axios.put(`http://files.covaiciviltechlab.com/edit_material/${editRecord.id}/`, values, {
+      axios.put(`http://files.covaiciviltechlab.com/edit_material/${editRecord.id}/`, body, {
         headers: {
           "Authorization": `Token ${Token}`
         }
@@ -253,7 +276,7 @@ const Material = () => {
       })
 
     } else {
-      axios.post("http://files.covaiciviltechlab.com/create_material/", values, {
+      axios.post("http://files.covaiciviltechlab.com/create_material/", body, {
         headers: {
           "Authorization": `Token ${Token}`
         }
@@ -358,12 +381,12 @@ const Material = () => {
               label="Material Name"
               name="material_name"
               required={true}
-              rules={[{ required: true, message: 'This field is required.' }]}
+              rules={[{ required: true, message: 'Please input your Material Name' }]}
             >
               <Input />
             </Form.Item>
 
-            <Form.Item
+            {/* <Form.Item
               label="Templates"
               name="template"
               required={true}
@@ -385,6 +408,33 @@ const Material = () => {
                   ],
                 }}
               />
+            </Form.Item> */}
+
+            <Form.Item
+              label="Templates"
+              name="template"
+              required={false}
+              rules={[{ required: false, message: 'Please input your Template' }]}            >
+              <div dangerouslySetInnerHTML={{ __html: editor }} style={{ display: "none" }} />
+              {editorLoaded &&
+                <CKEditor
+                  editor={ClassicEditor}
+                  data={editor}
+                  onChange={(event: any, editor: any) => {
+                    const data = editor.getData();
+                    handleEditorChange(data);
+                    // onChange(data);
+                  }}
+                />
+              }
+              {/* <CKEditor
+               editor={ClassicEditor}
+                data={editor}
+                onChange={(event:any, editor:any) => {
+                  const newData = editor.getData();
+                  handleEditorChange(newData);
+                }}
+              /> */}
             </Form.Item>
 
 

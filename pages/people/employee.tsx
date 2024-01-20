@@ -62,7 +62,7 @@ console.log('✌️res --->', res.data);
         }
     }, [editRecord, open]);
 
-
+console.log("datasource", dataSource)
     // drawer
     const showDrawer = (record: any) => {
         console.log('✌️record --->', record);
@@ -97,11 +97,11 @@ console.log('✌️res --->', res.data);
             dataIndex: 'employee_name',
             key: 'employee_name',
         },
-        {
-            title: 'Login Name',
-            dataIndex: 'login_name',
-            key: 'login_name',
-        },
+        // {
+        //     title: 'Login Name',
+        //     dataIndex: 'login_name',
+        //     key: 'login_name',
+        // },
 
         {
             title: 'Mobile Number',
@@ -273,17 +273,18 @@ console.log("viewRecord", viewRecord)
     type FieldType = {
         employee_name?: string;
         username?: string;
-        login_name?: string
+        // login_name?: string
         password?: string;
         address?: string;
         mobile_number?: string;
-        phone_number?: string;
+        // phone_number?: string;
         email?: string;
         dob?: string;
         gender?: string;
         qualification?: string;
         joiningDate?: string;
         salary?: string;
+        branch_email?:string
     };
 
     const { TextArea } = Input;
@@ -316,10 +317,10 @@ console.log("viewRecord", viewRecord)
                 label: "Employee Name:",
                 value: viewRecord?.employee_name || "N/A",
             },
-            {
-                label: "Login Name:",
-                value: viewRecord?.login_name || "N/A",
-            },
+            // {
+            //     label: "Login Name:",
+            //     value: viewRecord?.login_name || "N/A",
+            // },
             {
                 label: "User Name:",
                 value: viewRecord?.username || "N/A",
@@ -329,7 +330,11 @@ console.log("viewRecord", viewRecord)
                 value: viewRecord?.email || "N/A",
             },
             {
-                label: "DOB:",
+                label: "Branch Email:",
+                value: viewRecord?.branch_email || "N/A",
+            },
+            {
+                label: "Date Of Birth:",
                 value: formatDate(viewRecord?.dob) || "N/A",
             },
             {
@@ -349,15 +354,13 @@ console.log("viewRecord", viewRecord)
                 value: viewRecord?.salary || "N/A",
             },
 
-            
+            // {
+            //     label: "Phone Number:",
+            //     value: viewRecord?.phone_number || "N/A",
+            // },
 
             {
-                label: "Phone Number:",
-                value: viewRecord?.phone_number || "N/A",
-            },
-
-            {
-                label: "DOJ:",
+                label: "Date Of Joining:",
                 value: formatDate(viewRecord?.joining_date) || "N/A",
             },
             {
@@ -433,20 +436,20 @@ console.log("viewRecord", viewRecord)
                         </Form.Item>
 
 
-                        <Form.Item<FieldType>
+                        {/* <Form.Item<FieldType>
                             label="Login Name"
                             name="login_name"
                             required={true}
                             rules={[{ required: true, message: 'Please input your Login Name!' }]}
                         >
                             <Input />
-                        </Form.Item>
+                        </Form.Item> */}
 
                         <Form.Item<FieldType>
                             label="Password"
                             name="password"
-                            required={false}
-                            rules={[{ required: false, message: 'Please input your Password!' }]}
+                            required={true}
+                            rules={[{ required: true, message: 'Please input your Password!' }]}
                         >
                             <Input />
                         </Form.Item>
@@ -469,14 +472,14 @@ console.log("viewRecord", viewRecord)
                             <InputNumber style={{ width: "100%" }} maxLength={10} />
                         </Form.Item>
 
-                        <Form.Item<FieldType>
+                        {/* <Form.Item<FieldType>
                             label="Phone Number"
                             name="phone_number"
                             required={true}
                             rules={[{ required: true, message: 'Please input your Phone Number!' }]}
                         >
                             <InputNumber style={{ width: "100%" }} maxLength={10} />
-                        </Form.Item>
+                        </Form.Item> */}
 
 
                         <Form.Item<FieldType>
@@ -484,6 +487,15 @@ console.log("viewRecord", viewRecord)
                             name="email"
                             required={true}
                             rules={[{ required: true, message: 'Please input your EMail!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item<FieldType>
+                            label="Branch Email"
+                            name="branch_email"
+                            required={true}
+                            rules={[{ required: true, message: 'Please input your Branch Email!' }]}
                         >
                             <Input />
                         </Form.Item>

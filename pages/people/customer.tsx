@@ -367,10 +367,10 @@ const Customer = () => {
                 label: "contact_person Email 1:",
                 value: viewRecord?.contact_person_email1 || "N/A",
             },
-            {
-                label: "Code:",
-                value: viewRecord?.code || "N/A",
-            },
+            // {
+            //     label: "Code:",
+            //     value: viewRecord?.code || "N/A",
+            // },
             {
                 label: "place Of Testing :",
                 value: viewRecord?.place_of_testing || "N/A",
@@ -573,14 +573,14 @@ const Customer = () => {
                             <Input />
                         </Form.Item>
 
-                        <Form.Item<FieldType>
+                        {/* <Form.Item<FieldType>
                             label="Code"
                             name="code"
                             required={true}
                             rules={[{ required: true, message: 'Please input code..!' }]}
                         >
                             <Input />
-                        </Form.Item>
+                        </Form.Item> */}
 
                         <Form.Item<FieldType>
                             label="Contact Person 1"
