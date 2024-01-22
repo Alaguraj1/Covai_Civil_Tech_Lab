@@ -8,6 +8,7 @@ const Preview = () => {
   const router = useRouter();
   const { id } = router.query;
   const [printData, setPrintData] = useState<any>([])
+  const [totalTaxAmount, setTotalTaxAmount] = useState<any>(0)
 
   useEffect(() => {
     calcAmt();
@@ -37,23 +38,88 @@ const Preview = () => {
     })
   }, [id])
 
+  console.log("printData", printData)
 
-  const invoiceTests = printData.invoice_tests || [];
-  const totalAmount = invoiceTests.reduce((acc: any, invoiceTest: any) => {
-    return acc + parseFloat(invoiceTest.total);
-  }, 0);
+  // const invoiceTests = printData.invoice_tests || [];
 
 
-  const TaxData: any = totalAmount * 9 / 100
+  // const totalAmount = invoiceTests.reduce((acc: any, invoiceTest: any) => {
+  //   return acc + parseFloat(invoiceTest.total);
+  // }, 0);
 
 
-  const invoiceTestsTotal = invoiceTests.reduce((acc: any, item: any) => acc + parseFloat(item.total), 0);
+  // const TaxData: any = totalAmount * 9 / 100
 
-  // Assuming TaxData is a single numeric value
-  const taxDataValue = parseFloat(TaxData);
 
-  // Combine the totals and log the result
-  const TotalData = invoiceTestsTotal + taxDataValue + taxDataValue;
+  // const invoiceTestsTotal = invoiceTests.reduce((acc: any, item: any) => acc + parseFloat(item.total), 0);
+
+  // // Assuming TaxData is a single numeric value
+  // const taxDataValue = parseFloat(TaxData);
+
+  // // Combine the totals and log the result
+  // const TotalData = invoiceTestsTotal + taxDataValue + taxDataValue;
+
+
+  // before Tax
+
+
+
+  const TestTotal: any = printData?.invoice_tests?.reduce(
+    (accumulator: any, currentValue: any) => accumulator + parseFloat(currentValue.total || 0),
+    0
+  );
+
+  const Add_Discount = TestTotal * printData?.invoice?.discount / 100
+
+  const BeforeTotal = TestTotal - Add_Discount
+
+
+  // Taxs
+
+  const taxIds = printData?.invoice?.tax;
+
+  const filteredTaxes = printData?.taxes?.filter((tax: any) => taxIds.includes(tax.id));
+
+
+  const Discount: any = () => {
+
+    if (filteredTaxes?.length > 0) {
+      const percentagesArray = filteredTaxes.map((item: any) =>
+        parseFloat(item.tax_percentage)
+      );
+
+      const sum = percentagesArray.reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
+      console.log('✌️sum --->', sum);
+
+      const selectedName = filteredTaxes.map((item: any) =>
+        (item.tax_name)
+      );
+      const nameString = selectedName.join(" + ");
+
+      const percentagesString = percentagesArray.join(" + ");
+      return `${nameString} : ${percentagesString}`;
+    }
+    return "";
+  };
+  console.log("totalTaxAmount", totalTaxAmount)
+
+
+  // tax total amount
+  if (filteredTaxes?.length > 0) {
+    const percentagesArray = filteredTaxes.map((item: any) =>
+      parseFloat(item.tax_percentage)
+    )
+
+    var sum = percentagesArray.reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
+    console.log('✌️sum --->', sum);
+  }
+  const Tax_total = BeforeTotal * sum / 100
+  console.log('✌️Tax_total --->', Tax_total);
+
+
+  // after tax
+  const After_Tax: any = BeforeTotal + Tax_total
+  console.log('✌️After_Tax --->', After_Tax);
 
   return (
     <>
@@ -99,6 +165,7 @@ const Preview = () => {
                 <div className="space-y-1 text-white-dark">
                   <div>Issue For:</div>
                   <div className="text-black dark:text-white font-semibold">
+                    {printData?.customer?.customer_name} <br />
                     {printData?.customer?.address1}
                     <br></br>
                     <div className="space-y-1 text-white-dark">
@@ -128,7 +195,7 @@ const Preview = () => {
                   </div>
                   <div className="flex items-center w-full justify-between">
                     <div className="text-white-dark">Place of Testing  :</div>
-                    <div>{printData?.customer?.place_of_testing}</div>
+                    <div>{printData?.invoice?.place_of_testing}</div>
                   </div>
                   <div className="flex items-center w-full justify-between">
                     <div className="text-white-dark"> GSTIN/UIN  :</div>
@@ -198,31 +265,41 @@ const Preview = () => {
 
                   }
 
-                  {/* <tr>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td> </td>
+                 
+                  {
+                    printData?.invoice?.discount >= 1 ? (
+                      <tr>
+                        <>
+                          <td> </td>
+                          <td> </td>
+                          <td> </td>
+                          <td> </td>
+                          <td style={{ textAlign: "right" }}>Discount</td>
+                          <td style={{ textAlign: "right" }}>{printData?.invoice?.discount}</td>
+                        </>
+                      </tr>
+                    ) : null
+                  }
 
-                    <td style={{ textAlign: "right" }}><b> GST :18%</b></td>
-                    <td> </td>
-                  </tr> */}
                   <tr>
                     <td> </td>
                     <td> </td>
                     <td> </td>
                     <td> </td>
-                    <td style={{ textAlign: "right" }}>Add : CGST @ 9.00 %</td>
-                    <td style={{ textAlign: "right" }}>{parseInt(TaxData, 10)}</td>
+                    <td style={{ textAlign: "right" }}>Before Tax</td>
+                    <td style={{ textAlign: "right" }}>{BeforeTotal}</td>
                   </tr>
+
+            
                   <tr>
                     <td> </td>
                     <td> </td>
-                    <td></td>
-                    <td style={{ textAlign: "center" }}></td>
-                    <td style={{ textAlign: "right" }}>Add : SGST @ 9.00 % </td>
-                    <td style={{ textAlign: "right" }}>{parseInt(TaxData, 10)} </td>
+                    <td> </td>
+                    <td> </td>
+                    <td style={{ textAlign: "right" }}>{Discount()}</td>
+                    <td style={{ textAlign: "right" }}>{Tax_total}</td>
                   </tr>
+                
                   <tr></tr>
                   <tr>
                     <td> </td>
@@ -230,10 +307,10 @@ const Preview = () => {
                     <td> </td>
                     <td ></td>
                     <td style={{ textAlign: "right" }}>
-                      Total Rs.
+                      After Tax
                     </td>
                     <td style={{ textAlign: "right", fontWeight: "bold" }}>
-                      {parseInt(TotalData, 10)}{" "}
+                      {parseInt(After_Tax, 10)}{" "}
                       <input
                         type="hidden"
                         id="amt"
@@ -242,19 +319,6 @@ const Preview = () => {
                       />
                     </td>
                   </tr>
-                  {/* <tr>
-
-                    <td id="words_amt" colSpan={"5"} style={{ textAlign: "right" }}>
-                      {TotalData}{" "}
-                      <input
-                        type="hidden"
-                        id="amt"
-                        name="amt"
-                        defaultValue="11,446.00"
-                      />
-                    </td>
-                    <td style={{ textAlign: "right" }}>E &amp; OE</td>
-                  </tr> */}
                 </tbody>
               </table>
 
@@ -263,28 +327,28 @@ const Preview = () => {
 
             {/*footer */}
             <hr className="border-white-light dark:border-[#1b2e4b] my-6" />
-            <div className="flex justify-between flex-wrap">
-              <div className="gap-4 px-4 grid-cols-3"><div className="shrink-0">
-                <img src={printData?.invoice?.qr} style={{ textAlign: "center", width: "25%" }} alt='image' />
-              </div></div>
-              <div className="text-right grid-cols-9 space-y-1 mt-0 text-white-dark text-right text-sm">
-                <img src="/assets/images/signature.png" alt="img" style={{ marginLeft: "auto" }} />
-                <b style={{ textAlign: "right" }}>THIRUMALAI.</b>
-                <br />
-                TECHNICAL DIRECTOR
-                <img src="/assets/images/logo_3.jpg" alt="img" style={{ marginLeft: "auto" }} />
-                <div className="space-y-1 mt-0 text-white-dark text-right text-sm">
+            <div className='row' style={{ display: "flex", justifyContent: "space-between" }}>
+
+              <div className='col-4'>
+                <img src="/assets/images/SponsOr.jpg" style={{ textAlign: "center", }} alt='image' />
+              </div>
+              <div className='col-4'>
+                <img src={printData?.invoice?.qr} style={{ textAlign: "center", width: "30%" }} alt='image' />
+              </div>
+              <div className='col-4'>
+                <div className="text-right grid-cols-9 space-y-1 mt-0 text-white-dark text-right text-sm">
+                  <img src="/assets/images/sign.jpg" alt="img" style={{ marginLeft: "auto" }} />
+                  <br />
+                  COVAI CIVIL TECH LAB <br /> G.GOVARDHAN,.BE (CIVIL) <br /> MANAGER
+                  {/* <img src="/assets/images/logo_3.jpg" alt="img" style={{ marginLeft: "auto" }} /> */}
+                  <div className="space-y-1 mt-0 text-white-dark text-right text-sm">
 
 
-                  <br />  <b>Phone</b> :  9840014193 |<br />
-                  <i><b>Email :</b> cbe@covaiciviltechlab.com </i> |<br />
-                  <i><b>Website : </b>www.covaiciviltechlab.com</i>
-                  <br></br>
-
-
-
-
-
+                    <br />  <b>Phone</b> :  9840014193 |<br />
+                    <i><b>Email :</b> cbe@covaiciviltechlab.com </i> |<br />
+                    <i><b>Website : </b>www.covaiciviltechlab.com</i>
+                    <br></br>
+                  </div>
                 </div>
               </div>
             </div>
@@ -301,13 +365,9 @@ const Preview = () => {
             SUBJECT TO COIMBATORE JURISDICTION
             <br /> This is computer Generated Invoice.
           </div>
-
         </div>
-
       </div>
-
     </>
-
   );
 };
 

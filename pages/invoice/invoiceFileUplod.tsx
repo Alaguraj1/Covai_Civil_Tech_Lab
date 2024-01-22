@@ -163,8 +163,8 @@ const InvoiceFileUpload = () => {
     },
     {
       title: 'Expense',
-      dataIndex: 'expense',
-      key: 'expense',
+      dataIndex: 'expense_category',
+      key: 'expense_category',
     },
     {
       title: 'File Url',
@@ -257,7 +257,7 @@ const InvoiceFileUpload = () => {
   const inputChange = (e: any) => {
     setFilterData(
       dataSource.filter((item: any) => {
-        return item.category_name.toLowerCase().includes(e.target.value.toLowerCase())
+        return item.category_name.toLowerCase().includes(e.target.value.toLowerCase()) ||item?.expense_category?.toLowerCase().includes(e.target.value.toLowerCase()) || item?.invoice_no?.includes(e.target.value)
       })
     )
   }
@@ -367,7 +367,7 @@ const InvoiceFileUpload = () => {
       },
       {
         label: "Expense:",
-        value: viewRecord?.expense || "N/A",
+        value: viewRecord?.expense_category || "N/A",
       },
       {
         label: "Download:",
@@ -444,7 +444,7 @@ const InvoiceFileUpload = () => {
       <div className='panel'>
         <div className='tax-heading-main'>
           <div>
-            <h1 className='text-lg font-semibold dark:text-white-light'>Expense File Upload</h1>
+            <h1 className='text-lg font-semibold dark:text-white-light'>Expense/Invoice File Upload</h1>
           </div>
           <div>
             <Search placeholder="Input search text" onChange={inputChange} enterButton className='search-bar' />

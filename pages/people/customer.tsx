@@ -597,7 +597,7 @@ const Customer = () => {
                             required={false}
                             rules={[{ required: false, message: 'Please input your Mobile Number 1!' }]}
                         >
-                            <Input />
+                            <Input  maxLength={10} minLength={10}/>
                         </Form.Item>
 
                         <Form.Item<FieldType>
@@ -606,7 +606,7 @@ const Customer = () => {
                             required={false}
                             rules={[{ required: false, message: 'Please input your Contact Person Email 1!' }]}
                         >
-                            <Input />
+                            <Input type='email' />
                         </Form.Item>
 
 
@@ -691,7 +691,7 @@ const Customer = () => {
                             required={false}
                             rules={[{ required: false, message: 'Please input your Mobile Number 2!' }]}
                         >
-                            <Input />
+                            <Input  maxLength={10} minLength={10}/>
                         </Form.Item>
 
                         <Form.Item<FieldType>
@@ -700,7 +700,7 @@ const Customer = () => {
                             required={false}
                             rules={[{ required: false, message: 'Please input your Contact Person Email2!' }]}
                         >
-                            <Input />
+                            <Input type='email' />
                         </Form.Item>
 
 

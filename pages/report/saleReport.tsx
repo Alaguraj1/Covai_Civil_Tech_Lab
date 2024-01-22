@@ -67,15 +67,16 @@ const SaleReport = () => {
             key: 'balance',
         },
 
-        {
-            title: 'Cash',
-            dataIndex: 'cash',
-            key: 'cash',
-        },
+       
         {
             title: 'Cheque Neft',
             dataIndex: 'cheque_neft',
             key: 'cheque_neft',
+        },
+        {
+            title: 'UPI',
+            dataIndex: 'upi',
+            key: 'upi',
         },
         {
             title: 'CGST Tax',
@@ -87,11 +88,11 @@ const SaleReport = () => {
             dataIndex: 'sgst_tax',
             key: 'sgst_tax',
         },
-        {
-            title: 'Tax Deduction',
-            dataIndex: 'tax_deduction',
-            key: 'tax_deduction',
-        },
+        // {
+        //     title: 'Tax Deduction',
+        //     dataIndex: 'tax_deduction',
+        //     key: 'tax_deduction',
+        // },
         {
             title: 'Total Amount',
             dataIndex: 'total_amount',

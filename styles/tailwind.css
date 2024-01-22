@@ -975,6 +975,21 @@ color: white;
     color: #972e25;
 }
 
+/* 
+input password */
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-input:hover{
+    box-shadow:none !important
+}
+:where(.css-dev-only-do-not-override-6j9yrn).ant-input-affix-wrapper:hover {
+    border-color: #972e25;
+}
+
+:where(.css-dev-only-do-not-override-6j9yrn).ant-input-affix-wrapper:focus-within{
+    border-color: #972e25;
+    box-shadow: none;
+
+}
 
 /* Select Option */
 
@@ -1164,6 +1179,19 @@ color: white;
     color: #972e25;
 }
 
+/* input password */
+:where(.css-6j9yrn).ant-input:hover{
+        box-shadow: none
+}
+
+:where(.css-6j9yrn).ant-input-affix-wrapper:hover {
+    border-color: #972e25;
+}
+
+:where(.css-6j9yrn).ant-input-affix-wrapper:focus-within{
+    border-color: #972e25;
+
+}
 
 /* Select Option */
 

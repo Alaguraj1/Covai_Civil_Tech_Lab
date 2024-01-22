@@ -203,7 +203,7 @@ console.log("datasource", dataSource)
 
     const filteredData = dataSource.filter((item: any) => {
       return (
-        item.project_name.toLowerCase().includes(SearchValue.toLowerCase())
+        item.project_name.toLowerCase().includes(SearchValue.toLowerCase())  || item?.customer?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.invoice_no?.includes(SearchValue)
 
       )
     })

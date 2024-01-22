@@ -451,7 +451,7 @@ console.log("viewRecord", viewRecord)
                             required={false}
                             rules={[{ required: false, message: 'Please input your Password!' }]}
                         >
-                            <Input />
+                            <Input.Password />
                         </Form.Item>
 
                         <Form.Item<FieldType>
