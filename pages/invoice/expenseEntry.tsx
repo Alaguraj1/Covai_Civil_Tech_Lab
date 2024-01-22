@@ -313,7 +313,7 @@ console.log('✌️record --->', record);
       },
       {
         label: "Expense Category:",
-        value: viewRecord?.expense_category || "N/A",
+        value: viewRecord?.expense_category_name || "N/A",
       },
       {
         label: "Amount:",

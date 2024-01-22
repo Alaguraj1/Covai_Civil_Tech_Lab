@@ -298,7 +298,7 @@ const Test = () => {
             },
             {
                 label: "Created By:",
-                value: viewRecord?.created_by?.username || "N/A",
+                value: viewRecord?.created_by || "N/A",
             },
             {
                 label: "Created Date:",
@@ -306,7 +306,7 @@ const Test = () => {
             },
             {
                 label: "Modified By:",
-                value: viewRecord?.modified_by?.username || "N/A",
+                value: viewRecord?.modified_by || "N/A",
             },
             {
                 label: "Modified Date:",
