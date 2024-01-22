@@ -103,6 +103,14 @@ console.log("datasource", dataSource)
       title: 'Invoice Number',
       dataIndex: 'invoice_no',
       key: 'invoice_no',
+      render: (text:any, record:any) => (
+        <span
+          style={{ textDecoration: 'underline', color: 'blue', cursor: 'pointer' }}
+          onClick={() => handleRowClick(record)}
+        >
+          {text}
+        </span>
+      ),
     },
     {
       title: 'Customer Name',
@@ -176,6 +184,10 @@ console.log("datasource", dataSource)
   //     });
   //   };
 
+  const handleRowClick = (record: any) => {
+    // Navigate to the /invoice/edit page with the record data as a query parameter
+    window.location.href = `/invoice/edit?id=${record.id}`;
+};
 
 
   // input search
