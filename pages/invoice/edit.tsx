@@ -6,7 +6,7 @@ import IconEye from '@/components/Icon/IconEye';
 import { Button, Modal, Form, Input, Select, Space, Drawer, message } from 'antd';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import { DeleteOutlined, EditOutlined, PrinterOutlined} from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, PrinterOutlined } from '@ant-design/icons';
 
 const Edit = () => {
 
@@ -39,12 +39,14 @@ const Edit = () => {
     const [updateBeforeTax, setUpdateBeforeTax] = useState(0);
     const [updatedSum, setUpdatedSum] = useState(0);
     const [messageApi, contextHolder] = message.useMessage();
+    const [paymentMode, setPaymentMode] = useState("")
 
 
     const [formData, setFormData] = useState<any>({
         customer: "",
         cheque_number: "",
         project_name: "",
+        upi: "",
         discount: "",
         advance: "",
         date: "",
@@ -59,15 +61,28 @@ const Edit = () => {
     const tableTogle = () => {
         setTableVisible(!tableVisible)
     }
-    const inputChange = ((e: any) => {
+
+    const selectChange = (event: any) => {
+        const { name, value } = event.target;
+
+        // Reset the inactive field's state when changing the payment mode
+        setFormData({
+            ...formData,
+            [name]: value,
+            cheque_number: name === 'payment_mode' && value !== 'cheque' ? null : formData.cheque_number,
+            upi: name === 'payment_mode' && value !== 'upi' ? null : formData.upi,
+        });
+        setPaymentMode(event.target.value)
+    };
+
+    const inputChange = ((e: any,) => {
         setFormData({
             ...formData,
             [e.target.name]: e.target.value
-        }
-        )
+        })
     })
 
-
+    console.log("paymentMode", paymentMode)
     const formatTotal = () => {
 
         const selectedPercentages = invoiceFormData?.taxs?.filter(
@@ -170,9 +185,11 @@ const Edit = () => {
                 place_of_testing: response.invoice.place_of_testing,
                 amount_paid_date: response.invoice.amount_paid_date,
                 before_tax: parseInt(discountedBeforeTax, 10) || 0,
-                invoice_tests: response?.invoice_tests
-                // tax: response.invoice.tax || [],
+                invoice_tests: response?.invoice_tests,
+                upi: response.invoice.upi,
             }));
+
+            setPaymentMode(response.invoice.payment_mode)
 
             setInvoiceFormData(data)
             setCustomerAddress(uniqueArray[0]?.address1);
@@ -357,7 +374,7 @@ const Edit = () => {
 
 
     const onFinish = (values: any) => {
-     
+
         values.invoice = Number(id);
         const body: any = {
             ...values,
@@ -396,7 +413,7 @@ const Edit = () => {
 
 
     const quantityChange = ((e: any, index: number) => {
-        const updatedFilterTest: any = [...filterTest]; 
+        const updatedFilterTest: any = [...filterTest];
         const filterItem: any = updatedFilterTest[index];
 
         if (filterItem) {
@@ -430,6 +447,7 @@ const Edit = () => {
         }
     })
 
+    console.log("formData", formData)
 
 
     const invoiceFormSubmit = ((e: any) => {
@@ -444,6 +462,7 @@ const Edit = () => {
         //     },
         //     data: formData
         // };
+
         const Token = localStorage.getItem('token');
         const body = {
             "customer": formData.customer,
@@ -459,8 +478,11 @@ const Edit = () => {
             "cheque_number": formData.cheque_number,
             "payment_mode": formData.payment_mode,
             "date": formData.date,
-            "place_of_testing": formData.place_of_testing
+            "place_of_testing": formData.place_of_testing,
+            "upi": formData.upi,
         }
+        console.log('✌️body --->', body);
+
         axios.put(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`, body, {
             headers: {
                 'Authorization': `Token ${Token}`,
@@ -687,7 +709,7 @@ const Edit = () => {
                                 <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                                     Payment Mode
                                 </label>
-                                <select id="country" className="form-select flex-1" name="payment_mode" value={formData?.payment_mode} onChange={inputChange} >
+                                <select id="country" className="form-select flex-1" name="payment_mode" value={formData?.payment_mode} onChange={selectChange} >
                                     {
                                         invoiceFormData?.payment_mode_choices?.map((value: any) => {
                                             // console.log("valuevaluevalue", value)
@@ -699,13 +721,27 @@ const Edit = () => {
                                 </select>
                             </div>
 
+                            {
+                                paymentMode === "cheque" && (
+                                    <div className="mt-4 flex items-center">
+                                        <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                            Cheque Number
+                                        </label>
+                                        <input id="swift-code" type="text" className="form-input flex-1" name="cheque_number" value={formData?.cheque_number} onChange={inputChange} />
+                                    </div>
+                                )
+                            }
+                            {
+                                paymentMode === "upi" && (
+                                    <div className="mt-4 flex items-center">
+                                        <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                            UPI Number
+                                        </label>
+                                        <input id="swift-code" type="text" className="form-input flex-1" name="upi" value={formData?.upi} onChange={inputChange} />
+                                    </div>
+                                )
+                            }
 
-                            <div className="mt-4 flex items-center">
-                                <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Check Number
-                                </label>
-                                <input id="swift-code" type="text" className="form-input flex-1" name="cheque_number" value={formData?.cheque_number} onChange={inputChange} placeholder="Enter SWIFT Number" />
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -763,7 +799,7 @@ const Edit = () => {
                         <div className="sm:w-2/5">
                             <div className="flex items-center justify-between">
                                 <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Discount
+                                    Discount (%)
                                 </label>
                                 <input id="bank-name" type="text" className="form-input flex-1" name="discount" value={formData?.discount} onChange={(e) => handleDiscountChange(e.target.value)} placeholder="Enter Discount" />
                                 {/* <div>Subtotal</div>
@@ -973,7 +1009,7 @@ const Edit = () => {
 
 
 
-            {/* INvoice Edit Drawer */}
+            {/* Invoice Edit Drawer */}
             <Drawer title="Edit Test" placement="right" width={600} onClose={onClose} open={open}>
                 <Form
                     name="basic"
