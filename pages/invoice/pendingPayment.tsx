@@ -54,7 +54,7 @@ const PendingPayment = () => {
       console.log(error)
     })
   })
-
+console.log("datasource", dataSource)
   //   useEffect(() => {
   //     axios.get("http://files.covaiciviltechlab.com/pending_payment", {
   //         headers:{
@@ -99,11 +99,11 @@ const PendingPayment = () => {
 
 
   const columns = [
-    // {
-    //   title: 'S No',
-    //   dataIndex: 'id',
-    //   key: 'id',
-    // },
+    {
+      title: 'Invoice Number',
+      dataIndex: 'invoice_no',
+      key: 'invoice_no',
+    },
     {
       title: 'Customer Name',
       dataIndex: 'customer',

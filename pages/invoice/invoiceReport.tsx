@@ -3,25 +3,39 @@ import axios from "axios"
 import { useRouter } from 'next/router';
 import { Space, Table, Modal, Form, Input, Select, Button, Drawer, Radio, message } from 'antd';
 import "react-quill/dist/quill.snow.css";
-import dynamic from 'next/dynamic';
-import form from 'antd/es/form';
-import Link from 'next/link';
+// import dynamic from 'next/dynamic';
+// import form from 'antd/es/form';
+// import Link from 'next/link';
 
-import { Editor } from '@tinymce/tinymce-react';
-
-const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
+// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+// import { CKEditor } from "@ckeditor/ckeditor5-react";
+// import { Editor } from '@tinymce/tinymce-react';
+// import 'react-quill/dist/quill.snow.css';
+// const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const InvoiceReport = () => {
 
-  const editorRef = useRef(null);
-
+  const editorRef: any = useRef();
   const router = useRouter();
   const { id } = router.query;
-
   const [form] = Form.useForm();
+
+  const [editorLoaded, setEditorLoaded] = useState(false)
+  const { CKEditor, ClassicEditor } = editorRef.current || {}
   const [invoiceReport, setInvoiceReport] = useState<any>([])
   const [editor, setEditor] = useState<any>("<p>Your HTML content here</p>")
   const [messageApi, contextHolder] = message.useMessage();
+
+
+  useEffect(() => {
+    editorRef.current = {
+      CKEditor: require('@ckeditor/ckeditor5-react').CKEditor,
+      ClassicEditor: require('@ckeditor/ckeditor5-build-classic')
+    }
+    setEditorLoaded(true)
+  }, [])
+
+
 
   const getTestReport = (() => {
     const Token = localStorage.getItem("token")
@@ -44,6 +58,7 @@ const InvoiceReport = () => {
   }, [id])
 
 
+  console.log("editor", editor)
 
 
   // form submit
@@ -81,8 +96,8 @@ const InvoiceReport = () => {
   };
 
 
-  const handleEditorChange = (value: any) => {
-    setEditor(value.level.content);
+  const handleEditorChange = (data: any) => {
+    setEditor(data);
   };
 
 
@@ -111,10 +126,15 @@ const InvoiceReport = () => {
   const goBack = () => {
     window.location.href = `/invoice/edit?id=${invoiceReport.invoice.id}`;
   };
+
+
+  // const handleEditorChange = (newData:any) => {
+  //   setEditorData(newData);
+  // };
   return (
     <>
       <div className='panel' style={{ margin: "30px" }}>
-        <div style={{textAlign:"end"}}>
+        <div style={{ textAlign: "end" }}>
           <Button type="primary" onClick={() => goBack()}> Go Back </Button>
         </div>
 
@@ -129,7 +149,7 @@ const InvoiceReport = () => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-            <Form.Item
+            {/* <Form.Item
               label="Edit Report Template"
               name="report_template"
               required={false}
@@ -156,6 +176,33 @@ const InvoiceReport = () => {
                   content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
                 }}
               />
+            </Form.Item> */}
+            <Form.Item
+              label="Edit Report Template"
+              name="report_template"
+              required={false}
+            // rules={[{ required: true, message: 'Please input your Report Templates!' }]}
+            >
+              <div dangerouslySetInnerHTML={{ __html: editor }} style={{ display: "none" }} />
+              {editorLoaded &&
+                <CKEditor
+                  editor={ClassicEditor}
+                  data={editor}
+                  onChange={(event: any, editor: any) => {
+                    const data = editor.getData();
+                    handleEditorChange(data);
+                    // onChange(data);
+                  }}
+                />
+              }
+              {/* <CKEditor
+               editor={ClassicEditor}
+                data={editor}
+                onChange={(event:any, editor:any) => {
+                  const newData = editor.getData();
+                  handleEditorChange(newData);
+                }}
+              /> */}
             </Form.Item>
             <Form.Item label="Completed" name="completed"
               required={true}
@@ -171,7 +218,7 @@ const InvoiceReport = () => {
               label="Employee Name"
               name="signature"
               required={false}
-              rules={[{ required: true, message: 'Please select a Material ID!' }]}
+              rules={[{ required: true, message: 'Please select a Employee Name!' }]}
             >
               <Select >
                 {invoiceReport?.signatures?.map((value: any) => (
