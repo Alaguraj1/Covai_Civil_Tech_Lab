@@ -147,7 +147,7 @@ const InvoiceFileUpload = () => {
 
   const columns = [
     {
-      title: 'id',
+      title: 'Id',
       dataIndex: 'id',
       key: 'id',
     },
@@ -167,15 +167,14 @@ const InvoiceFileUpload = () => {
       key: 'expense',
     },
     {
-      title: 'File url',
+      title: 'File Url',
       dataIndex: 'file_url',
       key: 'file_url',
       render: (text: any, record: any) => (
         <Space size="middle">
-          <a href={text} target="_blank" rel="noopener noreferrer">
-            View
+          <a href={record.file_url } download target="_blank" rel="noopener noreferrer">
+            Download
           </a>
-          <Button onClick={() => handleDownload(record.file_url)}>Download</Button>
         </Space>
       ),
     },
@@ -218,13 +217,13 @@ const InvoiceFileUpload = () => {
     }
   ];
 
-  const handleDownload = (fileUrl: any) => {
-    const link = document.createElement('a');
-    link.href = fileUrl;
-    link.target = '_blank'; // Open in a new tab/window
-    link.rel = 'noopener noreferrer';
-    link.click();
-  };
+  // const handleDownload = (fileUrl: any) => {
+  //   const link = document.createElement('a');
+  //   link.href = fileUrl;
+  //   link.target = '_blank'; // Open in a new tab/window
+  //   link.rel = 'noopener noreferrer';
+  //   link.click();
+  // };
 
 
   // const handleDelete = (record: any,) => {
@@ -359,17 +358,22 @@ const InvoiceFileUpload = () => {
 
     const data = [
       {
+        label: "Category:",
+        value: viewRecord?.category_name || "N/A",
+      },
+      {
         label: "Invoice:",
         value: viewRecord?.invoice || "N/A",
+      },
+      {
+        label: "Expense:",
+        value: viewRecord?.expense || "N/A",
       },
       {
         label: "Download:",
         value: viewRecord?.file_url || "N/A",
       },
-      {
-        label: "Category:",
-        value: viewRecord?.category_name || "N/A",
-      },
+     
       {
         label: "Created By:",
         value: viewRecord?.created_by || "N/A",

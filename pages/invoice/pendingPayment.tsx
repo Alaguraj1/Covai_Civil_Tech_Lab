@@ -123,6 +123,11 @@ console.log("datasource", dataSource)
       key: 'project_name',
     },
     {
+      title: "Incompleted Test",
+      dataIndex: "incompleted_test",
+      key:"incompleted_test"
+    },
+    {
       title: 'Advance',
       dataIndex: 'advance',
       key: 'advance',
