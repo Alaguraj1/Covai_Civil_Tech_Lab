@@ -67,7 +67,7 @@ const Invoice = () => {
 
     const columns = [
         {
-            title: 'Invoice Id',
+            title: 'Invoice Number',
             dataIndex: 'invoice_no',
             key: 'invoice_no',
         },
