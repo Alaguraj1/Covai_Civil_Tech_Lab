@@ -389,6 +389,10 @@ console.log("viewRecord", viewRecord)
         return data;
     };
 
+    
+    const scrollConfig:any = {
+        y: 300,  
+      };
 
     return (
         <>
@@ -404,7 +408,7 @@ console.log("viewRecord", viewRecord)
                     </div>
                 </div>
                 <div className='table-responsive'>
-                    <Table dataSource={filterData} columns={columns} />
+                    <Table dataSource={filterData} columns={columns} scroll={scrollConfig}/>
                 </div>
 
                 <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>

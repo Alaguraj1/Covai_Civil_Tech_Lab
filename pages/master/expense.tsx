@@ -283,6 +283,11 @@ const Expense = () => {
     return data;
   };
 
+  
+  const scrollConfig:any = {
+    y: 300,  
+  };
+
   return (
     <>
       <div className='panel'>
@@ -296,7 +301,7 @@ const Expense = () => {
           </div>
         </div>
         <div className='table-responsive'>
-          <Table dataSource={filterData} columns={columns} pagination={false} />
+          <Table dataSource={filterData} columns={columns} pagination={false} scroll={scrollConfig} />
         </div>
 
         <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>

@@ -350,6 +350,10 @@ console.log('✌️values --->', values);
     return data;
   };
 
+  
+  const scrollConfig:any = {
+    y: 300,  
+  };
 
   return (
     <>
@@ -364,7 +368,7 @@ console.log('✌️values --->', values);
           </div>
         </div>
         <div className='table-responsive'>
-          <Table dataSource={filterData} columns={columns} />
+          <Table dataSource={filterData} columns={columns} scroll={scrollConfig}/>
         </div>
 
         <Drawer title={DrawerTitle} placement="right" width={600} onClose={onClose} open={open}>

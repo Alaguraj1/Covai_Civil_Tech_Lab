@@ -432,6 +432,9 @@ const Customer = () => {
         return data;
     };
 
+    const scrollConfig:any = {
+        y: 300,  
+      };
 
     return (
         <>
@@ -446,7 +449,7 @@ const Customer = () => {
                     </div>
                 </div>
                 <div className='table-responsive' >
-                    <Table dataSource={filterData} columns={columns} />
+                    <Table dataSource={filterData} columns={columns} scroll={scrollConfig} />
                 </div>
 
                 <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>

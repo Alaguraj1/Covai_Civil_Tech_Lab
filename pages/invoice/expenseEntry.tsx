@@ -354,6 +354,11 @@ console.log('✌️date --->', date);
     console.log(date, dateString);
   };
 
+  
+  const scrollConfig:any = {
+    y: 300,  
+  };
+
   return (
     <>
       <div className='panel'>
@@ -367,7 +372,7 @@ console.log('✌️date --->', date);
           </div>
         </div>
         <div className='table-responsive'>
-          <Table dataSource={filterData} columns={columns} pagination={false} />
+          <Table dataSource={filterData} columns={columns} pagination={false} scroll={scrollConfig}/>
         </div>
 
         <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>

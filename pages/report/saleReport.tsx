@@ -184,6 +184,11 @@ const SaleReport = () => {
     );
   };
 
+  
+  const scrollConfig:any = {
+    y: 300,  
+  };
+
     return (
         <>
             <div  className='panel'>
@@ -252,7 +257,7 @@ const SaleReport = () => {
                 </div>
                
                 <div  className='table-responsive'>
-                    <Table dataSource={dataSource} columns={columns} />
+                    <Table dataSource={dataSource} columns={columns}   scroll={scrollConfig}/>
                 </div>
             </div>
         </>

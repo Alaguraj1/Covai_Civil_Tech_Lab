@@ -800,6 +800,21 @@ border-right: 1px solid black;
     margin-top: 20px;  
 }
 
+.preview-header{
+    display:flex;
+    justify-content: space-between;
+}
+
+.preview-footer-main{
+    display:flex;
+    justify-content: space-between;
+}
+
+.preview-qr-outer{
+    display: flex;
+    justify-content: center;
+}
+
 table tbody tr {
     border-bottom-width: 0px;
     border-color:none;
@@ -835,6 +850,7 @@ table tbody tr {
     .mobile-menu{
         display: block;
     }
+
 }
 
 
@@ -842,6 +858,17 @@ table tbody tr {
     .sale_report_inputs{
         display: block;
     }
+    .preview-footer-main{
+        display:block;
+    }
+    .preview-header{
+        display:block;
+        /* justify-content: space-between; */
+    }
+/* 
+    .preview-qr-outer{
+        display: block;
+    } */
 }
 
 

@@ -319,6 +319,10 @@ const Test = () => {
     };
 
 
+    const scrollConfig:any = {
+        y: 300,  
+      };
+
     return (
         <>
             <div  className='panel'>
@@ -332,7 +336,7 @@ const Test = () => {
                     </div>
                 </div>
                 <div  className='table-responsive'>
-                    <Table dataSource={filterData} columns={columns}  />
+                    <Table dataSource={filterData} columns={columns} scroll={scrollConfig} />
                 </div>
 
                 <Drawer title={drawertitle} placement="right" width={600} onClose={onClose} open={open}>

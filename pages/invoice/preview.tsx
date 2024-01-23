@@ -160,7 +160,7 @@ const Preview = () => {
             </div>
 
             <hr className="border-white-light dark:border-[#1b2e4b] my-6" />
-            <div className="flex justify-between lg:flex-row flex-col gap-6 flex-wrap text-sm">
+            <div className="preview-header text-sm">
               <div className="flex-1">
                 <div className="space-y-1 text-white-dark">
                   <div>Issue For:</div>
@@ -327,15 +327,15 @@ const Preview = () => {
 
             {/*footer */}
             <hr className="border-white-light dark:border-[#1b2e4b] my-6" />
-            <div className='row' style={{ display: "flex", justifyContent: "space-between" }}>
+            <div className='preview-footer-main' >
 
-              <div className='col-4'>
-                <img src="/assets/images/SponsOr.jpg" style={{ textAlign: "center", }} alt='image' />
+              <div className='preview-qr-outer'>
+                <img src="/assets/images/SponsOr.jpg" style={{ textAlign: "center", width:"120px", height:"100px" }} alt='image' />
               </div>
-              <div className='col-4'>
-                <img src={printData?.invoice?.qr} style={{ textAlign: "center", width: "30%" }} alt='image' />
+              <div className='preview-qr-outer'>
+                <img src={printData?.invoice?.qr} style={{ textAlign: "center", width:"120px", height:"120px"}} alt='image' />
               </div>
-              <div className='col-4'>
+              <div className='preview-qr-outer'>
                 <div className="text-right grid-cols-9 space-y-1 mt-0 text-white-dark text-right text-sm">
                   <img src="/assets/images/sign.jpg" alt="img" style={{ marginLeft: "auto" }} />
                   <br />
@@ -344,9 +344,9 @@ const Preview = () => {
                   <div className="space-y-1 mt-0 text-white-dark text-right text-sm">
 
 
-                    <br />  <b>Phone</b> :  9840014193 |<br />
-                    <i><b>Email :</b> cbe@covaiciviltechlab.com </i> |<br />
-                    <i><b>Website : </b>www.covaiciviltechlab.com</i>
+                    <br />  <b>Phone</b> : <a href="tel:9840014193"> 9840014193 </a>|<br />
+                    <i><b>Email :</b>  <a href="mailto:cbe@covaiciviltechlab.com" target="_blank">cbe@covaiciviltechlab.com </a></i> |<br />
+                    <i><b>Website :</b> <a href="https://covaiciviltechlab.com/" target='blank'>covaiciviltechlab.com</a></i>
                     <br></br>
                   </div>
                 </div>
