@@ -407,7 +407,7 @@ const InvoiceFileUpload = () => {
 
   const handleRemove = (file: any) => {
     // Update the file list by filtering out the removed file
-    setFileList((prevFileList) => prevFileList.filter(item => item.uid !== file.uid));
+    setFileList((prevFileList) => prevFileList.filter((item:any) => item.uid !== file.uid));
   };
   const props: UploadProps = {
     name: 'file',
