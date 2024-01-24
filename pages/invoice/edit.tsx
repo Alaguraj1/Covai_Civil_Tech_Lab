@@ -335,6 +335,8 @@ const Edit = () => {
     // modal
     const showModal = () => {
         setIsModalOpen(true);
+        setTableVisible(false)
+        setFilterTest([])
     };
 
     const handleOk = () => {

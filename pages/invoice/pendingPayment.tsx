@@ -5,8 +5,8 @@ import { Button, Drawer } from 'antd';
 import { Checkbox, Form, Input, Radio } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
-
-
+import * as FileSaver from "file-saver";
+import ExcelJS from "exceljs";
 const PendingPayment = () => {
 
   // const [open, setOpen] = useState(false);
@@ -212,7 +212,7 @@ const PendingPayment = () => {
 
     const filteredData = dataSource.filter((item: any) => {
       return (
-        item.invoice_no.includes(SearchValue) || item.customer.toLowerCase().includes(SearchValue.toLowerCase()) || item.project_name.toLowerCase().includes(SearchValue.toLowerCase()) || item.total_amount.includes(SearchValue) || item.balance.includes(SearchValue) ||  item.incompleted_test.includes(SearchValue)
+        item.invoice_no.includes(SearchValue) || item.customer.toLowerCase().includes(SearchValue.toLowerCase()) || item.project_name.toLowerCase().includes(SearchValue.toLowerCase()) || item.total_amount.includes(SearchValue) || item.balance.includes(SearchValue) || item.incompleted_test.includes(SearchValue)
 
       )
     })
@@ -331,6 +331,34 @@ const PendingPayment = () => {
   //     return data;
   //   };
 
+  // export to excel format
+  const exportToExcel = async () => {
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet("Sheet1");
+
+
+    // Add header row
+    worksheet.addRow(columns.map((column) => column.title));
+
+    // Add data rows
+    filterData.forEach((row: any) => {
+      worksheet.addRow(columns.map((column: any) => row[column.dataIndex]));
+    });
+
+    // Generate a Blob containing the Excel file
+    const blob = await workbook.xlsx.writeBuffer();
+
+    // Use file-saver to save the Blob as a file
+    FileSaver.saveAs(
+      new Blob([blob], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      }),
+      "Expense-Report.xlsx"
+    );
+  };
+
+
+
 
   const scrollConfig: any = {
     x: true,
@@ -345,8 +373,12 @@ const PendingPayment = () => {
             <h1 className='text-lg font-semibold dark:text-white-light'>Pending Payment</h1>
           </div>
           <div>
-            <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
-            {/* <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Pending Payment</button> */}
+            <Space>
+              <Button type="primary" onClick={exportToExcel}>Export to Excel</Button>
+              <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
+              {/* <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Pending Payment</button> */}
+            </Space>
+
           </div>
         </div>
         <div className='table-responsive'>
