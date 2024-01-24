@@ -25,10 +25,10 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
     const router = useRouter();
   
     const getLayout = Component.getLayout ?? ((page) => <DefaultLayout>{page}</DefaultLayout>);
+    
   
     const pagesWithoutLayout = ['preview', 'print', 'print1'];
-  
-    const currentPageName = Component.displayName || Component.name;
+    const currentPageName = (Component.displayName || Component.name)?.toLowerCase();
   
     useEffect(() => {
       // Print the current route for debugging

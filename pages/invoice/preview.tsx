@@ -85,7 +85,7 @@ const Preview = () => {
 
     if (filteredTaxes?.length > 0) {
       const percentagesArray = filteredTaxes.map((item: any) =>
-        parseFloat(item.tax_percentage)
+     `${parseFloat(item.tax_percentage)}%`
       );
 
       const sum = percentagesArray.reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
@@ -287,7 +287,7 @@ const Preview = () => {
                     <td> </td>
                     <td> </td>
                     <td style={{ textAlign: "right" }}>Before Tax</td>
-                    <td style={{ textAlign: "right" }}>{BeforeTotal}</td>
+                    <td style={{ textAlign: "right" }}>{BeforeTotal.toFixed(2)}</td>
                   </tr>
 
             
@@ -297,7 +297,7 @@ const Preview = () => {
                     <td> </td>
                     <td> </td>
                     <td style={{ textAlign: "right" }}>{Discount()}</td>
-                    <td style={{ textAlign: "right" }}>{Tax_total}</td>
+                    <td style={{ textAlign: "right" }}>{Tax_total.toFixed(2)}</td>
                   </tr>
                 
                   <tr></tr>

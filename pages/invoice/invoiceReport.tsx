@@ -206,7 +206,7 @@ const InvoiceReport = () => {
             </Form.Item>
             <Form.Item label="Completed" name="completed"
               required={true}
-              rules={[{ required: true, message: 'Please Select your Gender!' }]}
+              rules={[{ required: true, message: 'Please Select your Completed Test!' }]}
             >
               <Radio.Group>
                 <Radio value="Yes"> Yes </Radio>
