@@ -343,7 +343,7 @@ console.log("viewRecord", viewRecord)
             },
             {
                 label: "Gender:",
-                value: viewRecord?.gender || "N/A",
+                value: viewRecord?.gender_name || "N/A",
             },
             {
                 label: "Mobile Number:",
