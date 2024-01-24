@@ -307,7 +307,7 @@ const Preview = () => {
                     <td> </td>
                     <td ></td>
                     <td style={{ textAlign: "right" }}>
-                      After Tax
+                   Total
                     </td>
                     <td style={{ textAlign: "right", fontWeight: "bold" }}>
                       {parseInt(After_Tax, 10)}{" "}
