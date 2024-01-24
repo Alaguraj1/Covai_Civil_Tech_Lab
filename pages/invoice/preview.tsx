@@ -330,7 +330,7 @@ const Preview = () => {
             <div className='preview-footer-main' >
 
               <div className='preview-qr-outer'>
-                <img src="/assets/images/SponsOr.jpg" style={{ textAlign: "center", width:"120px", height:"100px" }} alt='image' />
+                <img src="/assets/images/Sponsor.jpg" style={{ textAlign: "center", width:"120px", height:"100px" }} alt='image' />
               </div>
               <div className='preview-qr-outer'>
                 <img src={printData?.invoice?.qr} style={{ textAlign: "center", width:"120px", height:"120px"}} alt='image' />

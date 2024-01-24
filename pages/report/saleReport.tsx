@@ -4,6 +4,7 @@ import axios from "axios"
 import moment from 'moment';
 import ExcelJS from "exceljs";
 import * as FileSaver from "file-saver";
+import dayjs from 'dayjs';
 
 const SaleReport = () => {
 
@@ -28,8 +29,8 @@ const SaleReport = () => {
     const columns = [
         {
             title: 'Date',
-            dataIndex: 'date',
-            key: 'date',
+            dataIndex: 'export_date',
+            key: 'export_date',
             className: 'singleLineCell',
             // render: (text: any) => {
             //     const formattedDate = moment(text, 'YYYY-MM-DD').isValid()
@@ -158,8 +159,8 @@ const SaleReport = () => {
 
         const body = {
             "project_name": values.project_name ? values.project_name : "",
-            "from_date": values?.from_date ? moment(values?.from_date).format('YYYY-MM-DD') : "",
-            "to_date": values?.to_date ? moment(values?.to_date).format('YYYY-MM-DD') : "",
+            "from_date": values?.from_date ? dayjs(values?.from_date).format('YYYY-MM-DD') : "",
+            "to_date": values?.to_date ? dayjs(values?.to_date).format('YYYY-MM-DD') : "",
             "customer": values.customer ? values.customer : "",
         };
 
@@ -245,11 +246,11 @@ const SaleReport = () => {
                             </Form.Item>
 
                             <Form.Item label="From Date" name="from_date" style={{ width: "250px" }}>
-                            <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />                            
+                            <DatePicker style={{ width: "100%" }} />                            
                             </Form.Item>
 
                             <Form.Item label="To Date" name="to_date" style={{ width: "250px" }}>
-                                <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY"/>
+                                <DatePicker style={{ width: "100%" }} />
                             </Form.Item>
 
                             <Form.Item

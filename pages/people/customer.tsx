@@ -354,31 +354,17 @@ const Customer = () => {
                 label: "Country 1:",
                 value: viewRecord?.country1 || "N/A",
             },
+      
             {
                 label: "Pincode 1:",
                 value: viewRecord?.pincode1 || "N/A",
             },
 
-            {
-                label: "mobile No 1 :",
-                value: viewRecord?.mobile_no1 || "N/A",
-            },
-            {
-                label: "Pincode 1:",
-                value: viewRecord?.pincode1 || "N/A",
-            },
-            {
-                label: "contact_person Email 1:",
-                value: viewRecord?.contact_person_email1 || "N/A",
-            },
+           
             // {
-            //     label: "Code:",
-            //     value: viewRecord?.code || "N/A",
+            //     label: "Pincode 1:",
+            //     value: viewRecord?.pincode1 || "N/A",
             // },
-            {
-                label: "place Of Testing :",
-                value: viewRecord?.place_of_testing || "N/A",
-            },
             {
                 label: "Address 2:",
                 value: viewRecord?.address2 || "N/A",
@@ -402,6 +388,24 @@ const Customer = () => {
                 value: viewRecord?.pincode2 || "N/A",
             },
             {
+                label: "contact Person 1:",
+                value: viewRecord?.contact_person1 || "N/A",
+            },
+            {
+                label: "mobile No 1 :",
+                value: viewRecord?.mobile_no1 || "N/A",
+            },
+            {
+                label: "contact_person Email 1:",
+                value: viewRecord?.contact_person_email1 || "N/A",
+            },
+            // {
+            //     label: "Code:",
+            //     value: viewRecord?.code || "N/A",
+            // },
+          
+           
+            {
                 label: "contact Person 2:",
                 value: viewRecord?.contact_person2 || "N/A",
             },
@@ -414,6 +418,10 @@ const Customer = () => {
             {
                 label: "contact Person Email 2:",
                 value: viewRecord?.contact_person2 || "N/A",
+            },
+            {
+                label: "place Of Testing :",
+                value: viewRecord?.place_of_testing || "N/A",
             },
             {
                 label: "Created By:",
@@ -499,10 +507,10 @@ const Customer = () => {
                         <Form.Item<FieldType>
                             label="Email"
                             name="email"
-                            required={false}
-                            rules={[{ required: false, message: 'Please input your EMail!' }]}
+                            required={true}
+                            rules={[{ required: true, message: 'Please input your EMail!' }]}
                         >
-                            <Input />
+                            <Input type='email'/>
                         </Form.Item>
 
                         {/* <Form.Item label="DatePicker" name="dob">
@@ -581,45 +589,6 @@ const Customer = () => {
                             <Input />
                         </Form.Item>
 
-                        {/* <Form.Item<FieldType>
-                            label="Code"
-                            name="code"
-                            required={true}
-                            rules={[{ required: true, message: 'Please input code..!' }]}
-                        >
-                            <Input />
-                        </Form.Item> */}
-
-                        <Form.Item<FieldType>
-                            label="Contact Person 1"
-                            name="contact_person1"
-                            required={false}
-                            rules={[{ required: false, message: 'Please input your Contact Person 1!' }]}
-                        >
-                            <Input />
-                        </Form.Item>
-
-                        <Form.Item<FieldType>
-                            label="Mobile Number 1"
-                            name="mobile_no1"
-                            required={false}
-                            rules={[{ required: false, message: 'Please input your Mobile Number 1!' }]}
-                        >
-                            <Input  maxLength={10} minLength={10}/>
-                        </Form.Item>
-
-                        <Form.Item<FieldType>
-                            label="Contact Person Email1"
-                            name="contact_person_email1"
-                            required={false}
-                            rules={[{ required: false, message: 'Please input your Contact Person Email 1!' }]}
-                        >
-                            <Input type='email' />
-                        </Form.Item>
-
-
-
-
                         <Form.Item<FieldType>
                             label="Address 2"
                             name="address2"
@@ -683,6 +652,47 @@ const Customer = () => {
                         >
                             <Input />
                         </Form.Item>
+
+                        {/* <Form.Item<FieldType>
+                            label="Code"
+                            name="code"
+                            required={true}
+                            rules={[{ required: true, message: 'Please input code..!' }]}
+                        >
+                            <Input />
+                        </Form.Item> */}
+
+                        <Form.Item<FieldType>
+                            label="Contact Person 1"
+                            name="contact_person1"
+                            required={false}
+                            rules={[{ required: false, message: 'Please input your Contact Person 1!' }]}
+                        >
+                            <Input />
+                        </Form.Item>
+
+                        <Form.Item<FieldType>
+                            label="Mobile Number 1"
+                            name="mobile_no1"
+                            required={false}
+                            rules={[{ required: false, message: 'Please input your Mobile Number 1!' }]}
+                        >
+                            <Input  maxLength={10} minLength={10}/>
+                        </Form.Item>
+
+                        <Form.Item<FieldType>
+                            label="Contact Person Email1"
+                            name="contact_person_email1"
+                            required={false}
+                            rules={[{ required: false, message: 'Please input your Contact Person Email 1!' }]}
+                        >
+                            <Input type='email' />
+                        </Form.Item>
+
+
+
+
+                        
 
                         <Form.Item<FieldType>
                             label="Contact Person 2"
