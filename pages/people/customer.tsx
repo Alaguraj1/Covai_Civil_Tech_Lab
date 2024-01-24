@@ -122,20 +122,24 @@ const Customer = () => {
             title: 'Customer Name',
             dataIndex: 'customer_name',
             key: 'customer_name',
+            className: 'singleLineCell',
         },
         {
             title: 'Phone Number',
             dataIndex: 'phone_no',
             key: 'phone_no',
+            className: 'singleLineCell'
         },
         {
             title: 'Email',
             dataIndex: 'email',
             key: 'email',
+            className: 'singleLineCell'
         },
         {
             title: "Actions",
             key: "actions",
+            className: 'singleLineCell',
             render: (text: any, record: any) => (
                 <Space size="middle">
                     <EyeOutlined
@@ -432,9 +436,10 @@ const Customer = () => {
         return data;
     };
 
-    const scrollConfig:any = {
-        y: 300,  
-      };
+    const scrollConfig: any = {
+        x: true,
+        y: 300,
+    };
 
     return (
         <>

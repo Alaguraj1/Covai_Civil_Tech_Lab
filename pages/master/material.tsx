@@ -6,6 +6,7 @@ import { EditOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
 import "react-quill/dist/quill.snow.css";
 import dynamic from 'next/dynamic';
+import moment from 'moment';
 
 const Material = () => {
 
@@ -99,7 +100,7 @@ const Material = () => {
     setEditor(data);
   };
   console.log("editor", editor)
- 
+
 
   // drawer
   const showDrawer = (record: any) => {
@@ -127,24 +128,37 @@ const Material = () => {
       title: 'Material Name',
       dataIndex: 'material_name',
       key: 'material_name',
+      className: 'singleLineCell'
     },
 
     {
       title: 'Created At',
       dataIndex: 'created_date',
       key: 'created_date',
-      render: (text: any, record: any) => {
-        // Assuming created_date is in the format: 2023-12-12T08:41:09.567980Z
-        const date = new Date(text);
-        const formattedDate = new Intl.DateTimeFormat('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }).format(date);
-
-        return <span>{formattedDate}</span>;
+      className: 'singleLineCell',
+      render: (text: any) => {
+        const formattedDate = moment(text, 'YYYY-MM-DD').isValid()
+          ? moment(text).format('DD-MM-YYYY')
+          : ''; // Empty string for invalid dates
+        return formattedDate;
       },
     },
+    // {
+    //   title: 'Created At',
+    //   dataIndex: 'created_date',
+    //   key: 'created_date',
+    //   render: (text: any, record: any) => {
+    //     // Assuming created_date is in the format: 2023-12-12T08:41:09.567980Z
+    //     const date = new Date(text);
+    //     const formattedDate = new Intl.DateTimeFormat('en-US', {
+    //       year: 'numeric',
+    //       month: 'long',
+    //       day: 'numeric',
+    //     }).format(date);
+
+    //     return <span>{formattedDate}</span>;
+    //   },
+    // },
     // {
     //   title: 'Tax Status',
     //   dataIndex: 'taxStatus',
@@ -153,6 +167,7 @@ const Material = () => {
     {
       title: "Actions",
       key: "actions",
+      className: 'singleLineCell',
       render: (text: any, record: any) => (
 
         <Space size="middle">
@@ -240,7 +255,7 @@ const Material = () => {
   const inputChange = (e: any) => {
     const searchValue = e.target.value.toLowerCase();
     const filteredData = dataSource.filter((item: any) =>
-      item?.material_name?.toLowerCase().includes(searchValue)
+      item?.material_name?.toLowerCase().includes(searchValue) || item?.created_date?.includes(searchValue)
     );
     setFilterData(searchValue ? filteredData : dataSource);
   };
@@ -250,7 +265,7 @@ const Material = () => {
 
   // form submit
   const onFinish = (values: any) => {
-console.log('✌️values --->', values);
+    console.log('✌️values --->', values);
 
     const Token = localStorage.getItem("token")
 
@@ -350,10 +365,11 @@ console.log('✌️values --->', values);
     return data;
   };
 
-  
-  const scrollConfig:any = {
-    y: 300,  
-  };
+
+  const scrollConfig: any = {
+    x: true,
+    y: 300,
+};
 
   return (
     <>
@@ -368,7 +384,7 @@ console.log('✌️values --->', values);
           </div>
         </div>
         <div className='table-responsive'>
-          <Table dataSource={filterData} columns={columns} scroll={scrollConfig}/>
+          <Table dataSource={filterData} columns={columns} scroll={scrollConfig} />
         </div>
 
         <Drawer title={DrawerTitle} placement="right" width={600} onClose={onClose} open={open}>

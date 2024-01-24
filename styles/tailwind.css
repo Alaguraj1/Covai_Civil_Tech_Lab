@@ -911,6 +911,13 @@ background-color: #972e25;
 color: white;
 }
 
+:where(.css-dev-only-do-not-override-6j9yrn).ant-table-wrapper .ant-table-cell, :where(.css-dev-only-do-not-override-6j9yrn).ant-table-wrapper .ant-table-thead>tr>th{
+    padding: 16px 8px;
+}
+:where(.css-dev-only-do-not-override-6j9yrn).ant-table-wrapper .ant-table-tbody>tr>td {
+    padding: 16px 8px;
+}
+
 :where(.css-dev-only-do-not-override-6j9yrn).ant-table-wrapper .ant-table-tbody .ant-table-row >.ant-table-cell-row-hover {
     background: #ecd5d3;
 }
@@ -1117,6 +1124,13 @@ color: white;
 
 :where(.css-6j9yrn).ant-table-wrapper .ant-table-tbody .ant-table-row >.ant-table-cell-row-hover {
     background: #ecd5d3;
+}
+
+:where(.css-6j9yrn).ant-table-wrapper .ant-table-cell, :where(.css-6j9yrn).ant-table-wrapper .ant-table-thead>tr>th{
+    padding: 16px 8px;
+}
+:where(.css-6j9yrn).ant-table-wrapper .ant-table-tbody>tr>td {
+    padding: 16px 8px;
 }
 
 
@@ -1336,3 +1350,10 @@ color: white;
 .ck-focused{
 border: 1px solid #972e25 !important;
 }
+
+
+.singleLineCell {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }

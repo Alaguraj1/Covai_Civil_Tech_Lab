@@ -150,26 +150,31 @@ const InvoiceFileUpload = () => {
       title: 'Id',
       dataIndex: 'id',
       key: 'id',
+      className: 'singleLineCell',
     },
     {
       title: 'Category',
       dataIndex: 'category_name',
       key: 'category_name',
+      className: 'singleLineCell',
     },
     {
       title: 'Invoice No',
       dataIndex: 'invoice_no',
       key: 'invoice_no',
+      className: 'singleLineCell',
     },
     {
       title: 'Expense',
       dataIndex: 'expense_category',
       key: 'expense_category',
+      className: 'singleLineCell',
     },
     {
       title: 'File Url',
       dataIndex: 'file_url',
       key: 'file_url',
+      className: 'singleLineCell',
       render: (text: any, record: any) => (
         <Space size="middle">
           <a href={record.file_url } download target="_blank" rel="noopener noreferrer">
@@ -181,6 +186,7 @@ const InvoiceFileUpload = () => {
     {
       title: "Actions",
       key: "actions",
+      className: 'singleLineCell',
       render: (text: any, record: any) => (
 
         <Space size="middle">
@@ -257,7 +263,7 @@ const InvoiceFileUpload = () => {
   const inputChange = (e: any) => {
     setFilterData(
       dataSource.filter((item: any) => {
-        return item.category_name.toLowerCase().includes(e.target.value.toLowerCase()) ||item?.expense_category?.toLowerCase().includes(e.target.value.toLowerCase()) || item?.invoice_no?.includes(e.target.value)
+        return  item.category_name.toLowerCase().includes(e.target.value.toLowerCase()) ||item?.expense_category?.toLowerCase().includes(e.target.value.toLowerCase()) || item?.invoice_no?.includes(e.target.value)
       })
     )
   }
@@ -439,6 +445,7 @@ const InvoiceFileUpload = () => {
 
 
   const scrollConfig:any = {
+    x:true,
     y: 300,  
   };
 

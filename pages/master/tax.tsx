@@ -91,20 +91,25 @@ const Tax = () => {
       title: 'Tax Name',
       dataIndex: 'tax_name',
       key: 'id',
+      className: 'singleLineCell',
+    
     },
     {
       title: 'Tax Percentage',
       dataIndex: 'tax_percentage',
       key: 'tax_percentage',
+      className: 'singleLineCell'
     },
     {
       title: 'Tax Status',
       dataIndex: 'status',
       key: 'status',
+      className: 'singleLineCell'
     },
     {
       title: "Actions",
       key: "actions",
+      className: 'singleLineCell',
       render: (text: any, record: any) => (
 
         <Space size="middle">
@@ -190,7 +195,7 @@ const Tax = () => {
   const inputChange = (e: any) => {
     const searchValue = e.target.value.toLowerCase();
     const filteredData = dataSource.filter((item: any) =>
-      item.tax_name.toLowerCase().includes(searchValue) || item.tax_percentage.toLowerCase().includes(searchValue)
+      item.tax_name.toLowerCase().includes(searchValue) || item.tax_percentage.includes(searchValue) || item.tax_status.toLowerCase().includes(searchValue)
     );
     setFilterData(searchValue ? filteredData : dataSource);
   };
@@ -297,9 +302,11 @@ const Tax = () => {
   };
 
   
-  const scrollConfig:any = {
-    y: 300,  
-  };
+  const scrollConfig: any = {
+    x: true,
+    y: 300,
+};
+
   return (
     <>
       <div className='panel'>

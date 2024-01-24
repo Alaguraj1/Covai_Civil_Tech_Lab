@@ -120,20 +120,24 @@ const Test = () => {
             title: 'Test Name',
             dataIndex: 'test_name',
             key: 'test_name',
+            className: 'singleLineCell',
         },
         {
             title: 'Material Name',
             dataIndex: 'material_name',
             key: 'material_name',
+            className: 'singleLineCell',
         },
         {
             title: 'Price',
             dataIndex: 'price_per_piece',
             key: 'price_per_piece',
+            className: 'singleLineCell',
         },
         {
             title: "Actions",
             key: "actions",
+            className: 'singleLineCell',
             render: (text: any, record: any) => (
 
                 <Space size="middle">
@@ -188,38 +192,38 @@ const Test = () => {
 
 
 
-    const handleDelete = (record: any) => {
-        // Implement your delete logic here
-        const Token = localStorage.getItem("token")
+    // const handleDelete = (record: any) => {
+    //     // Implement your delete logic here
+    //     const Token = localStorage.getItem("token")
 
-        Modal.confirm({
-            title: "Are you sure, you want to delete this TEST record?",
-            okText: "Yes",
-            okType: "danger",
-            onOk: () => {
-                axios.delete(`http://files.covaiciviltechlab.com/delete_test/${record.id}/`,
-                    {
-                        headers: {
-                            "Authorization": `Token ${Token}`
-                        }
-                    }).then((res) => {
-                        console.log(res)
-                        getTest()
-                    }).catch((err) => {
-                        console.log(err)
-                    })
+    //     Modal.confirm({
+    //         title: "Are you sure, you want to delete this TEST record?",
+    //         okText: "Yes",
+    //         okType: "danger",
+    //         onOk: () => {
+    //             axios.delete(`http://files.covaiciviltechlab.com/delete_test/${record.id}/`,
+    //                 {
+    //                     headers: {
+    //                         "Authorization": `Token ${Token}`
+    //                     }
+    //                 }).then((res) => {
+    //                     console.log(res)
+    //                     getTest()
+    //                 }).catch((err) => {
+    //                     console.log(err)
+    //                 })
 
-            },
+    //         },
 
-        });
-    };
+    //     });
+    // };
 
     const [filterData, setFilterData] = useState(dataSource)
 
     const inputChange = (e: any) => {
         const searchValue = e.target.value.toLowerCase();
         const filteredData = dataSource.filter((item: any) =>
-            item.test_name.toLowerCase().includes(searchValue) || item.material_name.toLowerCase().includes(searchValue) || item.price_per_piece.toLowerCase().includes(searchValue)
+            item.test_name.toLowerCase().includes(searchValue) || item.material_name.toLowerCase().includes(searchValue) || item.price_per_piece.includes(searchValue)
         );
         setFilterData(searchValue ? filteredData : dataSource);
     };
@@ -319,9 +323,10 @@ const Test = () => {
     };
 
 
-    const scrollConfig:any = {
-        y: 300,  
-      };
+const scrollConfig: any = {
+        x: true,
+        y: 300,
+    };
 
     return (
         <>

@@ -67,38 +67,47 @@ const Invoice = () => {
 
     const columns = [
         {
-            title: 'Invoice Number',
+            title: 'Invoice N0',
             dataIndex: 'invoice_no',
             key: 'invoice_no',
+            className: 'singleLineCell',
+            width:100
         },
         {
             title: 'Customer Name',
             dataIndex: 'customer',
             key: 'customer',
+            className: 'singleLineCell',
         },
         {
             title: 'Project Name',
             dataIndex: 'project_name',
             key: 'project_name',
+            className: 'singleLineCell',
         },
         {
             title: 'Total Amount',
             dataIndex: 'total_amount',
             key: 'total_amount',
+            className: 'singleLineCell',
         },
         {
             title: 'Balance',
             dataIndex: 'balance',
             key: 'balance',
+            className: 'singleLineCell',
         },
         {
             title: 'Incompleted Test',
             dataIndex: 'incompleted_test',
             key: 'incompleted_test',
+            className: 'singleLineCell',
+            width:150
         },
         {
             title: "Actions",
             key: "actions",
+            className: 'singleLineCell',
             render: (text: any, record: any) => (
 
                 <Space size="middle">
@@ -183,7 +192,7 @@ const Invoice = () => {
 
         const filteredData = dataSource.filter((item: any) => {
             return (
-                item.project_name.toLowerCase().includes(SearchValue.toLowerCase())
+                item.invoice_no.includes(SearchValue) || item.customer.toLowerCase().includes(SearchValue.toLowerCase()) || item.project_name.toLowerCase().includes(SearchValue.toLowerCase()) || item.total_amount.includes(SearchValue) || item.balance.includes(SearchValue) ||  item.incompleted_test.includes(SearchValue)
             )
         })
         setFilterData(filteredData)
@@ -225,15 +234,6 @@ const Invoice = () => {
         console.log('Failed:', errorInfo);
     };
 
-    type FieldType = {
-        discount?: string;
-        advance?: string;
-        balance?: string;
-        customer?: string;
-        beforeTax?: string;
-        afterTax?: string;
-    };
-
 
 
     const handleSelectChange = (customerId: any) => {
@@ -248,6 +248,7 @@ const Invoice = () => {
 
     
     const scrollConfig:any = {
+        x:true,
         y: 300,  
       };
 

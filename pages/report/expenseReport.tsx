@@ -4,6 +4,7 @@ import { Input } from 'antd';
 import axios from "axios"
 import ExcelJS from "exceljs";
 import * as FileSaver from "file-saver";
+import moment from 'moment';
 
 
 const ExpenseReport = () => {
@@ -41,38 +42,38 @@ const ExpenseReport = () => {
       title: 'Expense User',
       dataIndex: 'expense_user',
       key: 'expense_user',
+      className: 'singleLineCell',
     },
     {
       title: 'Expense Category',
       dataIndex: 'expense_category',
       key: 'expense_category',
+      className: 'singleLineCell',
     },
     {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
+      className: 'singleLineCell',
     },
     {
       title: 'Narration',
       dataIndex: 'narration',
       key: 'narration',
+      className: 'singleLineCell',
     },
     {
       title: 'Date',
       dataIndex: 'date',
       key: 'date',
-      render: (text: any, record: any) => {
-        // Assuming created_date is in the format: 2023-12-12T08:41:09.567980Z
-        const date = new Date(text);
-        const formattedDate = new Intl.DateTimeFormat('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }).format(date);
-
-        return <span>{formattedDate}</span>;
-      },
-    },
+       className: 'singleLineCell',
+      //  render: (text:any) => {
+      //     const formattedDate = moment(text, 'YYYY-MM-DD').isValid()
+      //       ? moment(text).format('DD-MM-YYYY')
+      //       : ''; // Empty string for invalid dates
+      //     return formattedDate;
+      //   },       
+       },
   ]
 
   // input search
@@ -117,6 +118,7 @@ const ExpenseReport = () => {
 
 
   const scrollConfig:any = {
+    x:true,
     y: 300,  
   };
 

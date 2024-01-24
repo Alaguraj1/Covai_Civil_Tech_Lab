@@ -5,6 +5,7 @@ import { Button, Drawer } from 'antd';
 import { Checkbox, Form, Input } from 'antd';
 import { EditOutlined, DeleteOutlined, EyeOutlined } from "@ant-design/icons";
 import axios from "axios"
+import moment from 'moment';
 
 const Expense = () => {
 
@@ -86,21 +87,18 @@ const Expense = () => {
       title: 'Expense Name',
       dataIndex: 'expense_name',
       key: 'expense_name',
+      className: 'singleLineCell',
     },
     {
-      title: 'CreatedAt',
+      title: 'Created At',
       dataIndex: 'created_date',
       key: 'created_date',
-      render: (text: any, record: any) => {
-        // Assuming created_date is in the format: 2023-12-12T08:41:09.567980Z
-        const date = new Date(text);
-        const formattedDate = new Intl.DateTimeFormat('en-US', {
-          year: 'numeric',
-          month: 'long',
-          day: 'numeric',
-        }).format(date);
-
-        return <span>{formattedDate}</span>;
+      className: 'singleLineCell',
+      render: (text: any) => {
+        const formattedDate = moment(text, 'YYYY-MM-DD').isValid()
+          ? moment(text).format('DD-MM-YYYY')
+          : ''; // Empty string for invalid dates
+        return formattedDate;
       },
     },
     {
@@ -161,29 +159,29 @@ const Expense = () => {
 
 
 
-  const handleDelete = (record: any) => {
-    // Implement your delete logic here
-    const Token = localStorage.getItem("token")
+  // const handleDelete = (record: any) => {
+  //   // Implement your delete logic here
+  //   const Token = localStorage.getItem("token")
 
-    Modal.confirm({
-      title: "Are you sure, you want to delete this EXPENSE record?",
-      okText: "Yes",
-      okType: "danger",
-      onOk: () => {
-        axios.delete(`http://files.covaiciviltechlab.com/delete_expense/${record.id}/`, {
-          headers: {
-            "Authorization": `Token ${Token}`
-          }
-        }).then((res) => {
-          console.log(res)
-          getExpense()
-        }).catch((err) => {
-          console.log(err)
-        })
+  //   Modal.confirm({
+  //     title: "Are you sure, you want to delete this EXPENSE record?",
+  //     okText: "Yes",
+  //     okType: "danger",
+  //     onOk: () => {
+  //       axios.delete(`http://files.covaiciviltechlab.com/delete_expense/${record.id}/`, {
+  //         headers: {
+  //           "Authorization": `Token ${Token}`
+  //         }
+  //       }).then((res) => {
+  //         console.log(res)
+  //         getExpense()
+  //       }).catch((err) => {
+  //         console.log(err)
+  //       })
 
-      },
-    });
-  };
+  //     },
+  //   });
+  // };
 
   const [filterData, setFilterData] = useState(dataSource)
 
@@ -285,6 +283,7 @@ const Expense = () => {
 
   
   const scrollConfig:any = {
+    x:true,
     y: 300,  
   };
 

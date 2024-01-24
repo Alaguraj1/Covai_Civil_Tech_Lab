@@ -54,7 +54,7 @@ const PendingPayment = () => {
       console.log(error)
     })
   })
-console.log("datasource", dataSource)
+  console.log("datasource", dataSource)
   //   useEffect(() => {
   //     axios.get("http://files.covaiciviltechlab.com/pending_payment", {
   //         headers:{
@@ -100,10 +100,12 @@ console.log("datasource", dataSource)
 
   const columns = [
     {
-      title: 'Invoice Number',
+      title: 'Invoice No',
       dataIndex: 'invoice_no',
       key: 'invoice_no',
-      render: (text:any, record:any) => (
+      className: 'singleLineCell',
+      width: 100,
+      render: (text: any, record: any) => (
         <span
           style={{ textDecoration: 'underline', color: 'blue', cursor: 'pointer' }}
           onClick={() => handleRowClick(record)}
@@ -116,31 +118,38 @@ console.log("datasource", dataSource)
       title: 'Customer Name',
       dataIndex: 'customer',
       key: 'customer',
+      className: 'singleLineCell',
     },
     {
       title: 'Project Name',
       dataIndex: 'project_name',
       key: 'project_name',
+      className: 'singleLineCell',
     },
     {
       title: "Incompleted Test",
       dataIndex: "incompleted_test",
-      key:"incompleted_test"
+      key: "incompleted_test",
+      className: 'singleLineCell',
+      width: 150
     },
     {
       title: 'Advance',
       dataIndex: 'advance',
       key: 'advance',
+      className: 'singleLineCell',
     },
     {
       title: 'Total Amount',
       dataIndex: 'total_amount',
       key: 'total_amount',
+      className: 'singleLineCell',
     },
     {
       title: 'Balance',
       dataIndex: 'balance',
       key: 'balance',
+      className: 'singleLineCell',
     },
     // {
     //   title: "Actions",
@@ -192,7 +201,7 @@ console.log("datasource", dataSource)
   const handleRowClick = (record: any) => {
     // Navigate to the /invoice/edit page with the record data as a query parameter
     window.location.href = `/invoice/edit?id=${record.id}`;
-};
+  };
 
 
   // input search
@@ -203,7 +212,7 @@ console.log("datasource", dataSource)
 
     const filteredData = dataSource.filter((item: any) => {
       return (
-        item.project_name.toLowerCase().includes(SearchValue.toLowerCase())  || item?.customer?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.invoice_no?.includes(SearchValue)
+        item.invoice_no.includes(SearchValue) || item.customer.toLowerCase().includes(SearchValue.toLowerCase()) || item.project_name.toLowerCase().includes(SearchValue.toLowerCase()) || item.total_amount.includes(SearchValue) || item.balance.includes(SearchValue) ||  item.incompleted_test.includes(SearchValue)
 
       )
     })
@@ -323,13 +332,14 @@ console.log("datasource", dataSource)
   //   };
 
 
-  const scrollConfig:any = {
-    y: 300,  
+  const scrollConfig: any = {
+    x: true,
+    y: 300,
   };
 
   return (
     <>
-      <div  className='panel'>
+      <div className='panel'>
         <div className='tax-heading-main'>
           <div>
             <h1 className='text-lg font-semibold dark:text-white-light'>Pending Payment</h1>
@@ -339,8 +349,8 @@ console.log("datasource", dataSource)
             {/* <button type='button' onClick={() => showDrawer(null)} className='create-button'>+ Create Pending Payment</button> */}
           </div>
         </div>
-        <div  className='table-responsive'>
-          <Table dataSource={filterData} columns={columns} pagination={false} scroll={scrollConfig}/>
+        <div className='table-responsive'>
+          <Table dataSource={filterData} columns={columns} pagination={false} scroll={scrollConfig} />
         </div>
 
         {/* <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>

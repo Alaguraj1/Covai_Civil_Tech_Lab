@@ -122,25 +122,30 @@ console.log('✌️record --->', record);
       title: 'Expense User',
       dataIndex: 'expense_user',
       key: 'expense_user',
+      className: 'singleLineCell',
     },
     {
       title: 'Expense Category',
       dataIndex: 'expense_category_name',
       key: 'expense_category_name',
+      className: 'singleLineCell',
     },
     {
       title: 'Amount',
       dataIndex: 'amount',
       key: 'amount',
+      className: 'singleLineCell',
     },
     {
       title: 'Narration',
       dataIndex: 'narration',
       key: 'narration',
+      className: 'singleLineCell',
     },
     {
       title: "Actions",
       key: "actions",
+      className: 'singleLineCell',
       render: (text: any, record: any) => (
 
         <Space size="middle">
@@ -214,7 +219,7 @@ console.log('✌️record --->', record);
 
     const filteredData = dataSource.filter((item: any) => {
       return (
-        item?.narration?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.expense_category_name?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.expense_user?.toLowerCase().includes(SearchValue.toLowerCase())
+        item?.narration?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.expense_category_name?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.expense_user?.toLowerCase().includes(SearchValue.toLowerCase())  || item?.amount?.includes(SearchValue)
       )
     })
     setFilterData(filteredData)
@@ -356,6 +361,7 @@ console.log('✌️date --->', date);
 
   
   const scrollConfig:any = {
+    x:true,
     y: 300,  
   };
 

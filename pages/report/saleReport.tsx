@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Form, Input, Button, DatePicker, Select } from 'antd';
+import { Table, Form, Input, Button, DatePicker, Select, Tooltip } from 'antd';
 import axios from "axios"
 import moment from 'moment';
 import ExcelJS from "exceljs";
@@ -30,63 +30,91 @@ const SaleReport = () => {
             title: 'Date',
             dataIndex: 'date',
             key: 'date',
+            className: 'singleLineCell',
+            // render: (text: any) => {
+            //     const formattedDate = moment(text, 'YYYY-MM-DD').isValid()
+            //         ? moment(text).format('DD-MM-YYYY')
+            //         : ''; // Empty string for invalid dates
+            //     return formattedDate;
+            // },
+        },
+        {
+            title: 'Invoice No',
+            dataIndex: 'invoice_no',
+            key: 'invoice_no',
+            className: 'singleLineCell',
+            width: 100
         },
         {
             title: 'Customer Name',
             dataIndex: 'customer_name',
             key: 'customer_name',
+            className: 'singleLineCell'
         },
         {
             title: 'Customer GST No',
             dataIndex: 'customer_gst_no',
             key: 'customer_gst_no',
+            className: 'singleLineCell'
         },
         {
             title: 'Project Name',
             dataIndex: 'project_name',
             key: 'project_name',
-        },   
-        {
-            title: 'Invoice No',
-            dataIndex: 'invoice_no',
-            key: 'invoice_no',
+            className: 'singleLineCell'
         },
+
         {
             title: 'Advance',
             dataIndex: 'advance',
             key: 'advance',
+            className: 'singleLineCell',
         },
-        {
-            title: 'Amount',
-            dataIndex: 'amount',
-            key: 'amount',
-        },
+        // {
+        // //     title: (
+        // //         <Tooltip title="amount">
+        // //           <span>Amount</span>
+        // //         </Tooltip>
+        // //       ),
+        //     title: 'Amount',
+        //     dataIndex: 'amount',
+        //     key: 'amount',
+        //      className: 'singleLineCell'
+        // },
         {
             title: 'Balance',
             dataIndex: 'balance',
             key: 'balance',
+            className: 'singleLineCell'
         },
 
-       
+
         {
-            title: 'Cheque Neft',
+            title: 'Cheque No',
             dataIndex: 'cheque_neft',
             key: 'cheque_neft',
+            className: 'singleLineCell',
+            width: 120
         },
         {
             title: 'UPI',
             dataIndex: 'upi',
             key: 'upi',
+            className: 'singleLineCell'
         },
         {
             title: 'CGST Tax',
             dataIndex: 'cgst_tax',
             key: 'cgst_tax',
+            className: 'singleLineCell',
+            width: 100
         },
         {
             title: 'SGST Tax',
             dataIndex: 'sgst_tax',
             key: 'sgst_tax',
+            className: 'singleLineCell',
+            width: 100
         },
         // {
         //     title: 'Tax Deduction',
@@ -97,6 +125,7 @@ const SaleReport = () => {
             title: 'Total Amount',
             dataIndex: 'total_amount',
             key: 'total_amount',
+            className: 'singleLineCell'
         },
     ];
 
@@ -105,9 +134,9 @@ const SaleReport = () => {
 
         const body = {
             "project_name": "",
-            "from_date":"",
+            "from_date": "",
             "to_date": "",
-            "customer":"",
+            "customer": "",
         };
 
         axios.post("http://files.covaiciviltechlab.com/sale_report/", body, {
@@ -119,7 +148,7 @@ const SaleReport = () => {
         }).catch((error: any) => {
             console.log(error);
         });
-    },[])
+    }, [])
 
 
     // form submit
@@ -158,40 +187,41 @@ const SaleReport = () => {
     };
 
 
-     // export to excel format
-  const exportToExcel = async () => {
-    const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet("Sheet1");
+    // export to excel format
+    const exportToExcel = async () => {
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet("Sheet1");
 
 
-    // Add header row
-    worksheet.addRow(columns.map((column) => column.title));
+        // Add header row
+        worksheet.addRow(columns.map((column) => column.title));
 
-    // Add data rows
-    dataSource.forEach((row: any) => {
-      worksheet.addRow(columns.map((column: any) => row[column.dataIndex]));
-    });
+        // Add data rows
+        dataSource.forEach((row: any) => {
+            worksheet.addRow(columns.map((column: any) => row[column.dataIndex]));
+        });
 
-    // Generate a Blob containing the Excel file
-    const blob = await workbook.xlsx.writeBuffer();
+        // Generate a Blob containing the Excel file
+        const blob = await workbook.xlsx.writeBuffer();
 
-    // Use file-saver to save the Blob as a file
-    FileSaver.saveAs(
-      new Blob([blob], {
-        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-      }),
-      "Sales-Report.xlsx"
-    );
-  };
+        // Use file-saver to save the Blob as a file
+        FileSaver.saveAs(
+            new Blob([blob], {
+                type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+            }),
+            "Sales-Report.xlsx"
+        );
+    };
 
-  
-  const scrollConfig:any = {
-    y: 300,  
-  };
+
+    const scrollConfig: any = {
+        x: true,
+        y: 300,
+    };
 
     return (
         <>
-            <div  className='panel'>
+            <div className='panel'>
                 <div>
 
                     <Form
@@ -215,11 +245,11 @@ const SaleReport = () => {
                             </Form.Item>
 
                             <Form.Item label="From Date" name="from_date" style={{ width: "250px" }}>
-                                <DatePicker style={{ width: "100%" }} />
+                            <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY" />                            
                             </Form.Item>
 
                             <Form.Item label="To Date" name="to_date" style={{ width: "250px" }}>
-                                <DatePicker style={{ width: "100%" }} />
+                                <DatePicker style={{ width: "100%" }} format="DD-MM-YYYY"/>
                             </Form.Item>
 
                             <Form.Item
@@ -252,12 +282,12 @@ const SaleReport = () => {
                         <h1 className='text-lg font-semibold dark:text-white-light'>Sales Report</h1>
                     </div>
                     <div>
-                        <button type='button'  onClick={exportToExcel} className='create-button'>Export to Excel </button>
+                        <button type='button' onClick={exportToExcel} className='create-button'>Export to Excel </button>
                     </div>
                 </div>
-               
-                <div  className='table-responsive'>
-                    <Table dataSource={dataSource} columns={columns}   scroll={scrollConfig}/>
+
+                <div className='table-responsive'>
+                    <Table dataSource={dataSource} columns={columns} scroll={scrollConfig} />
                 </div>
             </div>
         </>

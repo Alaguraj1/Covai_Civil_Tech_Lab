@@ -96,17 +96,20 @@ console.log("datasource", dataSource)
             title: 'Employee Name',
             dataIndex: 'employee_name',
             key: 'employee_name',
+            className: 'singleLineCell'
         },
         {
             title: 'User Name',
             dataIndex: 'username',
             key: 'username',
+            className: 'singleLineCell'
         },
 
         {
             title: 'Mobile Number',
             dataIndex: 'mobile_number',
             key: 'mobile_number',
+            className: 'singleLineCell'
         },
         // {
         //     title: 'Email',
@@ -116,6 +119,7 @@ console.log("datasource", dataSource)
         {
             title: "Actions",
             key: "actions",
+            className: 'singleLineCell',
             render: (text: any, record: any) => (
 
                 <Space size="middle">
@@ -204,7 +208,7 @@ console.log("datasource", dataSource)
 
         const filteredData = dataSource.filter((item: any) => {
             return (
-                item.employee_name.toLowerCase().includes(SearchValue.toLowerCase()) || item.email.toLowerCase().includes(SearchValue.toLowerCase()) || item.mobile_no.toLowerCase().includes(SearchValue.toLowerCase())
+                item?.employee_name?.toLowerCase()?.includes(SearchValue?.toLowerCase()) || item?.username?.toLowerCase()?.includes(SearchValue?.toLowerCase()) || item?.mobile_number?.includes(SearchValue)
             )
         })
         setFilterData(filteredData)
@@ -390,10 +394,10 @@ console.log("viewRecord", viewRecord)
     };
 
     
-    const scrollConfig:any = {
-        y: 300,  
-      };
-
+    const scrollConfig: any = {
+        x: true,
+        y: 300,
+    };
     return (
         <>
             <div className='panel '>
