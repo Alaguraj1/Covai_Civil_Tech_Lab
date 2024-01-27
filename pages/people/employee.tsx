@@ -18,6 +18,15 @@ const Employee = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [dataSource, setDataSource] = useState([])
     const [messageApi, contextHolder] = message.useMessage();
+    const [admin, setAdmin] = useState()
+
+
+    useEffect(() => {
+        const Admin: any = localStorage.getItem("admin")
+        setAdmin(Admin)
+    }, [])
+
+    console.log("admin", admin)
 
 
     useEffect(() => {
@@ -32,7 +41,7 @@ const Employee = () => {
                 "Authorization": `Token ${Token}`
             }
         }).then((res) => {
-console.log('✌️res --->', res.data);
+            console.log('✌️res --->', res.data);
             setDataSource(res.data)
             setFilterData(res.data)
         }).catch((error: any) => {
@@ -62,7 +71,7 @@ console.log('✌️res --->', res.data);
         }
     }, [editRecord, open]);
 
-console.log("datasource", dataSource)
+    console.log("datasource", dataSource)
     // drawer
     const showDrawer = (record: any) => {
         console.log('✌️record --->', record);
@@ -223,7 +232,7 @@ console.log("datasource", dataSource)
         const formattedData = {
             ...values,
             dob: dayjs(values.dob),
-            joining_date:dayjs(values.joining_date),
+            joining_date: dayjs(values.joining_date),
         };
 
 
@@ -272,7 +281,7 @@ console.log("datasource", dataSource)
 
 
 
-console.log("viewRecord", viewRecord)
+    console.log("viewRecord", viewRecord)
 
     type FieldType = {
         employee_name?: string;
@@ -288,7 +297,7 @@ console.log("viewRecord", viewRecord)
         qualification?: string;
         joiningDate?: string;
         salary?: string;
-        branch_email?:string
+        branch_email?: string
     };
 
     const { TextArea } = Input;
@@ -393,7 +402,7 @@ console.log("viewRecord", viewRecord)
         return data;
     };
 
-    
+
     const scrollConfig: any = {
         x: true,
         y: 300,
@@ -412,7 +421,7 @@ console.log("viewRecord", viewRecord)
                     </div>
                 </div>
                 <div className='table-responsive'>
-                    <Table dataSource={filterData} columns={columns} scroll={scrollConfig}/>
+                    <Table dataSource={filterData} columns={columns} scroll={scrollConfig} />
                 </div>
 
                 <Drawer title={drawerTitle} placement="right" width={600} onClose={onClose} open={open}>
@@ -440,7 +449,7 @@ console.log("viewRecord", viewRecord)
                             required={true}
                             rules={[{ required: true, message: 'Please input your User Name!' }]}
                         >
-                            <Input type='email'/>
+                            <Input type='email' />
                         </Form.Item>
 
 
@@ -538,15 +547,19 @@ console.log("viewRecord", viewRecord)
                             rules={[{ required: true, message: 'Please input DOJ!' }]} >
                             <DatePicker style={{ width: "100%" }} />
                         </Form.Item>
+                        {
+                            admin === "true" ?
+                                <Form.Item<FieldType>
+                                    label="Salary"
+                                    name="salary"
+                                    required={true}
+                                    rules={[{ required: true, message: 'Please input your Salary (Allowed Numbers Only 0-9)!' }]}
+                                >
+                                    <InputNumber style={{ width: "100%" }} />
+                                </Form.Item>
+                                : null
+                        }
 
-                        <Form.Item<FieldType>
-                            label="Salary"
-                            name="salary"
-                            required={false}
-                            rules={[{ required: false, message: 'Please input your Salary (Allowed Numbers Only 0-9)!' }]}
-                        >
-                            <InputNumber style={{ width: "100%" }} />
-                        </Form.Item>
 
                         <Form.Item >
                             <div className='form-btn-main'>

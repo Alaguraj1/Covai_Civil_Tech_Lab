@@ -880,7 +880,7 @@ table tbody tr {
 
 .invoice-table table tr{
     border-bottom-width: 1px;
-  border-color: rgb(224 230 237 / 0.4) !important;
+  border-color: black !important;
 }
 .invoice-table table tr:nth-child(2n+1) {
     background-color: rgb(224 230 237 / 0.2) !important;

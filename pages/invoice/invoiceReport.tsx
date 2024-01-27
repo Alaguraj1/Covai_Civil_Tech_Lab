@@ -1,17 +1,9 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from "axios"
 import { useRouter } from 'next/router';
-import { Space, Table, Modal, Form, Input, Select, Button, Drawer, Radio, message } from 'antd';
+import { Space,Form, Select, Button, Radio, message } from 'antd';
 import "react-quill/dist/quill.snow.css";
-// import dynamic from 'next/dynamic';
-// import form from 'antd/es/form';
-// import Link from 'next/link';
 
-// import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-// import { CKEditor } from "@ckeditor/ckeditor5-react";
-// import { Editor } from '@tinymce/tinymce-react';
-// import 'react-quill/dist/quill.snow.css';
-// const ReactQuill = dynamic(() => import('react-quill'), { ssr: false });
 
 const InvoiceReport = () => {
 
@@ -25,7 +17,7 @@ const InvoiceReport = () => {
   const [invoiceReport, setInvoiceReport] = useState<any>([])
   const [editor, setEditor] = useState<any>("<p>Your HTML content here</p>")
   const [messageApi, contextHolder] = message.useMessage();
-
+  const [date, setDate] = useState()
 
   useEffect(() => {
     editorRef.current = {
@@ -37,21 +29,69 @@ const InvoiceReport = () => {
 
 
 
+
   const getTestReport = (() => {
     const Token = localStorage.getItem("token")
 
-    axios.get(`http://files.covaiciviltechlab.com/edit_invoice_test_template/${id}/`,
-      {
-        headers: {
-          "Authorization": `Token ${Token}`
+    axios.get(`http://files.covaiciviltechlab.com/edit_invoice_test_template/${id}/`, {
+      headers: {
+        "Authorization": `Token ${Token}`
+      }
+    }).then((res) => {
+      setDate(res.data.invoice_test.report_template)
+      setInvoiceReport(res.data)
+
+      // let apiResponse: any = date; 
+
+      // let tempDiv = document.createElement('div');
+      // tempDiv.innerHTML = apiResponse;
+
+      // let tdElements = tempDiv.querySelectorAll('td');
+      // tdElements.forEach(tdElement => {
+      //   if (tdElement.innerText.trim() === 'Date :') {
+      //     tdElement.innerHTML = 'Date : 26-01-2024';
+      //   }
+      //   if (tdElement.innerText.trim() === 'Test Order No:') {
+      //     tdElement.innerHTML = 'Test Order No: 5';
+      //   }
+      // });
+
+      // let modifiedApiResponse = tempDiv.innerHTML;
+      // setEditor(modifiedApiResponse)
+
+      // console.log("modify", modifiedApiResponse);
+    }).catch((error: any) => {
+      console.log(error)
+    });
+  });
+
+  useEffect(() => {
+    // Ensure that the CKEditor is loaded and the date is available
+    if (editorLoaded && date) {
+      // Create a temporary div element to parse the HTML
+      let tempDiv = document.createElement('div');
+      tempDiv.innerHTML = date;
+
+      // Find the td elements and update the date
+      let tdElements = tempDiv.querySelectorAll('td');
+      tdElements.forEach((tdElement) => {
+        if (tdElement.innerText.trim() === 'Date :') {
+          const TestReportDate = "30-4-2024"
+          tdElement.innerHTML = `Date : ${TestReportDate}`;
         }
-      }).then((res) => {
-        setInvoiceReport(res.data)
-        setEditor(res.data.invoice_test.report_template)
-      }).catch((error: any) => {
-        console.log(error)
-      })
-  })
+        if (tdElement.innerText.trim() === 'Test Order No:') {
+          const testOrderNo = "1"
+          tdElement.innerHTML = `Test Order No: ${testOrderNo}`;
+        }
+      });
+
+      let modifiedApiResponse = tempDiv.innerHTML;
+      setEditor(modifiedApiResponse);
+
+      console.log("modify", modifiedApiResponse);
+    }
+  }, [editorLoaded, date]);
+
 
   useEffect(() => {
     getTestReport()
@@ -128,9 +168,6 @@ const InvoiceReport = () => {
   };
 
 
-  // const handleEditorChange = (newData:any) => {
-  //   setEditorData(newData);
-  // };
   return (
     <>
       <div className='panel' style={{ margin: "30px" }}>
@@ -149,39 +186,10 @@ const InvoiceReport = () => {
             onFinishFailed={onFinishFailed}
             autoComplete="off"
           >
-            {/* <Form.Item
-              label="Edit Report Template"
-              name="report_template"
-              required={false}
-            // rules={[{ required: true, message: 'Please input your Report Templates!' }]}
-            >
-              <div dangerouslySetInnerHTML={{ __html: editor }} style={{ display: "none" }} />
-              <Editor
-                apiKey='4nwikn94zwvps0hbggwtumfo1vauvnz2sjsw50m8ji615iqw'
-                onChange={handleEditorChange}
-                onInit={(evt, editor:any) => editorRef.current = editor}
-                initialValue={editor}
-                init={{
-                  height: 500,
-                  menubar: false,
-                  plugins: [
-                    'advlist autolink lists link image charmap print preview anchor',
-                    'searchreplace visualblocks code fullscreen image',
-                    'insertdatetime media table paste code help wordcount',
-                  ],
-                  toolbar: 'table undo redo | formatselect | ' +
-                    'bold italic backcolor | alignleft aligncenter ' +
-                    'alignright alignjustify | bullist numlist outdent indent | ' +
-                    'removeformat | help',
-                  content_style: 'body { font-family:Helvetica,Arial,sans-serif; font-size:14px }'
-                }}
-              />
-            </Form.Item> */}
             <Form.Item
               label="Edit Report Template"
               name="report_template"
               required={false}
-            // rules={[{ required: true, message: 'Please input your Report Templates!' }]}
             >
               <div dangerouslySetInnerHTML={{ __html: editor }} style={{ display: "none" }} />
               {editorLoaded &&
@@ -191,18 +199,9 @@ const InvoiceReport = () => {
                   onChange={(event: any, editor: any) => {
                     const data = editor.getData();
                     handleEditorChange(data);
-                    // onChange(data);
                   }}
                 />
               }
-              {/* <CKEditor
-               editor={ClassicEditor}
-                data={editor}
-                onChange={(event:any, editor:any) => {
-                  const newData = editor.getData();
-                  handleEditorChange(newData);
-                }}
-              /> */}
             </Form.Item>
             <Form.Item label="Completed" name="completed"
               required={true}

@@ -387,7 +387,7 @@ const Material = () => {
           <Table dataSource={filterData} columns={columns} scroll={scrollConfig} />
         </div>
 
-        <Drawer title={DrawerTitle} placement="right" width={600} onClose={onClose} open={open}>
+        <Drawer title={DrawerTitle} placement="right" width={900} onClose={onClose} open={open}>
           <Form
             name="basic"
             layout="vertical"
