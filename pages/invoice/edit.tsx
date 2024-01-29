@@ -73,6 +73,7 @@ const Edit = () => {
 
     const selectChange = (event: any) => {
         const { name, value } = event.target;
+        console.log('✌️ name, value --->', name, value);
 
         // Reset the inactive field's state when changing the payment mode
         setPaymentFormData({
@@ -80,6 +81,7 @@ const Edit = () => {
             [name]: value,
             cheque_number: name === 'payment_mode' && value !== 'cheque' ? null : paymentFormData.cheque_number,
             upi: name === 'payment_mode' && value !== 'upi' ? null : paymentFormData.upi,
+            // cash: name === 'payment_mode' && value !== 'cash' ? null : null
         });
         setPaymentMode(event.target.value)
     };
@@ -133,7 +135,7 @@ const Edit = () => {
                 "Authorization": `Token ${localStorage.getItem("token")}`
             }
         }).then((res) => {
-console.log('✌️res --->', res);
+            console.log('✌️res --->', res);
             let response = res.data;
             // console.log('✌️responsedatedate --->', response);
             let mergeArray: any = [response.customer, ...response.customers];
@@ -220,7 +222,8 @@ console.log('✌️res --->', res);
             //     amount: response.invoice.amount
             // }))
 
-            setPaymentMode(response.invoice.payment_mode)
+            //             setPaymentMode(response.invoice.payment_mode)
+            // console.log('✌️response.invoice.payment_mode --->', response.invoice.payment_mode);
 
             setInvoiceFormData(data)
             setCustomerAddress(uniqueArray[0]?.address1);
@@ -396,11 +399,11 @@ console.log('✌️res --->', res);
         setPaymentModalOpen(true)
         setPaymentMode(null)
         setPaymentFormData({
-            payment_mode: "",
+            payment_mode: "cash",
             date: "",
-            upi: "",
-            cheque_number: "",
-            amount: ""
+            upi:null,
+            cheque_number: null,
+            amount:null
         })
     };
 
@@ -606,7 +609,6 @@ console.log('✌️res --->', res);
         setEditRecord(item);
         form.setFieldsValue(item);
         setOpen(true);
-
     };
 
     const onClose = () => {
@@ -615,6 +617,7 @@ console.log('✌️res --->', res);
         setCustomerAddress('')
     };
 
+    console.log("paymentMode", paymentMode)
     // drawer
     const showPaymentDrawer = (item: any) => {
         setPaymentEditRecord(item);
@@ -713,35 +716,61 @@ console.log('✌️res --->', res);
     // payment post method
     const paymentSubmit = ((e: any) => {
         e.preventDefault()
+        console.log('✌️paymentFormData --->', paymentFormData);
 
-        axios.post(`http://files.covaiciviltechlab.com/add_payment/${id}/`, paymentFormData, {
-            headers: {
-                'Authorization': `Token ${localStorage.getItem('token')}`
-            }
-        }).then((res: any) => {
-            setPaymentModalOpen(false);
-            getInvoiceTestData()
-            setPaymentFormData({
-                payment_mode: "",
-                date: "",
-                upi: "",
-                cheque_number: "",
-                amount: ""
+
+        if (paymentFormData.payment_mode == 'upi' && paymentFormData?.upi == null) {
+            console.log('UPI field is required');
+            messageApi.open({
+                type: 'error',
+                content: 'UPI field is required',
+            });
+            return;
+        } else if (paymentFormData.payment_mode === 'cheque' && paymentFormData?.cheque_number == null) {
+            console.log('Cheque Number field is required');
+            messageApi.open({
+                type: 'error',
+                content: 'Cheque Number field is required',
+            });
+            return;
+        } else {
+
+
+
+            axios.post(`http://files.covaiciviltechlab.com/add_payment/${id}/`, paymentFormData, {
+                headers: {
+                    'Authorization': `Token ${localStorage.getItem('token')}`
+                }
+            }).then((res: any) => {
+                setPaymentModalOpen(false);
+                getInvoiceTestData()
+                messageApi.open({
+                    type: 'success',
+                    content: 'Payment Successfully Updated',
+                });
+                setPaymentFormData({
+                    payment_mode: "",
+                    date: "",
+                    upi: "",
+                    cheque_number: "",
+                    amount: ""
+                })
+                console.log("create", res)
+                const totalAmount = res.payments.reduce((accumulator: any, current: any) => {
+                    const amountValue = parseFloat(current.amount);
+
+                    return accumulator + amountValue;
+                }, 0);
+                setAdvance(totalAmount)
+
+                const InitialBalance: any = afterTax - totalAmount
+                setBalance(parseInt(InitialBalance, 10))
+                console.log("after", afterTax)
+            }).catch((error: any) => {
+                console.log(error)
             })
-            console.log("create",res)
-            const totalAmount = res.payments.reduce((accumulator: any, current: any) => {
-                const amountValue = parseFloat(current.amount);
+        }
 
-                return accumulator + amountValue;
-            }, 0);
-            setAdvance(totalAmount)
-
-            const InitialBalance: any = afterTax - totalAmount
-            setBalance(parseInt(InitialBalance, 10))
-            console.log("after", afterTax)
-        }).catch((error: any) => {
-            console.log(error)
-        })
         console.log("testing for payment", paymentFormData)
     })
 
@@ -764,6 +793,8 @@ console.log('✌️res --->', res);
         onClose();
 
     })
+
+    console.log("paymentFormData", paymentFormData)
 
     // payment Delete
     const PaymentDelete = (id: any,) => {
@@ -790,49 +821,13 @@ console.log('✌️res --->', res);
         });
     };
 
+    console.log("invoiceFormData?.payment_mode_choices", invoiceFormData?.payment_mode_choices)
+
     console.log("invoiceFormData?.invoice_tests", invoiceFormData?.invoice_tests)
     return (
         <div className="flex flex-col gap-2.5 xl:flex-row">
             {contextHolder}
             <div className="panel flex-1 px-0 py-6 rtl:xl:ml-6">
-                <div className="flex flex-wrap justify-between px-4">
-                    <div className="mb-6 w-full lg:w-1/2">
-                        {/* <div className="flex shrink-0 items-center text-black dark:text-white">
-                            <img src="/assets/images/civil-techno-logo.png" alt="img" style={{ width: "30%" }} />
-                        </div> */}
-                        {/* <div className="mt-6 space-y-1 text-gray-500 dark:text-gray-400">
-                            <div className="mt-4 flex items-center">
-                                <label htmlFor="place_of_testing" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
-                                    Place of testing
-                                </label>
-                                <input id="place_of_testing" type="text" className="form-input w-2/3 lg:w-[250px]" name="place_of_testing" value={formData.place_of_testing} onChange={inputChange} />
-                            </div>
-
-                        </div> */}
-                    </div>
-                    <div className="w-full lg:w-1/2 lg:max-w-fit">
-                        <div className="flex items-center">
-                            <label htmlFor="number" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
-                                Invoice Number
-                            </label>
-                            <input id="number" type="text" className="form-input w-2/3 lg:w-[250px]" name="invoice_no" defaultValue={invoiceFormData?.invoice?.invoice_no} disabled />
-                        </div>
-                        <div className="mt-4 flex items-center">
-                            <label htmlFor="startDate" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
-                                Invoice Date
-                            </label>
-                            <input id="startDate" type="date" className="form-input w-2/3 lg:w-[250px]" name="date" value={formData.date} onChange={inputChange} />
-                        </div>
-                        <div className="mt-4 flex items-center">
-                            <label htmlFor="place_of_testing" className="mb-0 flex-1 ltr:mr-2 rtl:ml-2">
-                                Place of testing
-                            </label>
-                            <input id="place_of_testing" type="text" className="form-input w-2/3 lg:w-[250px]" name="place_of_testing" value={formData.place_of_testing} onChange={inputChange} />
-                        </div>
-
-                    </div>
-                </div>
-                <hr className="my-6 border-white-light dark:border-[#1b2e4b]" />
                 <div className="mt-8 px-4">
                     <div className="flex flex-col justify-between lg:flex-row">
                         <div className="mb-6 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
@@ -866,53 +861,29 @@ console.log('✌️res --->', res);
                                 <input id="reciever-email" type="email" className="form-input flex-1" name="project_name" value={formData?.project_name} onChange={inputChange} placeholder="Enter Email" />
                             </div>
                         </div>
-                        {/* <div className="w-full lg:w-1/2">
-                        <div className="text-lg"></div>
+                        <div className="w-full lg:w-1/2">
+                            <div className="text-lg"></div>
 
-                        <div className="mt-4 flex items-center">
-                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                Amount Paid Date
-                            </label>
-                            <input id="swift-code" type="date" className="form-input flex-1" name="amount_paid_date" value={formData?.amount_paid_date} onChange={inputChange} placeholder="Enter SWIFT Number" />
+                            <div className="mt-4 flex items-center">
+                                <label htmlFor="number" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Invoice Number
+                                </label>
+                                <input id="number" type="text" className="form-input flex-1" name="invoice_no" defaultValue={invoiceFormData?.invoice?.invoice_no} disabled />
+                            </div>
+                            <div className="mt-4 flex items-center">
+                                <label htmlFor="startDate" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Invoice Date
+                                </label>
+                                <input id="startDate" type="date" className="form-input flex-1" name="date" value={formData.date} onChange={inputChange} />
+                            </div>
+                            <div className="mt-4 flex items-center">
+                                <label htmlFor="place_of_testing" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Place of testing
+                                </label>
+                                <input id="place_of_testing" type="text" className="form-input flex-1" name="place_of_testing" value={formData.place_of_testing} onChange={inputChange} />
+                            </div>
+
                         </div>
-                        <div className="mt-4 flex items-center">
-                            <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                Payment Mode
-                            </label>
-                            <select id="country" className="form-select flex-1" name="payment_mode" value={formData?.payment_mode} onChange={selectChange} >
-                                {
-                                    invoiceFormData?.payment_mode_choices?.map((value: any) => {
-                                        // console.log("valuevaluevalue", value)
-                                        return (
-                                            <option key={value.id} value={value.value}>{value.value}</option>
-                                        )
-                                    })
-                                }
-                            </select>
-                        </div>
-
-                        {
-                            paymentMode === "cheque" && (
-                                <div className="mt-4 flex items-center">
-                                    <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                        Cheque Number
-                                    </label>
-                                    <input id="swift-code" type="text" className="form-input flex-1" name="cheque_number" value={formData?.cheque_number} onChange={inputChange} />
-                                </div>
-                            )
-                        }
-                        {
-                            paymentMode === "upi" && (
-                                <div className="mt-4 flex items-center">
-                                    <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                        UPI Number
-                                    </label>
-                                    <input id="swift-code" type="text" className="form-input flex-1" name="upi" value={formData?.upi} onChange={inputChange} />
-                                </div>
-                            )
-                        }
-
-                    </div> */}
                     </div>
                 </div>
                 <div className="mt-8">
@@ -1006,7 +977,14 @@ console.log('✌️res --->', res);
                                             <td>
                                                 <Space>
                                                     <EditOutlined rev={undefined} className='edit-icon' onClick={() => showPaymentDrawer(item)} />
-                                                    <DeleteOutlined rev={undefined} style={{ color: "red", cursor: "pointer" }} className='delete-icon' onClick={() => PaymentDelete(item?.id)} />
+                                                    {
+                                                        localStorage.getItem('admin') === 'true' ? (
+                                                            <DeleteOutlined rev={undefined} style={{ color: "red", cursor: "pointer" }} className='delete-icon' onClick={() => PaymentDelete(item?.id)} />
+
+                                                        ) : (
+                                                            <DeleteOutlined rev={undefined} style={{ display: "none" }} className='delete-icon' onClick={() => PaymentDelete(item?.id)} />
+                                                        )
+                                                    }
                                                 </Space>
                                             </td>
                                         </tr>
@@ -1296,66 +1274,59 @@ console.log('✌️res --->', res);
 
 
             {/* payment Modal */}
-            <Modal title="Create Payment" open={paymentModalOpen} width={600} onOk={paymentOk} onCancel={paymentCancel} footer={false}>
+            <Modal title="Add Payment" open={paymentModalOpen} width={600} onOk={paymentOk} onCancel={paymentCancel} footer={false}>
 
                 <form>
                     <div style={{ marginBottom: "10px" }}>
                         <label >
                             Amount Paid Date
                         </label>
-                        <input type="date" className="form-input flex-1" name="date" value={paymentFormData?.date} onChange={paymentInputChange} />
+                        <input type="date" required className="form-input flex-1" name="date" value={paymentFormData?.date} onChange={paymentInputChange} />
                     </div>
-                    <div style={{ marginBottom: "10px" }}>
-                        <label >
-                            Amount
-                        </label>
-                        <input className="form-input flex-1" name="amount" value={paymentFormData?.amount} onChange={paymentInputChange} />
-                    </div>
+
                     <div style={{ marginBottom: "10px" }}>
                         <label htmlFor="payment-mode" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
                             Payment Mode
                         </label>
-                        <select id="payment-mode" className="form-select flex-1" name="payment_mode" value={paymentFormData?.payment_mode} onChange={selectChange} >
+                        <select id="payment-mode" className="form-select flex-1" name="payment_mode" value={paymentFormData?.payment_mode} required onChange={selectChange}>
                             {
-                                invoiceFormData?.payment_mode_choices?.map((value: any) => {
-                                    // console.log("valuevaluevalue", value)
-                                    return (
-                                        <option key={value.id} value={value.value}>{value.value}</option>
-                                    )
-                                })
+                                invoiceFormData?.payment_mode_choices?.map((value: any) => (
+                                    <option key={value.id} value={value.value}>{value.value}</option>
+                                ))
                             }
                         </select>
                     </div>
 
                     <div style={{ marginBottom: "10px" }}>
-                        {
-                            paymentMode === "cheque" && (
-                                <>
-                                    <label htmlFor="cheque" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                        Cheque Number
-                                    </label>
-                                    <input id="swift-code" type="text" className="form-input flex-1" name="cheque_number" value={paymentFormData?.cheque_number} onChange={paymentInputChange} />
+                        {paymentFormData?.payment_mode === "cheque" && (
+                            <>
+                                <label htmlFor="cheque" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    Cheque Number
+                                </label>
+                                <input id="cheque-number" type="text" className="form-input flex-1" name="cheque_number" value={paymentFormData?.cheque_number} onChange={paymentInputChange} required />
+                                {paymentFormData?.cheque_number === null && <p style={{ color: 'red' }}>Cheque Number field is required</p>}
+                            </>
+                        )}
+                        {paymentFormData?.payment_mode === "upi" && (
+                            <>
+                                <label htmlFor="upi" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                    UPI Ref
+                                </label>
+                                <input id="upi" type="text" className="form-input flex-1" name="upi" value={paymentFormData?.upi} onChange={paymentInputChange} required />
+                                {paymentFormData?.upi === null && <p style={{ color: 'red' }}>UPI field is required</p>}
+                            </>
+                        )}
+                    </div>
 
-                                </>
-
-                            )
-                        }
-                        {
-                            paymentMode === "upi" && (
-                                <>
-                                    <label htmlFor="upi" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                        UPI Number
-                                    </label>
-                                    <input id="swift-code" type="text" className="form-input flex-1" name="upi" value={paymentFormData?.upi} onChange={paymentInputChange} />
-                                </>
-
-
-                            )
-                        }
+                    <div style={{ marginBottom: "10px" }}>
+                        <label >
+                            Amount
+                        </label>
+                        <input className="form-input flex-1" name="amount" value={paymentFormData?.amount} required onChange={paymentInputChange} />
                     </div>
                     <div style={{ paddingTop: "30px" }}>
                         <Button type="primary" htmlType="submit" onClick={paymentSubmit}>
-                            Create
+                            Add
                         </Button>
                     </div>
                 </form>

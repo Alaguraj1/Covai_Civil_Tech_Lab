@@ -116,7 +116,7 @@ const Invoice = () => {
                             className='view-icon' rev={undefined} />
                     </Link> */}
 
-
+{/* 
 
                     {
                         localStorage.getItem('admin') === 'true' ? (
@@ -136,15 +136,15 @@ const Invoice = () => {
                                 <EditOutlined rev={undefined} />
                             </span>
                         )
-                    }
+                    } */}
 
-                    {/* <span
+                    <span
                         onClick={() => handleEditClick(record)}
                         style={{ cursor: "pointer" }}
                         className='edit-icon'
                     >
                         <EditOutlined rev={undefined} />
-                    </span> */}
+                    </span>
                     {/* <DeleteOutlined
                         style={{ color: "red", cursor: "pointer" }}
                         onClick={() => handleDelete(record)} className='delete-icon' rev={undefined} /> */}
