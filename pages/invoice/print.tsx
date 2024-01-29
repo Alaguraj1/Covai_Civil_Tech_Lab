@@ -47,7 +47,7 @@ const [finalHtml, setFinalHtml] = useState<any>()
             let lastTable = TableElement2[TableElement2.length - 1];
     
             // Loop through all table elements and update the styles
-            tableElements.forEach((tableElement) => {
+            tableElements.forEach((tableElement:any) => {
                 // Check if the current table is not the last one
                 if (tableElement !== lastTable) {
                     tableElement.style.border = "1px solid black";
@@ -58,9 +58,15 @@ const [finalHtml, setFinalHtml] = useState<any>()
             });
     
             let figureElements = tempDiv.querySelectorAll('figure');
-            figureElements.forEach((figureElement) => {
+            figureElements.forEach((figureElement:any) => {
                 figureElement.style.width = "100%"; // Set the width to 100%
                 figureElement.style.marginBottom = "20px";
+            });
+
+            let headingElements = tempDiv.querySelectorAll('h1, h2, h3, h4');
+            headingElements.forEach((headingElement:any) => {
+                headingElement.style.textAlign = "center"; // Set the width to 100%
+                // headingElement.style.marginBottom = "20px";
             });
     
             // Now, you can use tempDiv.innerHTML to get the updated HTML content
