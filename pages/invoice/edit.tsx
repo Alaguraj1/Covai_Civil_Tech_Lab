@@ -403,7 +403,7 @@ const Edit = () => {
             date: "",
             upi:null,
             cheque_number: null,
-            amount:null
+            amount: ""
         })
     };
 
