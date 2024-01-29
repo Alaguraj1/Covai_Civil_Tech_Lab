@@ -369,7 +369,9 @@ const Material = () => {
   const scrollConfig: any = {
     x: true,
     y: 300,
-};
+  };
+
+
 
   return (
     <>
@@ -434,27 +436,41 @@ const Material = () => {
               label="Templates"
               name="template"
               required={false}
-              rules={[{ required: false, message: 'Please input your Template' }]}            >
+              rules={[{ required: false, message: 'Please input your Template' }]}
+            >
               <div dangerouslySetInnerHTML={{ __html: editor }} style={{ display: "none" }} />
-              {editorLoaded &&
+              {editorLoaded && (
                 <CKEditor
                   editor={ClassicEditor}
                   data={editor}
+                  config={{ 
+                    toolbar: [
+                    'heading',
+                    '|',
+                    'bold',
+                    'italic',
+                    'link',
+                    "|",
+                    'alignment:left', 'alignment:right', 'alignment:center', 'alignment:justify',
+                    'bulletedList',
+                    'numberedList',
+                    '|',
+                    'outdent',
+                    'indent',
+                    '|',
+                    'imageUpload',
+                    'blockQuote',
+                    'insertTable',
+                    'mediaEmbed',
+                    'undo',
+                    'redo'
+                  ]}}
                   onChange={(event: any, editor: any) => {
                     const data = editor.getData();
                     handleEditorChange(data);
-                    // onChange(data);
                   }}
                 />
-              }
-              {/* <CKEditor
-               editor={ClassicEditor}
-                data={editor}
-                onChange={(event:any, editor:any) => {
-                  const newData = editor.getData();
-                  handleEditorChange(newData);
-                }}
-              /> */}
+              )}
             </Form.Item>
 
 

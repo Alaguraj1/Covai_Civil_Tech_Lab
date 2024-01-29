@@ -17,7 +17,7 @@ const InvoiceReport = () => {
   const [invoiceReport, setInvoiceReport] = useState<any>([])
   const [editor, setEditor] = useState<any>("<p>Your HTML content here</p>")
   const [messageApi, contextHolder] = message.useMessage();
-  const [date, setDate] = useState()
+  // const [date, setDate] = useState()
 
   useEffect(() => {
     editorRef.current = {
@@ -38,9 +38,9 @@ const InvoiceReport = () => {
         "Authorization": `Token ${Token}`
       }
     }).then((res) => {
-      setDate(res.data.invoice_test.report_template)
+      // setDate(res.data.invoice_test.report_template)
       setInvoiceReport(res.data)
-
+      setEditor(res.data.invoice_test.report_template)
       // let apiResponse: any = date; 
 
       // let tempDiv = document.createElement('div');
@@ -65,32 +65,32 @@ const InvoiceReport = () => {
     });
   });
 
-  useEffect(() => {
-    // Ensure that the CKEditor is loaded and the date is available
-    if (editorLoaded && date) {
-      // Create a temporary div element to parse the HTML
-      let tempDiv = document.createElement('div');
-      tempDiv.innerHTML = date;
+  // useEffect(() => {
+  //   // Ensure that the CKEditor is loaded and the date is available
+  //   if (editorLoaded && date) {
+  //     // Create a temporary div element to parse the HTML
+  //     let tempDiv = document.createElement('div');
+  //     tempDiv.innerHTML = date;
 
-      // Find the td elements and update the date
-      let tdElements = tempDiv.querySelectorAll('td');
-      tdElements.forEach((tdElement) => {
-        if (tdElement.innerText.trim() === 'Date :') {
-          const TestReportDate = "30-4-2024"
-          tdElement.innerHTML = `Date : ${TestReportDate}`;
-        }
-        if (tdElement.innerText.trim() === 'Test Order No:') {
-          const testOrderNo = "1"
-          tdElement.innerHTML = `Test Order No: ${testOrderNo}`;
-        }
-      });
+  //     // Find the td elements and update the date
+  //     let tdElements = tempDiv.querySelectorAll('td');
+  //     tdElements.forEach((tdElement) => {
+  //       if (tdElement.innerText.trim() === 'Date :') {
+  //         const TestReportDate = "30-4-2024"
+  //         tdElement.innerHTML = `Date : ${TestReportDate}`;
+  //       }
+  //       if (tdElement.innerText.trim() === 'Test Order No:') {
+  //         const testOrderNo = "1"
+  //         tdElement.innerHTML = `Test Order No: ${testOrderNo}`;
+  //       }
+  //     });
 
-      let modifiedApiResponse = tempDiv.innerHTML;
-      setEditor(modifiedApiResponse);
+  //     let modifiedApiResponse = tempDiv.innerHTML;
+  //     setEditor(modifiedApiResponse);
 
-      console.log("modify", modifiedApiResponse);
-    }
-  }, [editorLoaded, date]);
+  //     console.log("modify", modifiedApiResponse);
+  //   }
+  // }, [editorLoaded, date]);
 
 
   useEffect(() => {
