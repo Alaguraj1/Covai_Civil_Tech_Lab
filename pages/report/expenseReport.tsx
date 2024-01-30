@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react'
-import { Table, Button, Space } from 'antd';
+import { Table, Button, Space, Form, Select, DatePicker } from 'antd';
 import { Input } from 'antd';
 import axios from "axios"
 import ExcelJS from "exceljs";
 import * as FileSaver from "file-saver";
-import moment from 'moment';
+import dayjs from 'dayjs';
 
 
 const ExpenseReport = () => {
 
-  const { Search } = Input;
+  const [form] = Form.useForm();
   const [dataSource, setDataSource] = useState([])
-  const [filterData, setFilterData] = useState(dataSource)
-
+  const [saleFormData, setSaleFormData] = useState([])
 
   // get GetExpenseReport datas
 
@@ -28,8 +27,7 @@ const ExpenseReport = () => {
         "Authorization": `Token ${Token}`
       }
     }).then((res) => {
-      setDataSource(res.data.reports)
-      setFilterData(res.data.reports)
+      setSaleFormData(res.data?.expense_category)
     }).catch((error: any) => {
       console.log(error)
     })
@@ -66,29 +64,9 @@ const ExpenseReport = () => {
       title: 'Date',
       dataIndex: 'date',
       key: 'date',
-       className: 'singleLineCell',
-      //  render: (text:any) => {
-      //     const formattedDate = moment(text, 'YYYY-MM-DD').isValid()
-      //       ? moment(text).format('DD-MM-YYYY')
-      //       : ''; // Empty string for invalid dates
-      //     return formattedDate;
-      //   },       
-       },
+      className: 'singleLineCell',
+    },
   ]
-
-  // input search
-  const inputChange = ((e: any) => {
-    const SearchValue = e.target.value
-
-    const filteredData = dataSource.filter((item: any) => {
-      return (
-        item?.expense_user?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.expense_category?.toLowerCase().includes(SearchValue.toLowerCase()) || item?.amount.includes(SearchValue) || item?.narration?.toLowerCase().includes(SearchValue.toLowerCase()) 
-      )
-    })
-    setFilterData(filteredData)
-  })
-
-
 
   // export to excel format
   const exportToExcel = async () => {
@@ -100,7 +78,7 @@ const ExpenseReport = () => {
     worksheet.addRow(columns.map((column) => column.title));
 
     // Add data rows
-    filterData.forEach((row: any) => {
+    dataSource.forEach((row: any) => {
       worksheet.addRow(columns.map((column: any) => row[column.dataIndex]));
     });
 
@@ -117,14 +95,121 @@ const ExpenseReport = () => {
   };
 
 
-  const scrollConfig:any = {
-    x:true,
-    y: 300,  
+  useEffect(() => {
+    const Token = localStorage.getItem("token")
+
+    const body = {
+      "expense_user": "",
+      "from_date": "",
+      "to_date": "",
+      "expense_category": "",
+    };
+
+    axios.post("http://files.covaiciviltechlab.com/expense_report/", body, {
+      headers: {
+        "Authorization": `Token ${Token}`
+      }
+    }).then((res: any) => {
+      setDataSource(res?.data?.reports);
+    }).catch((error: any) => {
+      console.log(error);
+    });
+  }, [])
+
+
+  // form submit
+  const onFinish = (values: any,) => {
+
+    const Token = localStorage.getItem("token")
+
+    const body = {
+      "expense_user": values.expense_user ? values.expense_user : "",
+      "from_date": values?.from_date ? dayjs(values?.from_date).format('YYYY-MM-DD') : "",
+      "to_date": values?.to_date ? dayjs(values?.to_date).format('YYYY-MM-DD') : "",
+      "expense_category": values.expense_category ? values.expense_category : "",
+    };
+
+    axios.post("http://files.covaiciviltechlab.com/expense_report/", body, {
+      headers: {
+        "Authorization": `Token ${Token}`
+      }
+    }).then((res: any) => {
+      setDataSource(res?.data?.reports);
+    }).catch((error: any) => {
+      console.log(error);
+    });
+    form.resetFields();
+  }
+
+  const onFinishFailed = (errorInfo: any) => {
+    console.log('Failed:', errorInfo);
   };
+
+
+  const scrollConfig: any = {
+    x: true,
+    y: 300,
+  };
+
 
   return (
     <>
-      <div  className='panel'>
+      <div className='panel'>
+        <div>
+
+          <Form
+            name="basic"
+            layout="vertical"
+            form={form}
+            initialValues={{ remember: true }}
+            onFinish={onFinish}
+            onFinishFailed={onFinishFailed}
+            autoComplete="off"
+
+          >
+            <div className='sale_report_inputs'>
+
+              <Form.Item
+                label="Expense User"
+                name="expense_user"
+                style={{ width: "250px" }}
+              >
+                <Input />
+              </Form.Item>
+
+              <Form.Item label="From Date" name="from_date" style={{ width: "250px" }}>
+                <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+
+              <Form.Item label="To Date" name="to_date" style={{ width: "250px" }}>
+                <DatePicker style={{ width: "100%" }} />
+              </Form.Item>
+
+              <Form.Item
+                label="Expense Category"
+                name="expense_category"
+                style={{ width: "300px" }}
+              >
+                <Select >
+                  {saleFormData?.map((value: any) => (
+                    <Select.Option key={value.id} value={value.id}>
+                      {value.expense_name}
+                    </Select.Option>
+                  ))}
+                </Select>
+              </Form.Item>
+
+              <div style={{ display: "flex", alignItems: "end" }}>
+                <Form.Item  >
+                  <Button type="primary" htmlType="submit" style={{ width: "200px" }}>
+                    Search
+                  </Button>
+                </Form.Item>
+              </div>
+            </div>
+
+          </Form>
+        </div>
         <div className='tax-heading-main'>
           <div>
             <h1 className='text-lg font-semibold dark:text-white-light'>Expense Report</h1>
@@ -132,12 +217,12 @@ const ExpenseReport = () => {
           <div>
             <Space>
               <Button type="primary" onClick={exportToExcel}>Export to Excel</Button>
-              <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' />
+              {/* <Search placeholder="input search text" onChange={inputChange} enterButton className='search-bar' /> */}
             </Space>
           </div>
         </div>
-        <div  className='table-responsive'>
-          <Table dataSource={filterData} columns={columns} pagination={false} scroll={scrollConfig}/>
+        <div className='table-responsive'>
+          <Table dataSource={dataSource} columns={columns} pagination={false} scroll={scrollConfig} />
         </div>
       </div>
     </>

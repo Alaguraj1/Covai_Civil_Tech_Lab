@@ -13,7 +13,6 @@ const Edit = () => {
     const router = useRouter();
     const { id } = router.query;
 
-
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(setPageTitle('Invoice Edit'));
@@ -22,6 +21,7 @@ const Edit = () => {
     const [editRecord, setEditRecord] = useState<any>(null);
     const [paymentEditRecord, setPaymentEditRecord] = useState<any>(null)
     const [open, setOpen] = useState(false);
+    const [open2, setOpen2] = useState(false)
     const [form] = Form.useForm()
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [testFormData, setTestFormData] = useState<any>([])
@@ -42,7 +42,8 @@ const Edit = () => {
     const [messageApi, contextHolder] = message.useMessage();
     const [paymentMode, setPaymentMode] = useState<any>("")
     const [paymentModalOpen, setPaymentModalOpen] = useState(false);
-
+    const [admin, setAdmin] = useState<any>()
+    const [geteditData, setGetEditData] = useState<any>()
     const [paymentFormData, setPaymentFormData] = useState<any>({
         payment_mode: "",
         date: "",
@@ -50,6 +51,8 @@ const Edit = () => {
         cheque_number: "",
         amount: ""
     })
+    const [pendingBalance, setPendingBalance] = useState(0);
+
 
     const [formData, setFormData] = useState<any>({
         customer: "",
@@ -64,8 +67,13 @@ const Edit = () => {
         amount_paid_date: "",
         before_tax: "",
         tax: [],
+        completed: ""
     });
 
+    useEffect(() => {
+        const Admin = localStorage.getItem("admin")
+        setAdmin(Admin)
+    }, [id])
 
     const tableTogle = () => {
         setTableVisible(!tableVisible)
@@ -86,12 +94,6 @@ const Edit = () => {
         setPaymentMode(event.target.value)
     };
 
-    const paymentInputChange = ((e: any,) => {
-        setPaymentFormData({
-            ...paymentFormData,
-            [e.target.name]: e.target.value
-        })
-    })
 
     const inputChange = ((e: any,) => {
         setFormData({
@@ -135,8 +137,9 @@ const Edit = () => {
                 "Authorization": `Token ${localStorage.getItem("token")}`
             }
         }).then((res) => {
-            console.log('✌️res --->', res);
             let response = res.data;
+
+
             // console.log('✌️responsedatedate --->', response);
             let mergeArray: any = [response.customer, ...response.customers];
             const uniqueArray = mergeArray.reduce((acc: any, obj: any) => {
@@ -151,7 +154,7 @@ const Edit = () => {
 
             setSelectedIDs(response?.invoice.tax)
 
-            const data = {
+            const data: any = {
                 customers: uniqueArray,
                 invoice: response.invoice,
                 invoice_tests: response.invoice_tests,
@@ -160,8 +163,8 @@ const Edit = () => {
                 taxs: response.taxs,
                 payments: response.payments
             }
-            console.log('✌️data --->', data);
 
+            setGetEditData(data)
             // if (update) {
             const convertedObj: any = {}
 
@@ -210,8 +213,8 @@ const Edit = () => {
                 before_tax: parseInt(discountedBeforeTax, 10) || 0,
                 invoice_tests: response?.invoice_tests,
                 upi: response.invoice.upi,
+                completed: response.invoice.completed
             }));
-
 
             // setPaymentFormData((prevState:any) => ({
             //     ...prevState,
@@ -239,7 +242,6 @@ const Edit = () => {
 
             const InitialBalance: any = After_tax - totalAmount
             setBalance(parseInt(InitialBalance, 10))
-            console.log('✌️totalAmount --->', totalAmount);
 
 
         }).catch((error: any) => {
@@ -394,6 +396,7 @@ const Edit = () => {
         form.resetFields()
     };
 
+
     // modal
     const PaymentModal = () => {
         setPaymentModalOpen(true)
@@ -401,7 +404,7 @@ const Edit = () => {
         setPaymentFormData({
             payment_mode: "cash",
             date: "",
-            upi:null,
+            upi: null,
             cheque_number: null,
             amount: ""
         })
@@ -517,7 +520,10 @@ const Edit = () => {
         }
     })
 
-
+    const invoiceDataShow = (id: any) => {
+        var url = `/invoice/view?id=${id}`;
+        window.location.href = url;
+    };
 
     const invoiceFormSubmit = ((e: any) => {
 
@@ -533,6 +539,8 @@ const Edit = () => {
         // };
 
         const Token = localStorage.getItem('token');
+
+
         const body = {
             "customer": formData.customer,
             // "sales_mode": Number(formData.sales_mode),
@@ -549,8 +557,8 @@ const Edit = () => {
             "date": formData.date,
             "place_of_testing": formData.place_of_testing,
             "upi": formData.upi,
+            "completed": formData.completed
         }
-        console.log('✌️body --->', body);
 
         axios.put(`http://files.covaiciviltechlab.com/edit_invoice/${id}/`, body, {
             headers: {
@@ -617,7 +625,6 @@ const Edit = () => {
         setCustomerAddress('')
     };
 
-    console.log("paymentMode", paymentMode)
     // drawer
     const showPaymentDrawer = (item: any) => {
         setPaymentEditRecord(item);
@@ -629,12 +636,12 @@ const Edit = () => {
             cheque_number: item?.cheque_number,
             amount: item?.amount
         })
-        setOpen(true);
+        setOpen2(true);
 
     };
 
     const paymentClose = () => {
-        setOpen(false)
+        setOpen2(false)
         setPaymentFormData({
             payment_mode: "",
             date: "",
@@ -713,21 +720,31 @@ const Edit = () => {
         window.location.href = `/invoice/invoiceReport?id=${item.id}`;
     };
 
+    const handlePrintEmployee = (item: any) => {
+        const id = item.id;
+        const ref = `/invoice/print/?id=${id}`;
+        window.open(ref, "_blank"); // Note: "_blank" specifies a new tab or window
+    };
+
     // payment post method
     const paymentSubmit = ((e: any) => {
         e.preventDefault()
-        console.log('✌️paymentFormData --->', paymentFormData);
 
+        const balanceValue = parseInt(balance, 10);
 
-        if (paymentFormData.payment_mode == 'upi' && paymentFormData?.upi == null) {
-            console.log('UPI field is required');
+        if (balanceValue < paymentFormData.amount) {
+            messageApi.open({
+                type: 'error',
+                content: 'The amount filed exceeds the available balance.',
+            });
+            return;
+        } else if (paymentFormData.payment_mode == 'upi' && paymentFormData?.upi == null) {
             messageApi.open({
                 type: 'error',
                 content: 'UPI field is required',
             });
             return;
         } else if (paymentFormData.payment_mode === 'cheque' && paymentFormData?.cheque_number == null) {
-            console.log('Cheque Number field is required');
             messageApi.open({
                 type: 'error',
                 content: 'Cheque Number field is required',
@@ -755,7 +772,6 @@ const Edit = () => {
                     cheque_number: "",
                     amount: ""
                 })
-                console.log("create", res)
                 const totalAmount = res.payments.reduce((accumulator: any, current: any) => {
                     const amountValue = parseFloat(current.amount);
 
@@ -770,9 +786,19 @@ const Edit = () => {
                 console.log(error)
             })
         }
-
-        console.log("testing for payment", paymentFormData)
     })
+
+    const paymentInputChange = ((e: any,) => {
+        setPaymentFormData({
+            ...paymentFormData,
+            [e.target.name]: e.target.value
+        })
+
+        const oldBalance: any = parseFloat(paymentEditRecord.amount) + Number(balance);
+        setPendingBalance(oldBalance)
+        // setBalance(oldBalance)
+    })
+
 
 
     // payment edit
@@ -780,13 +806,35 @@ const Edit = () => {
         e.preventDefault()
         const Token = localStorage.getItem("token")
 
-        axios.put(`http://files.covaiciviltechlab.com/edit_payment/${paymentEditRecord.id}/`, paymentFormData, {
+        if (pendingBalance < paymentFormData.amount) {
+            messageApi.open({
+                type: 'error',
+                content: 'The amount filed exceeds the available balance.',
+            });
+            return;
+        }
+
+        axios.put(`http://files.covaiciviltechlab.com/edit_payment/${paymentEditRecord?.id}/`, paymentFormData, {
             headers: {
                 "Authorization": `Token ${Token}`
             }
         }).then((res: any) => {
+            console.log('Edit --->', res);
+            const totalAmount = res.data.payments.reduce((accumulator: any, current: any) => {
+                const amountValue = parseFloat(current.amount);
+
+                return accumulator + amountValue;
+            }, 0);
+            console.log('✌️totalAmount --->', totalAmount);
+
+            setAdvance(totalAmount)
+
+            const InitialBalance: any = afterTax - totalAmount
+            console.log('✌️InitialBalance --->', InitialBalance);
+            setBalance(parseInt(InitialBalance, 10))
+            console.log("after", afterTax)
             getInvoiceTestData()
-            setOpen(false);
+            setOpen2(false);
         }).catch((error: any) => {
             console.log(error);
         });
@@ -794,7 +842,6 @@ const Edit = () => {
 
     })
 
-    console.log("paymentFormData", paymentFormData)
 
     // payment Delete
     const PaymentDelete = (id: any,) => {
@@ -821,586 +868,913 @@ const Edit = () => {
         });
     };
 
-    console.log("invoiceFormData?.payment_mode_choices", invoiceFormData?.payment_mode_choices)
-
-    console.log("invoiceFormData?.invoice_tests", invoiceFormData?.invoice_tests)
     return (
-        <div className="flex flex-col gap-2.5 xl:flex-row">
-            {contextHolder}
-            <div className="panel flex-1 px-0 py-6 rtl:xl:ml-6">
-                <div className="mt-8 px-4">
-                    <div className="flex flex-col justify-between lg:flex-row">
-                        <div className="mb-6 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
-                            <div className="text-lg">Bill To :-</div>
-                            <div className="mt-4 flex items-center">
-                                <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Customer Name
-                                </label>
-                                <select id="country" className="form-select flex-1" name="customer" onChange={handleSelectChange}
-
-                                >
-
-                                    {invoiceFormData?.customers?.map((value: any) => (
-                                        <option key={value.id} value={value.id}>
-                                            {value?.customer_name}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-
-                            <div className="mt-4 flex items-center">
-                                <label htmlFor="reciever-address" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Address
-                                </label>
-                                <textarea id="reciever-address" name="reciever-address" className="form-input flex-1" value={customerAddress} placeholder="Enter Address" />
-                            </div>
-                            <div className="mt-4 flex items-center">
-                                <label htmlFor="reciever-email" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Project Name
-                                </label>
-                                <input id="reciever-email" type="email" className="form-input flex-1" name="project_name" value={formData?.project_name} onChange={inputChange} placeholder="Enter Email" />
-                            </div>
-                        </div>
-                        <div className="w-full lg:w-1/2">
-                            <div className="text-lg"></div>
-
-                            <div className="mt-4 flex items-center">
-                                <label htmlFor="number" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Invoice Number
-                                </label>
-                                <input id="number" type="text" className="form-input flex-1" name="invoice_no" defaultValue={invoiceFormData?.invoice?.invoice_no} disabled />
-                            </div>
-                            <div className="mt-4 flex items-center">
-                                <label htmlFor="startDate" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Invoice Date
-                                </label>
-                                <input id="startDate" type="date" className="form-input flex-1" name="date" value={formData.date} onChange={inputChange} />
-                            </div>
-                            <div className="mt-4 flex items-center">
-                                <label htmlFor="place_of_testing" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Place of testing
-                                </label>
-                                <input id="place_of_testing" type="text" className="form-input flex-1" name="place_of_testing" value={formData.place_of_testing} onChange={inputChange} />
-                            </div>
-
-                        </div>
-                    </div>
-                </div>
-                <div className="mt-8">
-                    <div className="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Test Name</th>
-                                    <th>Quantity</th>
-                                    <th >Price</th>
-                                    <th>Total</th>
-                                    <th >Action</th>
-                                    <th>Completed</th>
-                                    <th >Report</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {invoiceFormData.invoice_tests?.length <= 0 && (
-                                    <tr>
-                                        <td colSpan={5} className="!text-center font-semibold">
-                                            No Item Available
-                                        </td>
-                                    </tr>
-                                )}
-                                {invoiceFormData?.invoice_tests?.map((item: any, index: any) => {
-                                    return (
-                                        <tr className="align-top" key={item.id}>
-                                            <td>{item.test_name}</td>
-                                            <td>{Number(item?.quantity)}</td>
-                                            <td>  {Number(item?.price_per_sample)} </td>
-                                            <td>{item.quantity * item.price_per_sample}</td>
-                                            <td>
-                                                <Space>
-                                                    <EditOutlined rev={undefined} className='edit-icon' onClick={() => showDrawer(item)} />
-                                                    <DeleteOutlined rev={undefined} style={{ color: "red", cursor: "pointer" }} className='delete-icon' onClick={() => handleDelete(item?.id)} />
-                                                </Space>
-                                            </td>
-                                            <td>{item?.completed}</td>
-                                            <td>
-                                                <PrinterOutlined rev={undefined} className='edit-icon' onClick={() => handlePrint(item)} />
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div className="mt-6 flex flex-col justify-between px-4 sm:flex-row">
-                        <div className="mb-6 sm:mb-0">
-                            <button type="button" className="btn btn-civil" onClick={showModal}>
-                                Add Test
-                            </button>
-                        </div>
-
-                    </div>
-                </div>
-
-
-                <div className="mt-8">
-                    <div className="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>Payment Mode</th>
-                                    <th>Cheque Number</th>
-                                    <th>UPI</th>
-                                    <th>Amount</th>
-                                    <th>Amount Paid Date</th>
-                                    <th >Action</th>
-                                    {/* <th>Completed</th> */}
-                                    {/* <th >Report</th> */}
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {invoiceFormData.payments?.length <= 0 && (
-                                    <tr>
-                                        <td colSpan={5} className="!text-center font-semibold">
-                                            No Item Available
-                                        </td>
-                                    </tr>
-                                )}
-                                {invoiceFormData.payments?.map((item: any, index: any) => {
-                                    return (
-                                        <tr className="align-top" key={item.id}>
-                                            <td>{item?.payment_mode}</td>
-                                            <td>{item?.cheque_number}</td>
-                                            <td>{item?.upi} </td>
-                                            <td>{item?.amount}</td>
-                                            <td>{item?.date}</td>
-                                            <td>
-                                                <Space>
-                                                    <EditOutlined rev={undefined} className='edit-icon' onClick={() => showPaymentDrawer(item)} />
-                                                    {
-                                                        localStorage.getItem('admin') === 'true' ? (
-                                                            <DeleteOutlined rev={undefined} style={{ color: "red", cursor: "pointer" }} className='delete-icon' onClick={() => PaymentDelete(item?.id)} />
-
-                                                        ) : (
-                                                            <DeleteOutlined rev={undefined} style={{ display: "none" }} className='delete-icon' onClick={() => PaymentDelete(item?.id)} />
-                                                        )
-                                                    }
-                                                </Space>
-                                            </td>
-                                        </tr>
-                                    );
-                                })}
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div className="mt-6 flex flex-col justify-between px-4 sm:flex-row">
-                        <div className="mb-6 sm:mb-0">
-                            <button type="button" className="btn btn-civil" onClick={PaymentModal}>
-                                Add Payment
-                            </button>
-                        </div>
-                        <div className="sm:w-2/5">
-                            <div className="flex items-center justify-between">
-                                <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Discount (%)
-                                </label>
-                                <input id="bank-name" type="text" className="form-input flex-1" name="discount" value={formData?.discount} onChange={(e) => handleDiscountChange(e.target.value)} placeholder="Enter Discount" />
-                                {/* <div>Subtotal</div>
-                                <div>265.00</div> */}
-                            </div>
-                            <div className="mt-4 flex items-center justify-between">
-                                <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Before Tax
-                                </label>
-                                <input id="bank-name" type="text" className="form-input flex-1" name="before_tax" value={formData?.before_tax} onChange={inputChange} placeholder="Enter Before Tax" disabled />
-                            </div>
-                            <div className="mt-4 flex items-center justify-between">
-
-                                <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Tax
-                                </label>
-
-                                {invoiceFormData?.taxs?.map((item: any) => {
-
-                                    return (
-                                        <div key={item.id}>
-                                            <label>
-                                                <input
-                                                    type="checkbox"
-                                                    value={item.tax_name}
-                                                    checked={checkedItems[item.id]}
-                                                    onChange={() => handleChange(item.id, item.tax_percentage)}
-                                                    style={{ marginRight: "5px" }}
-                                                />
-                                                {item.tax_name}
+        <>
+            {
+                admin == "false" && geteditData?.invoice?.completed == "Yes" ? (
+                    <div className="flex flex-col gap-2.5 xl:flex-row">
+                        <div className="panel flex-1 px-0 py-6 rtl:xl:ml-6">
+                            <div className="mt-8 px-4">
+                                <div className="flex flex-col justify-between lg:flex-row">
+                                    <div className="mb-6 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
+                                        <div className="text-lg">Bill To :-</div>
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Customer Name
                                             </label>
+                                            <select id="country" className="form-select flex-1" name="customer" disabled
+
+                                            >
+
+                                                {invoiceFormData?.customers?.map((value: any) => (
+                                                    <option key={value.id} value={value.id}>
+                                                        {value?.customer_name}
+                                                    </option>
+                                                ))}
+                                            </select>
                                         </div>
 
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="reciever-address" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Address
+                                            </label>
+                                            <textarea id="reciever-address" name="reciever-address" className="form-input flex-1" value={customerAddress} placeholder="Enter Address" disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="reciever-email" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Project Name
+                                            </label>
+                                            <input id="reciever-email" type="email" className="form-input flex-1" name="project_name" value={formData?.project_name} placeholder="Enter Email" disabled />
+                                        </div>
+                                    </div>
+                                    <div className="w-full lg:w-1/2">
+                                        <div className="text-lg"></div>
 
-                                    )
-                                })}
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="number" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Invoice Number
+                                            </label>
+                                            <input id="number" type="text" className="form-input flex-1" name="invoice_no" defaultValue={invoiceFormData?.invoice?.invoice_no} disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="startDate" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Invoice Date
+                                            </label>
+                                            <input id="startDate" type="date" className="form-input flex-1" name="date" value={formData.date} disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="place_of_testing" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Place of testing
+                                            </label>
+                                            <input id="place_of_testing" type="text" className="form-input flex-1" name="place_of_testing" value={formData.place_of_testing} disabled />
+                                        </div>
 
+                                    </div>
+                                </div>
                             </div>
-                            <div className="flex items-center justify-between" style={{ marginTop: "20px" }}>
-                                {formatTotal() && <p> {formatTotal()}</p>}
-                            </div>
-                            <div className="mt-4 flex items-center justify-between">
-                                <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    After Tax
-                                </label>
-                                <input id="bank-name" type="text" className="form-input flex-1" name="after_tax" value={afterTax} onChange={inputChange} placeholder="Enter After Tax" disabled />
-                            </div>
-                            <div className="mt-4 flex items-center justify-between">
-                                <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Advance
-                                </label>
-                                <input id="swift-code" type="text" className="form-input flex-1" name="advance" value={advance}
-                                    disabled />
-                            </div>
-                            <div className="mt-4 flex items-center justify-between font-semibold">
-                                <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Balance
-                                </label>
-                                <input id="swift-code" type="text" className="form-input flex-1" name="balance" value={balance} onChange={inputChange} disabled />
+                            <div className="mt-8">
+                                <div className="table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Test Name</th>
+                                                <th>Quantity</th>
+                                                <th >Price</th>
+                                                <th>Total</th>
+                                                <th>Completed</th>
+                                                <th >Report</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {invoiceFormData.invoice_tests?.length <= 0 && (
+                                                <tr>
+                                                    <td colSpan={5} className="!text-center font-semibold">
+                                                        No Item Available
+                                                    </td>
+                                                </tr>
+                                            )}
+                                            {invoiceFormData?.invoice_tests?.map((item: any, index: any) => {
+                                                return (
+                                                    <tr className="align-top" key={item.id}>
+                                                        <td>{item.test_name}</td>
+                                                        <td>{Number(item?.quantity)}</td>
+                                                        <td>  {Number(item?.price_per_sample)} </td>
+                                                        <td>{item.quantity * item.price_per_sample}</td>
+                                                        <td>{item?.completed}</td>
+                                                        <td>
+                                                            <PrinterOutlined rev={undefined} className='edit-icon' onClick={() => handlePrintEmployee(item)} />
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
                             </div>
 
-                            <div style={{ marginTop: "50px" }}>
-                                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1" style={{ display: "flex" }}>
-                                    <button type="button" className="btn btn-civil w-full gap-2" onClick={invoiceFormSubmit}>
+
+                            <div className="mt-8">
+                                <div className="table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Payment Mode</th>
+                                                <th>Cheque Number</th>
+                                                <th>UPI</th>
+                                                <th>Amount</th>
+                                                <th>Amount Paid Date</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {invoiceFormData.payments?.length <= 0 && (
+                                                <tr>
+                                                    <td colSpan={5} className="!text-center font-semibold">
+                                                        No Item Available
+                                                    </td>
+                                                </tr>
+                                            )}
+                                            {invoiceFormData.payments?.map((item: any, index: any) => {
+                                                return (
+                                                    <tr className="align-top" key={item.id}>
+                                                        <td>{item?.payment_mode}</td>
+                                                        <td>{item?.cheque_number}</td>
+                                                        <td>{item?.upi} </td>
+                                                        <td>{item?.amount}</td>
+                                                        <td>{item?.date}</td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div className="mt-6 flex flex-col justify-between px-4 sm:flex-row">
+                                    <div className="mb-6 sm:mb-0">
+                                    </div>
+                                    <div className="sm:w-2/5">
+                                        <div className="flex items-center justify-between">
+                                            <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Discount (%)
+                                            </label>
+                                            <input id="bank-name" type="text" className="form-input flex-1" name="discount" value={formData?.discount} placeholder="Enter Discount" disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center justify-between">
+                                            <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Before Tax
+                                            </label>
+                                            <input id="bank-name" type="text" className="form-input flex-1" name="before_tax" value={formData?.before_tax} placeholder="Enter Before Tax" disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center justify-between">
+
+                                            <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Tax
+                                            </label>
+
+                                            {invoiceFormData?.taxs?.map((item: any) => {
+
+                                                return (
+                                                    <div key={item.id}>
+                                                        <label>
+                                                            <input
+                                                                type="checkbox"
+                                                                value={item.tax_name}
+                                                                checked={checkedItems[item.id]}
+
+                                                                style={{ marginRight: "5px" }}
+                                                            />
+                                                            {item.tax_name}
+                                                        </label>
+                                                    </div>
+
+
+                                                )
+                                            })}
+
+                                        </div>
+                                        <div className="flex items-center justify-between" style={{ marginTop: "20px" }}>
+                                            {formatTotal() && <p> {formatTotal()}</p>}
+                                        </div>
+                                        <div className="mt-4 flex items-center justify-between">
+                                            <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                After Tax
+                                            </label>
+                                            <input id="bank-name" type="text" className="form-input flex-1" name="after_tax" value={afterTax} placeholder="Enter After Tax" disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center justify-between">
+                                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Advance
+                                            </label>
+                                            <input id="swift-code" type="text" className="form-input flex-1" name="advance" value={advance}
+                                                disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center justify-between font-semibold">
+                                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Balance
+                                            </label>
+                                            <input id="swift-code" type="text" className="form-input flex-1" name="balance" value={balance} disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center justify-start font-semibold">
+                                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Completed
+                                            </label>
+                                            <label style={{ marginRight: "3px", marginBottom: "0px" }}>Yes</label>
+                                            <input
+                                                id="swift-code-yes"
+                                                type="radio"
+                                                style={{ marginRight: "20px" }}
+                                                name="completed"
+                                                value="Yes"
+                                                checked={formData.completed === "Yes"}
+                                            />
+                                            <label style={{ marginRight: "3px", marginBottom: "0px" }}>No</label>
+                                            <input
+                                                id="swift-code-no"
+                                                type="radio"
+                                                name="completed"
+                                                value="No"
+                                                checked={formData.completed === "No"}
+                                            />
+                                        </div>
+
+                                        <div style={{ marginTop: "50px" }}>
+                                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1" style={{ display: "flex" }}>
+
+                                                {/* {
+                                        admin == "false" && editGetData?.invoice?.completed == "Yes" ? (
+                                            <button
+                                                type="button"
+                                                className="btn btn-civil w-full gap-2"
+                                            >
+                                                <IconSave className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                Show
+                                            </button>
+                                        ) : (
+                                            <button
+                                                type="button"
+                                                className="btn btn-civil w-full gap-2"
+                                                onClick={invoiceFormSubmit}
+                                            >
+                                                <IconSave className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                Update
+                                            </button>
+                                        )
+                                    } */}
+
+
+                                                {/* <button type="button" className="btn btn-civil w-full gap-2" onClick={invoiceFormSubmit}>
                                         <IconSave className="ltr:mr-2 rtl:ml-2 shrink-0" />
                                         Update
-                                    </button>
+                                    </button> */}
 
-                                    <button className="btn btn-gray w-full gap-2" onClick={() => handlePreviewClick(id)}>
-                                        <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
-                                        Preview
-                                    </button>
+                                                <button className="btn btn-civil w-full gap-2" onClick={() => handlePreviewClick(id)}>
+                                                    <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                    Preview
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
+                ) : (
+
+                    <div className="flex flex-col gap-2.5 xl:flex-row">
+                        {contextHolder}
+                        <div className="panel flex-1 px-0 py-6 rtl:xl:ml-6">
+                            <div className="mt-8 px-4">
+                                <div className="flex flex-col justify-between lg:flex-row">
+                                    <div className="mb-6 w-full lg:w-1/2 ltr:lg:mr-6 rtl:lg:ml-6">
+                                        <div className="text-lg">Bill To :-</div>
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Customer Name
+                                            </label>
+                                            <select id="country" className="form-select flex-1" name="customer" onChange={handleSelectChange}
+
+                                            >
+
+                                                {invoiceFormData?.customers?.map((value: any) => (
+                                                    <option key={value.id} value={value.id}>
+                                                        {value?.customer_name}
+                                                    </option>
+                                                ))}
+                                            </select>
+                                        </div>
+
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="reciever-address" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Address
+                                            </label>
+                                            <textarea id="reciever-address" name="reciever-address" className="form-input flex-1" value={customerAddress} placeholder="Enter Address" />
+                                        </div>
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="reciever-email" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Project Name
+                                            </label>
+                                            <input id="reciever-email" type="email" className="form-input flex-1" name="project_name" value={formData?.project_name} onChange={inputChange} placeholder="Enter Email" />
+                                        </div>
+                                    </div>
+                                    <div className="w-full lg:w-1/2">
+                                        <div className="text-lg"></div>
+
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="number" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Invoice Number
+                                            </label>
+                                            <input id="number" type="text" className="form-input flex-1" name="invoice_no" defaultValue={invoiceFormData?.invoice?.invoice_no} disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="startDate" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Invoice Date
+                                            </label>
+                                            <input id="startDate" type="date" className="form-input flex-1" name="date" value={formData.date} onChange={inputChange} />
+                                        </div>
+                                        <div className="mt-4 flex items-center">
+                                            <label htmlFor="place_of_testing" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Place of testing
+                                            </label>
+                                            <input id="place_of_testing" type="text" className="form-input flex-1" name="place_of_testing" value={formData.place_of_testing} onChange={inputChange} />
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="mt-8">
+                                <div className="table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Test Name</th>
+                                                <th>Quantity</th>
+                                                <th >Price</th>
+                                                <th>Total</th>
+                                                <th >Action</th>
+                                                <th>Completed</th>
+                                                <th >Report</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {invoiceFormData.invoice_tests?.length <= 0 && (
+                                                <tr>
+                                                    <td colSpan={5} className="!text-center font-semibold">
+                                                        No Item Available
+                                                    </td>
+                                                </tr>
+                                            )}
+                                            {invoiceFormData?.invoice_tests?.map((item: any, index: any) => {
+                                                return (
+                                                    <tr className="align-top" key={item.id}>
+                                                        <td>{item.test_name}</td>
+                                                        <td>{Number(item?.quantity)}</td>
+                                                        <td>  {Number(item?.price_per_sample)} </td>
+                                                        <td>{item.quantity * item.price_per_sample}</td>
+                                                        <td>
+                                                            <Space>
+                                                                <EditOutlined rev={undefined} className='edit-icon' onClick={() => showDrawer(item)} />
+                                                                <DeleteOutlined rev={undefined} style={{ color: "red", cursor: "pointer" }} className='delete-icon' onClick={() => handleDelete(item?.id)} />
+                                                            </Space>
+                                                        </td>
+                                                        <td>{item?.completed}</td>
+                                                        <td>
+                                                            <PrinterOutlined rev={undefined} className='edit-icon' onClick={() => handlePrint(item)} />
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div className="mt-6 flex flex-col justify-between px-4 sm:flex-row">
+                                    <div className="mb-6 sm:mb-0">
+                                        <button type="button" className="btn btn-civil" onClick={showModal}>
+                                            Add Test
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </div>
+
+
+                            <div className="mt-8">
+                                <div className="table-responsive">
+                                    <table>
+                                        <thead>
+                                            <tr>
+                                                <th>Payment Mode</th>
+                                                <th>Cheque Number</th>
+                                                <th>UPI</th>
+                                                <th>Amount</th>
+                                                <th>Amount Paid Date</th>
+                                                <th >Action</th>
+                                                {/* <th>Completed</th> */}
+                                                {/* <th >Report</th> */}
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            {invoiceFormData.payments?.length <= 0 && (
+                                                <tr>
+                                                    <td colSpan={5} className="!text-center font-semibold">
+                                                        No Item Available
+                                                    </td>
+                                                </tr>
+                                            )}
+                                            {invoiceFormData.payments?.map((item: any, index: any) => {
+                                                return (
+                                                    <tr className="align-top" key={item.id}>
+                                                        <td>{item?.payment_mode}</td>
+                                                        <td>{item?.cheque_number}</td>
+                                                        <td>{item?.upi} </td>
+                                                        <td>{item?.amount}</td>
+                                                        <td>{item?.date}</td>
+                                                        <td>
+                                                            <Space>
+                                                                <EditOutlined rev={undefined} className='edit-icon' onClick={() => showPaymentDrawer(item)} />
+                                                                {
+                                                                    localStorage.getItem('admin') === 'true' ? (
+                                                                        <DeleteOutlined rev={undefined} style={{ color: "red", cursor: "pointer" }} className='delete-icon' onClick={() => PaymentDelete(item?.id)} />
+
+                                                                    ) : (
+                                                                        <DeleteOutlined rev={undefined} style={{ display: "none" }} className='delete-icon' onClick={() => PaymentDelete(item?.id)} />
+                                                                    )
+                                                                }
+                                                            </Space>
+                                                        </td>
+                                                    </tr>
+                                                );
+                                            })}
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                                <div className="mt-6 flex flex-col justify-between px-4 sm:flex-row">
+                                    <div className="mb-6 sm:mb-0">
+                                        <button type="button" className="btn btn-civil" onClick={PaymentModal}>
+                                            Add Payment
+                                        </button>
+                                    </div>
+                                    <div className="sm:w-2/5">
+                                        <div className="flex items-center justify-between">
+                                            <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Discount (%)
+                                            </label>
+                                            <input id="bank-name" type="text" className="form-input flex-1" name="discount" value={formData?.discount} onChange={(e) => handleDiscountChange(e.target.value)} placeholder="Enter Discount" />
+                                            {/* <div>Subtotal</div>
+                                                                <div>265.00</div> */}
+                                        </div>
+                                        <div className="mt-4 flex items-center justify-between">
+                                            <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Before Tax
+                                            </label>
+                                            <input id="bank-name" type="text" className="form-input flex-1" name="before_tax" value={formData?.before_tax} onChange={inputChange} placeholder="Enter Before Tax" disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center justify-between">
+
+                                            <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Tax
+                                            </label>
+
+                                            {invoiceFormData?.taxs?.map((item: any) => {
+
+                                                return (
+                                                    <div key={item.id}>
+                                                        <label>
+                                                            <input
+                                                                type="checkbox"
+                                                                value={item.tax_name}
+                                                                checked={checkedItems[item.id]}
+                                                                onChange={() => handleChange(item.id, item.tax_percentage)}
+                                                                style={{ marginRight: "5px" }}
+                                                            />
+                                                            {item.tax_name}
+                                                        </label>
+                                                    </div>
+
+
+                                                )
+                                            })}
+
+                                        </div>
+                                        <div className="flex items-center justify-between" style={{ marginTop: "20px" }}>
+                                            {formatTotal() && <p> {formatTotal()}</p>}
+                                        </div>
+                                        <div className="mt-4 flex items-center justify-between">
+                                            <label htmlFor="bank-name" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                After Tax
+                                            </label>
+                                            <input id="bank-name" type="text" className="form-input flex-1" name="after_tax" value={afterTax} onChange={inputChange} placeholder="Enter After Tax" disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center justify-between">
+                                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Advance
+                                            </label>
+                                            <input id="swift-code" type="text" className="form-input flex-1" name="advance" value={advance}
+                                                disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center justify-between font-semibold">
+                                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Balance
+                                            </label>
+                                            <input id="swift-code" type="text" className="form-input flex-1" name="balance" value={balance} onChange={inputChange} disabled />
+                                        </div>
+                                        <div className="mt-4 flex items-center justify-start font-semibold">
+                                            <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Completed
+                                            </label>
+                                            <label style={{ marginRight: "3px", marginBottom: "0px" }}>Yes</label>
+                                            <input
+                                                id="swift-code-yes"
+                                                type="radio"
+                                                style={{ marginRight: "20px" }}
+                                                name="completed"
+                                                value="Yes"
+                                                onChange={inputChange}
+                                                checked={formData.completed === "Yes"}
+                                            />
+                                            <label style={{ marginRight: "3px", marginBottom: "0px" }}>No</label>
+                                            <input
+                                                id="swift-code-no"
+                                                type="radio"
+                                                name="completed"
+                                                value="No"
+                                                onChange={inputChange}
+                                                checked={formData.completed === "No"}
+                                            />
+                                        </div>
+
+                                        <div style={{ marginTop: "50px" }}>
+                                            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-1" style={{ display: "flex" }}>
+
+                                                {/* {
+                                                                        admin == "false" && formData?.completed == "Yes" ? (
+                                                                            <button
+                                                                                type="button"
+                                                                                className="btn btn-civil w-full gap-2"
+                                                                                onClick={() => invoiceDataShow(id)}
+                                                                            >
+                                                                                <IconSave className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                                                Show
+                                                                            </button>
+                                                                        ) : (
+                                                                            <button
+                                                                                type="button"
+                                                                                className="btn btn-civil w-full gap-2"
+                                                                                onClick={invoiceFormSubmit}
+                                                                            >
+                                                                                <IconSave className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                                                Update
+                                                                            </button>
+                                                                        )
+                                                                    } */}
+
+
+                                                <button type="button" className="btn btn-civil w-full gap-2" onClick={invoiceFormSubmit}>
+                                                    <IconSave className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                    Update
+                                                </button>
+
+                                                {/* <button className="btn btn-gray w-full gap-2" onClick={() => handlePreviewClick(id)}>
+                                                    <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                    Preview
+                                                </button> */}
+                                                {
+                                                    geteditData?.invoice?.completed == "Yes" ? (
+                                                        <button className="btn btn-gray w-full gap-2" onClick={() => handlePreviewClick(id)}>
+                                                            <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                            Preview
+                                                        </button>
+                                                    ) : (
+                                                        <button className="btn btn-gray w-full gap-2" disabled >
+                                                            <IconEye className="ltr:mr-2 rtl:ml-2 shrink-0" />
+                                                            Preview
+                                                        </button>
+                                                    )
+                                                }
+
+                                            </div>
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>
                         </div>
 
-                    </div>
-                </div>
-            </div>
+                        {/* Modal */}
+                        <Modal title="Create Test" open={isModalOpen} width={900} onOk={handleOk} onCancel={handleCancel} footer={false}>
+                            <Form
+                                name="basic"
+                                onFinish={onFinish}
+                                onFinishFailed={onFinishFailed}
+                                layout="vertical"
+                                form={form}
+                            >
+                                <Form.Item
+                                    label="Material Name"
+                                    name="material_id"
+                                    required={false}
+                                    rules={[{ required: true, message: 'Please select a Material Name!' }]}
+                                >
+                                    <Select onChange={materialChange}>
+                                        {testFormData?.materials?.map((value: any) => (
+                                            <Select.Option key={value.id} value={value.id}>
+                                                {value.material_name}
+                                            </Select.Option>
+                                        ))}
+                                    </Select>
+                                </Form.Item>
 
-            {/* Modal */}
-            <Modal title="Create Test" open={isModalOpen} width={900} onOk={handleOk} onCancel={handleCancel} footer={false}>
-                <Form
-                    name="basic"
-                    onFinish={onFinish}
-                    onFinishFailed={onFinishFailed}
-                    layout="vertical"
-                    form={form}
-                >
-                    <Form.Item
-                        label="Material Name"
-                        name="material_id"
-                        required={false}
-                        rules={[{ required: true, message: 'Please select a Material Name!' }]}
-                    >
-                        <Select onChange={materialChange}>
-                            {testFormData?.materials?.map((value: any) => (
-                                <Select.Option key={value.id} value={value.id}>
-                                    {value.material_name}
-                                </Select.Option>
-                            ))}
-                        </Select>
-                    </Form.Item>
+                                <Form.Item
+                                    label="Test"
+                                    name="test"
+                                    required={false}
+                                    rules={[{ required: true, message: 'Please select one or more tests!' }]}
+                                >
+                                    <Select
+                                        mode="multiple"
+                                        style={{ width: '100%' }}
+                                        placeholder="Select one or more tests"
+                                        onChange={TestChange}
+                                        optionLabelProp="label"
+                                        options={filterMaterial}
+                                    />
+                                </Form.Item>
 
-                    <Form.Item
-                        label="Test"
-                        name="test"
-                        required={false}
-                        rules={[{ required: true, message: 'Please select one or more tests!' }]}
-                    >
-                        <Select
-                            mode="multiple"
-                            style={{ width: '100%' }}
-                            placeholder="Select one or more tests"
-                            onChange={TestChange}
-                            optionLabelProp="label"
-                            options={filterMaterial}
-                        />
-                    </Form.Item>
+                                <Form.Item>
+                                    <Button className='getInfoBtn' onClick={tableTogle}>
+                                        {tableVisible ? "Hide Info" : "Get Info"}
+                                    </Button>
 
-                    <Form.Item>
-                        <Button className='getInfoBtn' onClick={tableTogle}>
-                            {tableVisible ? "Hide Info" : "Get Info"}
-                        </Button>
-
-                    </Form.Item>
+                                </Form.Item>
 
 
-                    {
-                        tableVisible && (
-                            <div className="table-responsive">
-                                <table>
-                                    <thead>
-                                        <tr>
-                                            <th>Test Name</th>
-                                            <th className="w-1">Quantity</th>
-                                            <th className="w-1">Price Per Sample</th>
-                                            <th>Total</th>
-                                            <th className="w-1"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {filterTest.length <= 0 && (
-                                            <tr>
-                                                <td colSpan={5} className="!text-center font-semibold">
-                                                    No Item Available
-                                                </td>
-                                            </tr>
-                                        )}
-                                        {filterTest.map((item: any, index: any) => {
-                                            return (
-                                                <tr className="align-top" key={item.value}>
-                                                    <td>
+                                {
+                                    tableVisible && (
+                                        <div className="table-responsive">
+                                            <table>
+                                                <thead>
+                                                    <tr>
+                                                        <th>Test Name</th>
+                                                        <th className="w-1">Quantity</th>
+                                                        <th className="w-1">Price Per Sample</th>
+                                                        <th>Total</th>
+                                                        <th className="w-1"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    {filterTest.length <= 0 && (
+                                                        <tr>
+                                                            <td colSpan={5} className="!text-center font-semibold">
+                                                                No Item Available
+                                                            </td>
+                                                        </tr>
+                                                    )}
+                                                    {filterTest.map((item: any, index: any) => {
+                                                        return (
+                                                            <tr className="align-top" key={item.value}>
+                                                                <td>
 
-                                                        <input type="text" className="form-input min-w-[200px]" placeholder="Enter Item Name" defaultValue={item?.label} />
-                                                        {/* <textarea className="form-textarea mt-4" placeholder="Enter Description" defaultValue={item.description}></textarea> */}
+                                                                    <input type="text" className="form-input min-w-[200px]" placeholder="Enter Item Name" defaultValue={item?.label} />
+                                                                    {/* <textarea className="form-textarea mt-4" placeholder="Enter Description" defaultValue={item.description}></textarea> */}
 
-                                                    </td>
-                                                    <td>
-                                                        <input
-                                                            type="number"
-                                                            className="form-input w-32"
-                                                            placeholder="Quantity"
-                                                            value={Number(item?.quantity)}
-                                                            min={0}
-                                                            onChange={(e) => quantityChange(e.target.value, index)}
-                                                        />
+                                                                </td>
+                                                                <td>
+                                                                    <input
+                                                                        type="number"
+                                                                        className="form-input w-32"
+                                                                        placeholder="Quantity"
+                                                                        value={Number(item?.quantity)}
+                                                                        min={0}
+                                                                        onChange={(e) => quantityChange(e.target.value, index)}
+                                                                    />
 
-                                                    </td>
-                                                    <td>
-                                                        <input
-                                                            type="float"
-                                                            className="form-input w-32"
-                                                            placeholder="Price"
-                                                            min={0}
-                                                            onChange={(e) => priceChange(e.target.value, index)}
-                                                            value={Number(item?.price)}
-                                                        />
-                                                    </td>
-                                                    <td>{item?.quantity * Number(item.price)}</td>
-                                                    {/* <td>
-                                                        <button type="button" onClick={() => removeItem(item)}>
-                                                            <IconX className="w-5 h-5" />
-                                                        </button>
-                                                    </td> */}
-                                                </tr>
-                                            );
-                                        })}
-                                    </tbody>
-                                </table>
-                            </div>
-                        )
-                    }
-
-
-                    <div style={{ paddingTop: "30px" }}>
-                        <Form.Item>
-                            <Button type="primary" htmlType="submit">
-                                Create
-                            </Button>
-                        </Form.Item>
-                    </div>
-                </Form>
-            </Modal>
-            {/* Invoice Edit Drawer */}
-            <Drawer title="Edit Test" placement="right" width={600} onClose={onClose} open={open}>
-                <Form
-                    name="basic"
-                    layout="vertical"
-                    form={form}
-                    initialValues={{ remember: true }}
-                    onFinish={onFinish2}
-                    onFinishFailed={onFinishFailed2}
-                    autoComplete="off"
-
-                >
-                    <Form.Item
-                        label="Test Name"
-                        name="test_name"
-                        required={false}
-                        rules={[{ required: true, message: 'Please input your Test Name!' }]}
-                    >
-                        <Input disabled />
-                    </Form.Item>
-
-                    <Form.Item
-                        label="Quantity"
-                        name="quantity"
-                        required={false}
-                        rules={[{ required: true, message: 'Please input your Quantity!' }]}
-                    >
-                        <Input onChange={(e) => handleQuantityChange(e.target.value)} />
-                    </Form.Item>
-
-                    <Form.Item label="Price Per Sample" name="price_per_sample"
-                        required={false}
-                        rules={[{ required: true, message: 'Please input your Tax Status!' }]}
-
-                    >
-                        <Input onChange={(e) => handlePricePerSampleChange(e.target.value)} />
-                    </Form.Item>
-
-                    <Form.Item label="Total" name="total"
-                        required={false}
-                    // rules={[{ required: true, message: 'Please input your !' }]}
-                    >
-                        <Input disabled />
-                    </Form.Item>
-
-                    <Form.Item >
-                        <div className='form-btn-main'>
-                            <Space>
-                                <Button danger htmlType="submit" onClick={() => onClose()}>
-                                    Cancel
-                                </Button>
-                                <Button type="primary" htmlType="submit">
-                                    Submit
-                                </Button>
-                            </Space>
-
-                        </div>
-
-                    </Form.Item>
-                </Form>
-            </Drawer>
-
-
-
-            {/* payment Modal */}
-            <Modal title="Add Payment" open={paymentModalOpen} width={600} onOk={paymentOk} onCancel={paymentCancel} footer={false}>
-
-                <form>
-                    <div style={{ marginBottom: "10px" }}>
-                        <label >
-                            Amount Paid Date
-                        </label>
-                        <input type="date" required className="form-input flex-1" name="date" value={paymentFormData?.date} onChange={paymentInputChange} />
-                    </div>
-
-                    <div style={{ marginBottom: "10px" }}>
-                        <label htmlFor="payment-mode" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                            Payment Mode
-                        </label>
-                        <select id="payment-mode" className="form-select flex-1" name="payment_mode" value={paymentFormData?.payment_mode} required onChange={selectChange}>
-                            {
-                                invoiceFormData?.payment_mode_choices?.map((value: any) => (
-                                    <option key={value.id} value={value.value}>{value.value}</option>
-                                ))
-                            }
-                        </select>
-                    </div>
-
-                    <div style={{ marginBottom: "10px" }}>
-                        {paymentFormData?.payment_mode === "cheque" && (
-                            <>
-                                <label htmlFor="cheque" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    Cheque Number
-                                </label>
-                                <input id="cheque-number" type="text" className="form-input flex-1" name="cheque_number" value={paymentFormData?.cheque_number} onChange={paymentInputChange} required />
-                                {paymentFormData?.cheque_number === null && <p style={{ color: 'red' }}>Cheque Number field is required</p>}
-                            </>
-                        )}
-                        {paymentFormData?.payment_mode === "upi" && (
-                            <>
-                                <label htmlFor="upi" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                    UPI Ref
-                                </label>
-                                <input id="upi" type="text" className="form-input flex-1" name="upi" value={paymentFormData?.upi} onChange={paymentInputChange} required />
-                                {paymentFormData?.upi === null && <p style={{ color: 'red' }}>UPI field is required</p>}
-                            </>
-                        )}
-                    </div>
-
-                    <div style={{ marginBottom: "10px" }}>
-                        <label >
-                            Amount
-                        </label>
-                        <input className="form-input flex-1" name="amount" value={paymentFormData?.amount} required onChange={paymentInputChange} />
-                    </div>
-                    <div style={{ paddingTop: "30px" }}>
-                        <Button type="primary" htmlType="submit" onClick={paymentSubmit}>
-                            Add
-                        </Button>
-                    </div>
-                </form>
-
-
-            </Modal>
-
-            {/* Invoice payment Edit Drawer */}
-            <Drawer title="Edit Payment" placement="right" width={600} onClose={paymentClose} open={open}>
-                <form>
-                    <div style={{ marginBottom: "10px" }}>
-                        <label >
-                            Amount Paid Date
-                        </label>
-                        <input type="date" className="form-input flex-1" name="date" value={paymentFormData?.date} onChange={paymentInputChange} />
-                    </div>
-                    <div style={{ marginBottom: "10px" }}>
-                        <label >
-                            Amount
-                        </label>
-                        <input className="form-input flex-1" name="amount" value={paymentFormData?.amount} onChange={paymentInputChange} />
-                    </div>
-                    <div style={{ marginBottom: "10px" }}>
-                        <label htmlFor="payment-mode" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                            Payment Mode
-                        </label>
-                        <select id="payment-mode" className="form-select flex-1" name="payment_mode" value={paymentFormData?.payment_mode} onChange={selectChange} >
-                            {
-                                invoiceFormData?.payment_mode_choices?.map((value: any) => {
-                                    // console.log("valuevaluevalue", value)
-                                    return (
-                                        <option key={value.id} value={value.value}>{value.value}</option>
+                                                                </td>
+                                                                <td>
+                                                                    <input
+                                                                        type="float"
+                                                                        className="form-input w-32"
+                                                                        placeholder="Price"
+                                                                        min={0}
+                                                                        onChange={(e) => priceChange(e.target.value, index)}
+                                                                        value={Number(item?.price)}
+                                                                    />
+                                                                </td>
+                                                                <td>{item?.quantity * Number(item.price)}</td>
+                                                                {/* <td>
+                                                                                        <button type="button" onClick={() => removeItem(item)}>
+                                                                                            <IconX className="w-5 h-5" />
+                                                                                        </button>
+                                                                                    </td> */}
+                                                            </tr>
+                                                        );
+                                                    })}
+                                                </tbody>
+                                            </table>
+                                        </div>
                                     )
-                                })
-                            }
-                        </select>
-                    </div>
+                                }
 
-                    <div style={{ marginBottom: "10px" }}>
-                        {
-                            paymentMode === "cheque" && (
-                                <>
-                                    <label htmlFor="cheque" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                        Cheque Number
+
+                                <div style={{ paddingTop: "30px" }}>
+                                    <Form.Item>
+                                        <Button type="primary" htmlType="submit">
+                                            Create
+                                        </Button>
+                                    </Form.Item>
+                                </div>
+                            </Form>
+                        </Modal>
+                        {/* Invoice Edit Drawer */}
+                        <Drawer title="Edit Test" placement="right" width={600} onClose={onClose} open={open}>
+                            <Form
+                                name="basic"
+                                layout="vertical"
+                                form={form}
+                                initialValues={{ remember: true }}
+                                onFinish={onFinish2}
+                                onFinishFailed={onFinishFailed2}
+                                autoComplete="off"
+
+                            >
+                                <Form.Item
+                                    label="Test Name"
+                                    name="test_name"
+                                    required={false}
+                                    rules={[{ required: true, message: 'Please input your Test Name!' }]}
+                                >
+                                    <Input disabled />
+                                </Form.Item>
+
+                                <Form.Item
+                                    label="Quantity"
+                                    name="quantity"
+                                    required={false}
+                                    rules={[{ required: true, message: 'Please input your Quantity!' }]}
+                                >
+                                    <Input onChange={(e) => handleQuantityChange(e.target.value)} />
+                                </Form.Item>
+
+                                <Form.Item label="Price Per Sample" name="price_per_sample"
+                                    required={false}
+                                    rules={[{ required: true, message: 'Please input your Tax Status!' }]}
+
+                                >
+                                    <Input onChange={(e) => handlePricePerSampleChange(e.target.value)} />
+                                </Form.Item>
+
+                                <Form.Item label="Total" name="total"
+                                    required={false}
+                                // rules={[{ required: true, message: 'Please input your !' }]}
+                                >
+                                    <Input disabled />
+                                </Form.Item>
+
+                                <Form.Item >
+                                    <div className='form-btn-main'>
+                                        <Space>
+                                            <Button danger htmlType="submit" onClick={() => onClose()}>
+                                                Cancel
+                                            </Button>
+                                            <Button type="primary" htmlType="submit">
+                                                Submit
+                                            </Button>
+                                        </Space>
+
+                                    </div>
+
+                                </Form.Item>
+                            </Form>
+                        </Drawer>
+
+
+
+                        {/* payment Modal */}
+                        <Modal title="Add Payment" open={paymentModalOpen} width={600} onOk={paymentOk} onCancel={paymentCancel} footer={false}>
+
+                            <form>
+                                <div style={{ marginBottom: "10px" }}>
+                                    <label >
+                                        Amount Paid Date
                                     </label>
-                                    <input id="swift-code" type="text" className="form-input flex-1" name="cheque_number" value={paymentFormData?.cheque_number} onChange={paymentInputChange} />
+                                    <input type="date" required className="form-input flex-1" name="date" value={paymentFormData?.date} onChange={paymentInputChange} />
+                                </div>
 
-                                </>
-
-                            )
-                        }
-                        {
-                            paymentMode === "upi" && (
-                                <>
-                                    <label htmlFor="upi" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
-                                        UPI Number
+                                <div style={{ marginBottom: "10px" }}>
+                                    <label htmlFor="payment-mode" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                        Payment Mode
                                     </label>
-                                    <input id="swift-code" type="text" className="form-input flex-1" name="upi" value={paymentFormData?.upi} onChange={paymentInputChange} />
-                                </>
+                                    <select id="payment-mode" className="form-select flex-1" name="payment_mode" value={paymentFormData?.payment_mode} required onChange={selectChange}>
+                                        {
+                                            invoiceFormData?.payment_mode_choices?.map((value: any) => (
+                                                <option key={value.id} value={value.value}>{value.value}</option>
+                                            ))
+                                        }
+                                    </select>
+                                </div>
+
+                                <div style={{ marginBottom: "10px" }}>
+                                    {paymentFormData?.payment_mode === "cheque" && (
+                                        <>
+                                            <label htmlFor="cheque" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                Cheque Number
+                                            </label>
+                                            <input id="cheque-number" type="text" className="form-input flex-1" name="cheque_number" value={paymentFormData?.cheque_number} onChange={paymentInputChange} required />
+                                            {paymentFormData?.cheque_number === null && <p style={{ color: 'red' }}>Cheque Number field is required</p>}
+                                        </>
+                                    )}
+                                    {paymentFormData?.payment_mode === "upi" && (
+                                        <>
+                                            <label htmlFor="upi" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                UPI Ref
+                                            </label>
+                                            <input id="upi" type="text" className="form-input flex-1" name="upi" value={paymentFormData?.upi} onChange={paymentInputChange} required />
+                                            {paymentFormData?.upi === null && <p style={{ color: 'red' }}>UPI field is required</p>}
+                                        </>
+                                    )}
+                                </div>
+
+                                <div style={{ marginBottom: "10px" }}>
+                                    <label >
+                                        Amount
+                                    </label>
+                                    <input className="form-input flex-1" name="amount" value={paymentFormData?.amount} required onChange={paymentInputChange} />
+                                </div>
+                                <div style={{ paddingTop: "30px" }}>
+                                    <Button type="primary" htmlType="submit" onClick={paymentSubmit}>
+                                        Add
+                                    </Button>
+                                </div>
+                            </form>
 
 
-                            )
-                        }
-                    </div>
-                    <div style={{ paddingTop: "30px" }}>
-                        <Button type="primary" htmlType="submit" onClick={paymentUpdate}>
-                            Update
-                        </Button>
-                    </div>
-                </form>
-            </Drawer>
+                        </Modal>
 
+                        {/* Invoice payment Edit Drawer */}
+                        <Drawer title="Edit Payment" placement="right" width={600} onClose={paymentClose} open={open2}>
+                            <form>
+                                <div style={{ marginBottom: "10px" }}>
+                                    <label >
+                                        Amount Paid Date
+                                    </label>
+                                    <input type="date" className="form-input flex-1" name="date" value={paymentFormData?.date} onChange={paymentInputChange} />
+                                </div>
+                                <div style={{ marginBottom: "10px" }}>
+                                    <label >
+                                        Amount
+                                    </label>
+                                    <input className="form-input flex-1" name="amount" value={paymentFormData?.amount} onChange={paymentInputChange} />
+                                </div>
+                                <div style={{ marginBottom: "10px" }}>
+                                    <label htmlFor="payment-mode" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                        Payment Mode
+                                    </label>
+                                    <select id="payment-mode" className="form-select flex-1" name="payment_mode" value={paymentFormData?.payment_mode} onChange={selectChange} >
+                                        {
+                                            invoiceFormData?.payment_mode_choices?.map((value: any) => {
+                                                // console.log("valuevaluevalue", value)
+                                                return (
+                                                    <option key={value.id} value={value.value}>{value.value}</option>
+                                                )
+                                            })
+                                        }
+                                    </select>
+                                </div>
 
-        </div>
+                                <div style={{ marginBottom: "10px" }}>
+                                    {
+                                        paymentMode === "cheque" && (
+                                            <>
+                                                <label htmlFor="cheque" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                    Cheque Number
+                                                </label>
+                                                <input id="swift-code" type="text" className="form-input flex-1" name="cheque_number" value={paymentFormData?.cheque_number} onChange={paymentInputChange} />
+
+                                            </>
+                                        )
+                                    }
+                                    {
+                                        paymentMode === "upi" && (
+                                            <>
+                                                <label htmlFor="upi" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                                                    UPI Number
+                                                </label>
+                                                <input id="swift-code" type="text" className="form-input flex-1" name="upi" value={paymentFormData?.upi} onChange={paymentInputChange} />
+                                            </>
+                                        )
+                                    }
+                                </div>
+                                <div style={{ paddingTop: "30px" }}>
+                                    <Button type="primary" htmlType="submit" onClick={paymentUpdate}>
+                                        Update
+                                    </Button>
+                                </div>
+                            </form>
+                        </Drawer>
+                    </div >
+                )}
+        </>
     );
 };
 

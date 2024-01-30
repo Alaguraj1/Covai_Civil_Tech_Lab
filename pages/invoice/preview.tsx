@@ -85,7 +85,7 @@ const Preview = () => {
 
     if (filteredTaxes?.length > 0) {
       const percentagesArray = filteredTaxes.map((item: any) =>
-     `${parseFloat(item.tax_percentage)}%`
+        `${parseFloat(item.tax_percentage)}%`
       );
 
       const sum = percentagesArray.reduce((accumulator: any, currentValue: any) => accumulator + currentValue, 0);
@@ -193,11 +193,11 @@ const Preview = () => {
                     <div className="text-white-dark">Project Name :</div>
                     <div>{printData?.invoice?.project_name}</div>
                   </div>
-                  <div className="flex items-center w-full justify-between">
+                  <div className="flex items-center w-full justify-between mb-2">
                     <div className="text-white-dark">Place of Testing  :</div>
                     <div>{printData?.invoice?.place_of_testing}</div>
                   </div>
-                  <div className="flex items-center w-full justify-between">
+                  <div className="flex items-center w-full justify-between mb-2">
                     <div className="text-white-dark"> GSTIN/UIN  :</div>
                     <div>{printData?.customer?.gstin_no}</div>
                   </div>
@@ -235,28 +235,28 @@ const Preview = () => {
 
             <div className="table-responsive mt-6 invoice-table">
               <table className="table-striped">
-                <thead>
+                <thead style={{ border: "1px solid black" }}>
                   <tr>
-                    <th >S.No</th>
-                    <th>Name of Test</th>
-                    <th>HAN/SAC</th>
-                    <th>Qty</th>
-                    <th style={{ textAlign: "right" }}>Rate/Sample(INR)</th>
-                    <th style={{ textAlign: "right" }}>Amount(INR)</th>
+                    <th style={{ border: "1px solid black" }}>S.No</th>
+                    <th style={{ border: "1px solid black" }}>Name of Test</th>
+                    <th style={{ border: "1px solid black" }}>HAN/SAC</th>
+                    <th style={{ border: "1px solid black" }}>Qty</th>
+                    <th style={{ textAlign: "right", border: "1px solid black" }}>Rate/Sample(INR)</th>
+                    <th style={{ textAlign: "right", border: "1px solid black" }}>Amount(INR)</th>
                   </tr>
                 </thead>
                 <tbody>
                   {
-                    printData?.invoice_tests?.map((invoice: any) => {
+                    printData?.invoice_tests?.map((invoice: any, index: any) => {
                       return (
                         <>
-                          <tr>
-                            <td>{invoice?.id}</td>
-                            <td>{invoice?.test_name} - <span style={{ fontWeight: "bold" }}>{invoice?.material_name}</span></td>
-                            <td>998346</td>
-                            <td >{invoice?.qty}</td>
-                            <td style={{ textAlign: "right" }}>{invoice?.price_per_sample}</td>
-                            <td style={{ textAlign: "right" }}>{parseInt(invoice?.total, 10)}</td>
+                          <tr style={{ border: "1px solid black" }}>
+                            <td style={{ border: "1px solid black" }}>{index}</td>
+                            <td style={{ border: "1px solid black" }}>{invoice?.test_name} - <span style={{ fontWeight: "bold" }}>{invoice?.material_name}</span></td>
+                            <td style={{ border: "1px solid black" }}>998346</td>
+                            <td style={{ border: "1px solid black" }}>{invoice?.qty}</td>
+                            <td style={{ textAlign: "right", border: "1px solid black" }}>{invoice?.price_per_sample}</td>
+                            <td style={{ textAlign: "right", border: "1px solid black" }}>{parseInt(invoice?.total, 10)}</td>
                           </tr>
 
                         </>
@@ -265,10 +265,10 @@ const Preview = () => {
 
                   }
 
-                 
+
                   {
                     printData?.invoice?.discount >= 1 ? (
-                      <tr>
+                      <tr style={{ border: "none" }}>
                         <>
                           <td> </td>
                           <td> </td>
@@ -281,7 +281,7 @@ const Preview = () => {
                     ) : null
                   }
 
-                  <tr>
+                  <tr style={{ border: "none" }}>
                     <td> </td>
                     <td> </td>
                     <td> </td>
@@ -290,24 +290,23 @@ const Preview = () => {
                     <td style={{ textAlign: "right" }}>{BeforeTotal.toFixed(2)}</td>
                   </tr>
 
-            
-                  <tr>
+
+                  <tr style={{ border: "none" }}>
                     <td> </td>
                     <td> </td>
-                    <td> </td>
-                    <td> </td>
-                    <td style={{ textAlign: "right" }}>{Discount()}</td>
+                    <td> </td>                    
+                    <td colSpan="2" style={{ textAlign: "right" }}>{Discount()}</td>
                     <td style={{ textAlign: "right" }}>{Tax_total.toFixed(2)}</td>
                   </tr>
-                
-                  <tr></tr>
-                  <tr>
+
+                  <tr style={{ border: "none" }}></tr>
+                  <tr style={{ border: "none" }}>
                     <td> </td>
                     <td> </td>
                     <td> </td>
                     <td ></td>
                     <td style={{ textAlign: "right" }}>
-                   Total
+                      Total
                     </td>
                     <td style={{ textAlign: "right", fontWeight: "bold" }}>
                       {parseInt(After_Tax, 10)}{" "}
@@ -330,10 +329,10 @@ const Preview = () => {
             <div className='preview-footer-main' >
 
               <div className='preview-qr-outer'>
-                <img src="/assets/images/Sponsor.jpg" style={{ textAlign: "center", width:"120px", height:"100px" }} alt='image' />
+                <img src="/assets/images/Sponsor.jpg" style={{ textAlign: "center", width: "120px", height: "100px" }} alt='image' />
               </div>
               <div className='preview-qr-outer'>
-                <img src={printData?.invoice?.qr} style={{ textAlign: "center", width:"120px", height:"120px"}} alt='image' />
+                <img src={printData?.invoice?.qr} style={{ textAlign: "center", width: "120px", height: "120px" }} alt='image' />
               </div>
               <div className='preview-qr-outer'>
                 <div className="text-right grid-cols-9 space-y-1 mt-0 text-white-dark text-right text-sm">
