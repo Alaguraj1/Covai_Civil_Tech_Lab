@@ -294,8 +294,9 @@ const Preview = () => {
                   <tr style={{ border: "none" }}>
                     <td> </td>
                     <td> </td>
-                    <td> </td>                    
-                    <td colSpan="2" style={{ textAlign: "right" }}>{Discount()}</td>
+                    <td> </td>     
+                    <td> </td>                 
+                    <td style={{ textAlign: "right" }}>{Discount()}</td>
                     <td style={{ textAlign: "right" }}>{Tax_total.toFixed(2)}</td>
                   </tr>
 
