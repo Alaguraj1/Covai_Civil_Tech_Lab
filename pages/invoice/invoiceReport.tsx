@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from 'react'
 import axios from "axios"
 import { useRouter } from 'next/router';
-import { Space,Form, Select, Button, Radio, message } from 'antd';
+import { Space, Form, Select, Button, Radio, message } from 'antd';
 import "react-quill/dist/quill.snow.css";
 
 
@@ -17,7 +17,14 @@ const InvoiceReport = () => {
   const [invoiceReport, setInvoiceReport] = useState<any>([])
   const [editor, setEditor] = useState<any>("<p>Your HTML content here</p>")
   const [messageApi, contextHolder] = message.useMessage();
-  // const [date, setDate] = useState()
+  const [formData, setFormData] = useState<any>({
+    completed: "",
+    signature: "",
+
+  });
+  const [selectedId, setSelectedId] = useState(1);
+  console.log('✌️formData.signature --->', formData.signature);
+
 
   useEffect(() => {
     editorRef.current = {
@@ -28,8 +35,6 @@ const InvoiceReport = () => {
   }, [])
 
 
-
-
   const getTestReport = (() => {
     const Token = localStorage.getItem("token")
 
@@ -38,67 +43,27 @@ const InvoiceReport = () => {
         "Authorization": `Token ${Token}`
       }
     }).then((res) => {
-      // setDate(res.data.invoice_test.report_template)
+
       setInvoiceReport(res.data)
+      console.log('✌️res.data --->', res.data);
       setEditor(res.data.invoice_test.report_template)
-      // let apiResponse: any = date; 
+      const filter = res.data.signatures.filter((element: any) => element.id === res.data.invoice_test.signature)
+      console.log('✌️filter --->', filter[0].id);
+      setFormData({
+        completed: res.data.invoice_test.completed,
+        signature: filter[0].id
 
-      // let tempDiv = document.createElement('div');
-      // tempDiv.innerHTML = apiResponse;
+      })
+      setSelectedId(filter[0].id)
 
-      // let tdElements = tempDiv.querySelectorAll('td');
-      // tdElements.forEach(tdElement => {
-      //   if (tdElement.innerText.trim() === 'Date :') {
-      //     tdElement.innerHTML = 'Date : 26-01-2024';
-      //   }
-      //   if (tdElement.innerText.trim() === 'Test Order No:') {
-      //     tdElement.innerHTML = 'Test Order No: 5';
-      //   }
-      // });
-
-      // let modifiedApiResponse = tempDiv.innerHTML;
-      // setEditor(modifiedApiResponse)
-
-      // console.log("modify", modifiedApiResponse);
     }).catch((error: any) => {
       console.log(error)
     });
   });
 
-  // useEffect(() => {
-  //   // Ensure that the CKEditor is loaded and the date is available
-  //   if (editorLoaded && date) {
-  //     // Create a temporary div element to parse the HTML
-  //     let tempDiv = document.createElement('div');
-  //     tempDiv.innerHTML = date;
-
-  //     // Find the td elements and update the date
-  //     let tdElements = tempDiv.querySelectorAll('td');
-  //     tdElements.forEach((tdElement) => {
-  //       if (tdElement.innerText.trim() === 'Date :') {
-  //         const TestReportDate = "30-4-2024"
-  //         tdElement.innerHTML = `Date : ${TestReportDate}`;
-  //       }
-  //       if (tdElement.innerText.trim() === 'Test Order No:') {
-  //         const testOrderNo = "1"
-  //         tdElement.innerHTML = `Test Order No: ${testOrderNo}`;
-  //       }
-  //     });
-
-  //     let modifiedApiResponse = tempDiv.innerHTML;
-  //     setEditor(modifiedApiResponse);
-
-  //     console.log("modify", modifiedApiResponse);
-  //   }
-  // }, [editorLoaded, date]);
-
-
   useEffect(() => {
     getTestReport()
   }, [id])
-
-
-  console.log("editor", editor)
 
 
   // form submit
@@ -106,9 +71,10 @@ const InvoiceReport = () => {
 
     const body = {
       report_template: editor,
-      completed: value.completed,
-      signature: value.signature
+      completed: formData.completed,
+      signature: selectedId
     }
+
     const Token = localStorage.getItem("token");
 
     axios.put(`http://files.covaiciviltechlab.com/edit_invoice_test_template/${id}/`, body, {
@@ -116,6 +82,7 @@ const InvoiceReport = () => {
         "Authorization": `Token ${Token}`,
       },
     }).then((res) => {
+      console.log('✌️res --->', res);
       getTestReport()
       messageApi.open({
         type: 'success',
@@ -151,7 +118,6 @@ const InvoiceReport = () => {
   };
 
 
-
   // Print
   const handlePrint1 = () => {
 
@@ -167,6 +133,16 @@ const InvoiceReport = () => {
     window.location.href = `/invoice/edit?id=${invoiceReport.invoice.id}`;
   };
 
+  console.log(invoiceReport?.invoice_test)
+
+  const inputChange = ((e: any,) => {
+
+    setFormData({
+      ...formData,
+      [e.target.name]: e.target.value
+    })
+  })
+
 
   return (
     <>
@@ -181,7 +157,11 @@ const InvoiceReport = () => {
             name="basic"
             layout="vertical"
             form={form}
-            initialValues={{ remember: true }}
+            // initialValues={{
+            //   remember: true,
+
+            // }}
+
             onFinish={onFinish}
             onFinishFailed={onFinishFailed}
             autoComplete="off"
@@ -203,17 +183,57 @@ const InvoiceReport = () => {
                 />
               }
             </Form.Item>
-            <Form.Item label="Completed" name="completed"
+            <div style={{ marginBottom: "20px" }}>
+              <label htmlFor="swift-code" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                Completed
+              </label>
+              <div className="mt-0 flex items-center  font-semibold ">
+
+                <input
+                  id="swift-code-yes"
+                  type="radio"
+                  name="completed"
+                  value="Yes"
+                  onChange={inputChange}
+                  checked={formData?.completed === "Yes"}
+
+
+                />
+                <label style={{ marginRight: "3px", marginBottom: "0px" }}>Yes</label>
+
+                <input
+                  id="swift-code-no"
+                  type="radio"
+                  name="completed"
+                  value="No"
+                  onChange={inputChange}
+                  checked={formData?.completed === "No"}
+                  style={{marginLeft:"20px"}}
+                />
+                <label style={{ marginRight: "3px", marginBottom: "0px" }}>No</label>
+
+              </div>
+            </div>
+
+            {/* <Form.Item
+              label="Completed"
+              name="completed"
               required={true}
               rules={[{ required: true, message: 'Please Select your Completed Status!' }]}
             >
-              <Radio.Group>
-                <Radio value="Yes"> Yes </Radio>
-                <Radio value="No"> No </Radio>
+              <Radio.Group  defaultValue={invoiceReport?.invoice_test?.completed == "Yes" ?true:false}>
+                <Radio >
+                  Yes
+                </Radio>
+                <Radio  >
+                  No
+                </Radio>
               </Radio.Group>
-            </Form.Item>
+            </Form.Item> */}
 
-            <Form.Item
+
+
+            {/* <Form.Item
               label="Employee Name"
               name="signature"
               required={false}
@@ -226,17 +246,58 @@ const InvoiceReport = () => {
                   </Select.Option>
                 ))}
               </Select>
-            </Form.Item>
+            </Form.Item> */}
+            {/* <div className="mt-4 flex items-center"> */}
+            {/* <label htmlFor="country" className="mb-0 w-1/3 ltr:mr-2 rtl:ml-2">
+                Customer Name
+              </label>
+              <select value={2} onChange={(e) => setFormData({ signature: parseInt(e.target.value) })} id="country" className="form-select flex-1" name="signature"
+              >
+                {invoiceReport?.signatures?.map((value: any) => (
+                  <option key={value.id} value={value.id}>
+                    {value?.employee_name}
+                  </option>
+                ))}
+              </select> */}
+            <div style={{ marginBottom: "20px" }}>
+              <label htmlFor="yourSelect">Employee Name</label>
+              <select
+                id="yourSelect"
+                value={selectedId}
+                onChange={(e) => setSelectedId(parseInt(e.target.value))}
+                className="form-select flex-1"
+              >
+                {invoiceReport?.
+                  signatures?.map((element: any) => (
+                    <option key={element.id} value={element.id}>
+                      {element.employee_name}
+                    </option>
+                  ))}
+              </select>
+            </div>
             <Form.Item >
               <div className='form-btn-main'>
                 <Space>
+                  {
+                    invoiceReport?.invoice_test?.completed == "Yes"  ? (
+                      <>
+                        <Button type="primary" onClick={() => handlePrint()} >
+                          Print
+                        </Button>
+                        <Button type="primary" onClick={() => handlePrint1()} >
+                          Print Without Header
+                        </Button>
+                      </>
+                    ) : (<>
+                      <Button type="primary" onClick={() => handlePrint()} disabled>
+                        Print
+                      </Button>
+                      <Button type="primary" onClick={() => handlePrint1()} disabled>
+                        Print Without Header
+                      </Button>
+                    </>)
+                  }
 
-                  <Button type="primary" onClick={() => handlePrint()} >
-                    Print
-                  </Button>
-                  <Button type="primary" onClick={() => handlePrint1()} >
-                    Print Without Header
-                  </Button>
                   <Button type="primary" htmlType="submit">
                     Update
                   </Button>
@@ -246,6 +307,7 @@ const InvoiceReport = () => {
 
             </Form.Item>
           </Form>
+
         </div>
       </div>
     </>
