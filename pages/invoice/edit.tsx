@@ -536,7 +536,7 @@ const Edit = () => {
                 console.log('✌️res --->', res);
                 setIsModalOpen(false);
                 getInvoiceTestData2();
-                // form1.resetFields()
+                form1.resetFields()
             })
             .catch((error) => {
                 console.error('Error:', error);
@@ -801,6 +801,8 @@ const Edit = () => {
     // invoice edit form onfinish
     const onFinish2 = (values: any) => {
         const Token = localStorage.getItem('token');
+
+console.log("hi", editRecord.id)
 
         axios
             .put(`http://files.covaiciviltechlab.com/edit_invoice_test/${editRecord.id}/`, values, {
