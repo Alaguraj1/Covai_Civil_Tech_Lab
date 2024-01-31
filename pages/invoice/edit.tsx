@@ -530,20 +530,30 @@ const Edit = () => {
             ...formData,
             [e.target.name]: e.target.value
         })
+
+        setTestFormData
     })
 
     const inputUpdate = ((e: any,) => {
+      
 
 
         if (e.target.value == "Yes") {
             const date = formData.date
-            console.log("date", date)
-
+          
             if (date == null) {
                 messageApi.open({
                     type: 'error',
                     content: ' Enter Invoice Date Field',
                 })
+                
+            setFormData({
+                ...formData,
+                [e.target.name]: "No"
+            })
+            return false
+
+       
             }
             const BalanceCheck = parseInt(balance, 10)
             if (BalanceCheck > 0) {
@@ -551,6 +561,13 @@ const Edit = () => {
                     type: 'error',
                     content: 'Not Fully Paid',
                 })
+
+                setFormData({
+                    ...formData,
+                    [e.target.name]: "No"
+                })
+                return false
+    
             }
 
             if (invoiceFormData?.invoice_tests?.some((obj: any) => Object.values(obj).includes('No'))) {
@@ -558,19 +575,31 @@ const Edit = () => {
                     type: 'error',
                     content: 'Test Not Completed',
                 })
-            }
 
+                setFormData({
+                    ...formData,
+                    [e.target.name]: "No"
+                })
+
+                return false
+    
+            }
 
             setFormData({
                 ...formData,
-                [e.target.name]: e.target.value
+                [e.target.name]: "Yes"
             })
+            return true
+
+
         }
         else {
             setFormData({
                 ...formData,
-                [e.target.name]: e.target.value
+                [e.target.name]: "No"
             })
+
+            return true
         }
 
     })
