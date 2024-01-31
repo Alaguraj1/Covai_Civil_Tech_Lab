@@ -164,11 +164,11 @@ const ChangePassword = () => {
                                     {passwordMatchError && <div style={{ color: 'red', marginTop: '5px' }}>Passwords do not match. Please try again.</div>}
                                 </div>
                                 <div style={{display:"flex"}}>
-                                    <button style={{paddingRight:"10px"}} type='button' onClick={() => router.back()} className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
-                                        cancel
-                                    </button>
                                     <button type="submit" className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
                                         Change Password
+                                    </button>
+                                    <button style={{paddingRight:"10px"}} type='button' onClick={() => router.back()} className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
+                                        cancel
                                     </button>
                                 </div>
                             </form>
