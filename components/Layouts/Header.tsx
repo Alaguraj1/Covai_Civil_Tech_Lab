@@ -165,8 +165,9 @@ const Header = () => {
                         .then((res) => {
                             console.log("resresres", res);
                             // Handle the success response, e.g., redirect to another page
-                            router.push("/");
                             localStorage.removeItem("token")
+                            router.push("/");
+                           
                         })
                         .catch((error: any) => {
                             console.log(error);
@@ -598,7 +599,7 @@ const Header = () => {
                             <li>
                                 <Link href="/auth/changePassword">{t('Change Password')}</Link>
                             </li>
-                            <li onClick={() => showConfirm()} style={{ paddingLeft: "10px" }}>
+                            <li onClick={() => showConfirm()} style={{ paddingLeft: "20px" }}>
                                 {t('Logout')}
                             </li>
                         </ul>

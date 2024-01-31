@@ -3,9 +3,8 @@ import { useRouter } from 'next/router';
 import BlankLayout from '@/components/Layouts/BlankLayout';
 import Link from 'next/link';
 import IconLockDots from '@/components/Icon/IconLockDots';
-import axios from "axios"
-import { message, } from 'antd';
-
+import axios from 'axios';
+import { message } from 'antd';
 
 const ChangePassword = () => {
     const router = useRouter();
@@ -19,73 +18,63 @@ const ChangePassword = () => {
         setShowPassword((prevShowPassword) => !prevShowPassword);
     };
 
-
     const togglePasswordVisibility2 = () => {
         setShowPassword2((prevShowPassword) => !prevShowPassword);
     };
-
 
     const togglePasswordVisibility3 = () => {
         setShowPassword3((prevShowPassword) => !prevShowPassword);
     };
 
-    const [formData, setFormData] = useState(
-        {
-            old_password: "",
-            new_password: "",
-            confirm_new_password: ""
-        }
-    )
+    const [formData, setFormData] = useState({
+        old_password: '',
+        new_password: '',
+        confirm_new_password: '',
+    });
     const [messageApi, contextHolder] = message.useMessage();
-
-
 
     const submitForm = async (e: any) => {
         e.preventDefault();
-        console.log("formData", formData)
-
+        console.log('formData', formData);
 
         if (formData.new_password === formData.confirm_new_password) {
             // Passwords match, proceed with your logic here
             console.log('Passwords match!');
-          } else {
+        } else {
             // Passwords don't match, display error message
             setPasswordMatchError(true);
-          }
+        }
 
-          const Token = localStorage.getItem("token")
-        axios.post("http://files.covaiciviltechlab.com/change-password/", formData,{
-            headers:{
-                "Authorization":  `Token ${Token}`
-            }
-        }).then((res) => {
-            // console.log(res.data)
-            // localStorage.setItem("token", res?.data?.token)
-            // localStorage.setItem("admin", res?.data?.is_admin)
-            // localStorage.setItem("user", res?.data?.name)
-            router.push('/dashboard');
-            messageApi.open({
-                type: 'success',
-                content: 'Password Changed',
+        const Token = localStorage.getItem('token');
+        axios
+            .post('http://files.covaiciviltechlab.com/change-password/', formData, {
+                headers: {
+                    Authorization: `Token ${Token}`,
+                },
+            })
+            .then((res) => {
+                () => router.back()
+                messageApi.open({
+                    type: 'success',
+                    content: 'Password Changed',
+                });
+            })
+            .catch((error: any) => {
+                console.log(error.code);
+                messageApi.open({
+                    type: 'error',
+                    content: 'Old password is incorrect',
+                });
             });
-        }).catch((error: any) => {
-            console.log(error.code)
-            messageApi.open({
-                type: 'error',
-                content: 'Old password is incorrect',
-            });
-        })
-
     };
 
-
-    const inputChange = ((e: any) => {
+    const inputChange = (e: any) => {
         setFormData({
             ...formData,
-            [e.target.name]: e.target.value
-        })
+            [e.target.name]: e.target.value,
+        });
         setPasswordMatchError(false);
-    })
+    };
 
     return (
         <div>
@@ -110,13 +99,10 @@ const ChangePassword = () => {
                         </div>
                     </div>
                     <div className="relative flex w-full flex-col items-center justify-center gap-6 px-4 pb-16 pt-6 sm:px-6 lg:max-w-[667px]">
-                        <div className="flex w-full max-w-[440px] items-center gap-2 lg:absolute lg:end-6 lg:top-6 lg:max-w-full">
-
-
-                        </div>
+                        <div className="flex w-full max-w-[440px] items-center gap-2 lg:absolute lg:end-6 lg:top-6 lg:max-w-full"></div>
                         <div className="w-full max-w-[440px] lg:mt-16">
                             <div className="mb-10">
-                                <h1 className="text-3xl font-extrabold uppercase !leading-snug text-brown md:text-4xl">Change Password</h1>
+                                <h1 className="text-brown text-3xl font-extrabold uppercase !leading-snug md:text-4xl">Change Password</h1>
                                 <p className="text-base font-bold leading-normal text-white-dark">Enter your Old Password and New password to Change Password</p>
                             </div>
                             {contextHolder}
@@ -124,14 +110,16 @@ const ChangePassword = () => {
                                 <div>
                                     <label htmlFor="Email">Old Password</label>
                                     <div className="relative text-white-dark">
-                                        <input required
+                                        <input
+                                            required
                                             id="old_password"
                                             type={showPassword ? 'text' : 'password'}
                                             placeholder="Enter Old Password"
                                             className="form-input ps-10 placeholder:text-white-dark"
-                                            name='old_password'
+                                            name="old_password"
                                             value={formData?.old_password}
-                                            onChange={inputChange} />
+                                            onChange={inputChange}
+                                        />
                                         <span className="absolute start-4 top-1/2 -translate-y-1/2" onClick={togglePasswordVisibility}>
                                             <IconLockDots fill={true} />
                                         </span>
@@ -146,13 +134,12 @@ const ChangePassword = () => {
                                             type={showPassword2 ? 'text' : 'password'}
                                             placeholder="Enter New Password"
                                             className="form-input ps-10 placeholder:text-white-dark"
-                                            name='new_password'
+                                            name="new_password"
                                             value={formData?.new_password}
                                             onChange={inputChange}
                                         />
 
-                                        <span className="absolute start-4 top-1/2 -translate-y-1/2" onClick={togglePasswordVisibility2}
-                                            style={{ cursor: 'pointer' }}>
+                                        <span className="absolute start-4 top-1/2 -translate-y-1/2" onClick={togglePasswordVisibility2} style={{ cursor: 'pointer' }}>
                                             <IconLockDots fill={true} />
                                         </span>
                                     </div>
@@ -166,23 +153,24 @@ const ChangePassword = () => {
                                             type={showPassword3 ? 'text' : 'password'}
                                             placeholder="Enter Confirm Password"
                                             className="form-input ps-10 placeholder:text-white-dark"
-                                            name='confirm_new_password'
+                                            name="confirm_new_password"
                                             value={formData?.confirm_new_password}
-                                            onChange={inputChange} />
+                                            onChange={inputChange}
+                                        />
                                         <span className="absolute start-4 top-1/2 -translate-y-1/2" onClick={togglePasswordVisibility3} style={{ cursor: 'pointer' }}>
                                             <IconLockDots fill={true} />
                                         </span>
                                     </div>
-                                    {passwordMatchError && (
-                                        <div style={{ color: 'red', marginTop: '5px' }}>
-                                            Passwords do not match. Please try again.
-                                        </div>
-                                    )}
+                                    {passwordMatchError && <div style={{ color: 'red', marginTop: '5px' }}>Passwords do not match. Please try again.</div>}
                                 </div>
-
-                                <button type="submit" className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
-                                    Change Password
-                                </button>
+                                <div style={{display:"flex"}}>
+                                    <button style={{paddingRight:"10px"}} type='button' onClick={() => router.back()} className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
+                                        cancel
+                                    </button>
+                                    <button type="submit" className="btn btn-gradient !mt-6 w-full border-0 uppercase shadow-[0_10px_20px_-10px_rgba(67,97,238,0.44)]">
+                                        Change Password
+                                    </button>
+                                </div>
                             </form>
                         </div>
                         <p className="absolute bottom-6 w-full text-center dark:text-white">© {new Date().getFullYear()}.Covai Civil Tech Lab. All Rights Reserved.</p>
