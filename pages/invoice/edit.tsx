@@ -874,7 +874,7 @@ const Edit = () => {
             [e.target.name]: e.target.value
         })
 
-        const oldBalance: any = parseFloat(paymentEditRecord.amount) + Number(balance);
+        const oldBalance: any = parseFloat(paymentEditRecord?.amount) + Number(balance);
         setPendingBalance(oldBalance)
         // setBalance(oldBalance)
     })
