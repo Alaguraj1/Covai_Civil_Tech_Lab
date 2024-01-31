@@ -7,6 +7,7 @@ import { Button, Modal, Form, Input, Select, Space, Drawer, message } from 'antd
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { DeleteOutlined, EditOutlined, PrinterOutlined } from '@ant-design/icons';
+import InvoiceReport from './invoiceReport';
 
 const Edit = () => {
 
@@ -95,12 +96,7 @@ const Edit = () => {
     };
 
 
-    const inputChange = ((e: any,) => {
-        setFormData({
-            ...formData,
-            [e.target.name]: e.target.value
-        })
-    })
+
 
     const formatTotal = () => {
 
@@ -380,6 +376,9 @@ const Edit = () => {
         })
     }, [])
 
+
+    console.log("testFormData", testFormData
+    )
     // modal
     const showModal = () => {
         setIsModalOpen(true);
@@ -524,6 +523,58 @@ const Edit = () => {
         var url = `/invoice/view?id=${id}`;
         window.location.href = url;
     };
+
+    const inputChange = ((e: any,) => {
+
+        setFormData({
+            ...formData,
+            [e.target.name]: e.target.value
+        })
+    })
+
+    const inputUpdate = ((e: any,) => {
+
+
+        if (e.target.value == "Yes") {
+            const date = formData.date
+            console.log("date", date)
+
+            if (date == null) {
+                messageApi.open({
+                    type: 'error',
+                    content: ' Enter Invoice Date Field',
+                })
+            }
+            const BalanceCheck = parseInt(balance, 10)
+            if (BalanceCheck > 0) {
+                messageApi.open({
+                    type: 'error',
+                    content: 'Not Fully Paid',
+                })
+            }
+
+            if (invoiceFormData?.invoice_tests?.some((obj: any) => Object.values(obj).includes('No'))) {
+                messageApi.open({
+                    type: 'error',
+                    content: 'Test Not Completed',
+                })
+            }
+
+
+            setFormData({
+                ...formData,
+                [e.target.name]: e.target.value
+            })
+        }
+        else {
+            setFormData({
+                ...formData,
+                [e.target.name]: e.target.value
+            })
+        }
+
+    })
+
 
     const invoiceFormSubmit = ((e: any) => {
 
@@ -868,6 +919,7 @@ const Edit = () => {
         });
     };
 
+    console.log("check", invoiceFormData?.invoice_tests)
     return (
         <>
             {
@@ -1391,7 +1443,7 @@ const Edit = () => {
                                                 style={{ marginRight: "20px" }}
                                                 name="completed"
                                                 value="Yes"
-                                                onChange={inputChange}
+                                                onChange={inputUpdate}
                                                 checked={formData.completed === "Yes"}
                                             />
                                             <label style={{ marginRight: "3px", marginBottom: "0px" }}>No</label>
@@ -1400,7 +1452,7 @@ const Edit = () => {
                                                 type="radio"
                                                 name="completed"
                                                 value="No"
-                                                onChange={inputChange}
+                                                onChange={inputUpdate}
                                                 checked={formData.completed === "No"}
                                             />
                                         </div>
