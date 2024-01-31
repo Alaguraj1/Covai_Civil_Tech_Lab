@@ -23,7 +23,6 @@ const InvoiceReport = () => {
 
   });
   const [selectedId, setSelectedId] = useState(1);
-  console.log('✌️formData.signature --->', formData.signature);
 
 
   useEffect(() => {
@@ -47,7 +46,7 @@ const InvoiceReport = () => {
       setInvoiceReport(res.data)
       console.log('✌️res.data --->', res.data);
       setEditor(res.data.invoice_test.report_template)
-      const filter = res.data.signatures.filter((element: any) => element.id === res.data.invoice_test.signature)
+      const filter = res.data.signatures.filter((element: any) => element.id == res.data.invoice_test.signature)
       console.log('✌️filter --->', filter[0].id);
       setFormData({
         completed: res.data.invoice_test.completed,
@@ -64,6 +63,10 @@ const InvoiceReport = () => {
   useEffect(() => {
     getTestReport()
   }, [id])
+
+  useEffect(() => {
+    getTestReport()
+  }, [])
 
 
   // form submit
@@ -82,7 +85,7 @@ const InvoiceReport = () => {
         "Authorization": `Token ${Token}`,
       },
     }).then((res) => {
-      console.log('✌️res --->', res);
+      console.log('update --->', res);
       getTestReport()
       messageApi.open({
         type: 'success',
@@ -133,7 +136,6 @@ const InvoiceReport = () => {
     window.location.href = `/invoice/edit?id=${invoiceReport.invoice.id}`;
   };
 
-  console.log(invoiceReport?.invoice_test)
 
   const inputChange = ((e: any,) => {
 
@@ -279,7 +281,7 @@ const InvoiceReport = () => {
               <div className='form-btn-main'>
                 <Space>
                   {
-                    invoiceReport?.invoice_test?.completed == "Yes"  ? (
+                    invoiceReport?.invoice_test?.completed == "Yes" && invoiceReport.invoice_test?.signature != "" ? (
                       <>
                         <Button type="primary" onClick={() => handlePrint()} >
                           Print
