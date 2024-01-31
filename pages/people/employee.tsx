@@ -400,6 +400,7 @@ const Employee = () => {
         ];
 
         return data;
+
     };
 
 
@@ -579,18 +580,17 @@ const Employee = () => {
 
                 {/* modal */}
                 <Modal title="View Employee" open={isModalOpen} onOk={handleOk} onCancel={handleCancel} footer={false}>
-                    {
-                        modalData()?.map((value: any) => {
-                            return (
+                    {modalData().map((value: any, index: number) => (
+                        <div className='content-main' key={index}>
+                            {admin === "true" || value.label !== "Salary:" ? (
                                 <>
-                                    <div className='content-main' >
-                                        <p className='content-1'>{value?.label}</p>
-                                        <p className='content-2'>{value?.value}</p>
-                                    </div>
+                                    <p className='content-1'>{value?.label}</p>
+                                    <p className='content-2'>{value?.value}</p>
                                 </>
-                            )
-                        })
-                    }
+
+                            ) : null}
+                        </div>
+                    ))}
                 </Modal>
 
             </div >
